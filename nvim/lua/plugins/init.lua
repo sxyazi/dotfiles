@@ -1,12 +1,4 @@
 return {
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd([[colorscheme tokyonight]])
-    end,
-  },
   { "folke/which-key.nvim", lazy = true },
   { "nvim-neorg/neorg", ft = "norg", config = true },
   { "dstein64/vim-startuptime", cmd = "StartupTime" },
