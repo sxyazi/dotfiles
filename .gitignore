@@ -1,3 +1,12 @@
-*/
-!kitty
-!tmux
+*
+
+!kitty/
+!kitty/**
+
+!tmux/
+!tmux/**
+tmux/plugins/
+
+!nvim/
+!nvim/**
+
