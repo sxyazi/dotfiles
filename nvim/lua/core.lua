@@ -18,5 +18,5 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.autoindent = true
 
+vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
-
