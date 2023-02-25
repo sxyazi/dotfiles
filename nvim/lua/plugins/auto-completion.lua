@@ -11,26 +11,38 @@ return {
       -- For luasnip users.
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
+
+      -- Vscode-like completion popup
+      "onsails/lspkind.nvim",
     },
     config = function()
       local cmp = require('cmp')
       local luasnip = require("luasnip")
+      local lspkind = require('lspkind')
       local mapping = {
-        ["<C-e>"] = cmp.mapping.abort(),
         ["<C-u>"] = cmp.mapping(function(fallback)
-          -- if cmp.visible() then
-            -- cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-          -- else
-            -- fallback()
-          -- end
-        end, {'i', 'c'}),
-        ["<C-e>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            if not cmp.get_selected_entry() then
+              cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            end
           else
             fallback()
           end
-        end, {'i', 'c'}),
+        end, { 'i', 'c' }),
+        ["<C-e>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            if not cmp.get_selected_entry() then
+              cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            end
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            if not cmp.get_selected_entry() then
+              cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            end
+          else
+            fallback()
+          end
+        end, { 'i', 'c' }),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.confirm({ select = true })
@@ -39,14 +51,14 @@ return {
           else
             fallback()
           end
-        end, {'i', 'c'}),
+        end, { 'i', 'c' }),
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if luasnip.jumpable( -1) then
             luasnip.jump( -1)
           else
             fallback()
           end
-        end, {'i', 'c'}),
+        end, { 'i', 'c' }),
       }
 
       cmp.setup({
@@ -63,7 +75,14 @@ return {
           { name = "luasnip" },
         }, {
           { name = "buffer" },
-        })
+        }),
+        formatting = {
+          format = lspkind.cmp_format({
+            mode = 'symbol',
+            maxwidth = 50,
+            ellipsis_char = '...',
+          })
+        }
       })
 
       -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -84,5 +103,16 @@ return {
         })
       })
     end
+  },
+
+  {
+    "windwp/nvim-autopairs",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-autopairs").setup {
+        disable_filetype = { "TelescopePrompt", "vim" },
+        check_ts = true
+      }
+    end,
   }
 }

@@ -3,7 +3,6 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.opt.mouse = ""
-vim.opt.clipboard = "unnamedplus"
 
 vim.opt.number = true
 vim.opt.cursorline = true

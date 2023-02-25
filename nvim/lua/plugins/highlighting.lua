@@ -1,9 +1,10 @@
 return {
-  { 
+  {
     "nvim-treesitter/nvim-treesitter",
-    event = "VeryLazy", 
+    event = "VeryLazy",
+    dependencies = { "windwp/nvim-ts-autotag" },
     config = function()
-      require("nvim-treesitter").setup({
+      require("nvim-treesitter.configs").setup {
         ensure_installed = {
           "bash",
           "c",
@@ -56,8 +57,8 @@ return {
         },
         highlight = { enable = true },
         indent = { enable = true },
-      })
+        autotag = { enable = true },
+      }
     end,
   },
 }
-
