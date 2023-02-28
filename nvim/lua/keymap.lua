@@ -1,15 +1,18 @@
 -- leader key
 vim.g.mapleader = " "
-vim.keymap.set("n", "<Space>", "<Nop>")
+vim.keymap.set("", "<Space>", "<Nop>")
 
 -- special keys
 vim.keymap.set("n", ";", ":")
+vim.keymap.set("", "<Tab>", "<Nop>") -- Will be handled in `plugins/completion.lua`
 
 -- reserved keys
 vim.keymap.set("", "s", "<Nop>")
 vim.keymap.set("", "S", "<Nop>")
 vim.keymap.set("", "j", "<Nop>")
 vim.keymap.set("", "J", "<Nop>")
+vim.keymap.set("", "o", "<Nop>")
+vim.keymap.set("", "O", "<Nop>")
 
 -- up, down, left, right
 vim.keymap.set("", "u", "k")

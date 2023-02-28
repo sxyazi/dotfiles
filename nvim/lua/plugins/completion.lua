@@ -1,12 +1,13 @@
 return {
   {
     "hrsh7th/nvim-cmp",
-    event = "VeryLazy",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
 
       -- For luasnip users.
       "L3MON4D3/LuaSnip",
@@ -17,7 +18,7 @@ return {
     },
     config = function()
       local cmp = require('cmp')
-      local luasnip = require("luasnip")
+      local luasnip = require('luasnip')
       local lspkind = require('lspkind')
       local mapping = {
         ["<C-u>"] = cmp.mapping(function(fallback)
@@ -43,13 +44,13 @@ return {
             fallback()
           end
         end, { 'i', 'c' }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
+        ["<Tab>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.confirm({ select = true })
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           else
-            fallback()
+            vim.api.nvim_feedkeys("\t", "n", false)
           end
         end, { 'i', 'c' }),
         ["<S-Tab>"] = cmp.mapping(function(fallback)
@@ -72,6 +73,7 @@ return {
         mapping = mapping,
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
+          { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
         }, {
           { name = "buffer" },
@@ -111,8 +113,31 @@ return {
     config = function()
       require("nvim-autopairs").setup {
         disable_filetype = { "TelescopePrompt", "vim" },
-        check_ts = true
+        check_ts = true,
       }
     end,
+  },
+
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    event = "BufRead",
+    dependencies = { "numToStr/Comment.nvim" },
+    config = function()
+      require('Comment').setup {
+        toggler = {
+          line = '<leader>c',
+          block = '<Nop>',
+        },
+        opleader = {
+          line = '<leader>c',
+          block = '<Nop>',
+        },
+        mappings = {
+          basic = true,
+          extra = false,
+        },
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+      }
+    end
   }
 }
