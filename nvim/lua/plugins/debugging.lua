@@ -1,13 +1,5 @@
 return {
   {
-    "mfussenegger/nvim-dap",
-    event = "BufRead",
-    config = function()
-
-    end
-  },
-
-  {
     "jay-babu/mason-nvim-dap.nvim",
     event = "BufRead",
     config = function()

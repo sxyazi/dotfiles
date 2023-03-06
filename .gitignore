@@ -1,7 +1,18 @@
 *
+!README.md
 
 !kitty/
 !kitty/**
+
+!zsh/
+!zsh/**
+zsh/plugins
+zsh/.zsh_history
+zsh/.zcompdump
+zsh/.zcompcache
+
+!fish/
+!fish/config.fish
 
 !tmux/
 !tmux/**

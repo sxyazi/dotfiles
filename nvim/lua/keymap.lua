@@ -57,8 +57,12 @@ vim.keymap.set("", "L", "<C-r>")
 
 -- copy, paste
 vim.keymap.set("", "Y", '"+y')
+vim.keymap.set("x", "p", '"_dP')
 
 -- search keys
-vim.keymap.set("n", "-", "nzz")
-vim.keymap.set("n", "=", "Nzz")
+vim.keymap.set("n", "-", "nzzv")
+vim.keymap.set("n", "=", "Nzzv")
 vim.keymap.set("n", ",c", ":nohlsearch<CR>", { noremap = true, silent = true })
+
+-- other keys
+vim.keymap.set("n", "J", "mzJ`z")

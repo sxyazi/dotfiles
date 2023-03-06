@@ -2,8 +2,7 @@ return {
   -- Configurations for build-in LSP of nvim
   {
     "neovim/nvim-lspconfig",
-    event = "VeryLazy",
-    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    event = "BufRead",
     config = function()
       local on_attach = function(client, bufnr)
         -- Format on save
@@ -20,6 +19,7 @@ return {
       local lsp = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
       lsp.lua_ls.setup {
         on_attach = on_attach,
         capabilities = capabilities,
@@ -35,17 +35,17 @@ return {
           },
         },
       }
-
       lsp.rust_analyzer.setup {
         on_attach = on_attach,
         capabilities = capabilities,
       }
+      lsp.marksman.setup {}
     end
   },
 
   {
     "williamboman/mason-lspconfig.nvim",
-    event = "VeryLazy",
+    event = "BufRead",
     config = function()
       require("mason-lspconfig").setup {
         ensure_installed = {
@@ -59,17 +59,17 @@ return {
           "html",
           "jsonls",
           "quick_lint_js", -- JavaScript
-          "ltex", -- LaTeX
+          "ltex",          -- LaTeX
           "lua_ls",
-          "marksman", -- Markdown
-          "ruff_lsp", -- Python
+          "marksman",      -- Markdown
+          "ruff_lsp",      -- Python
           "rust_analyzer",
-          "sqlls", -- SQL
-          "taplo", -- TOML
+          "sqlls",         -- SQL
+          "taplo",         -- TOML
           "tailwindcss",
-          "tsserver", -- TypeScript
-          "lemminx", -- XML
-          "yamlls", -- YAML
+          "tsserver",      -- TypeScript
+          "lemminx",       -- XML
+          "yamlls",        -- YAML
         },
         automatic_installation = true,
       }

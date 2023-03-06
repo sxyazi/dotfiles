@@ -3,76 +3,180 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = true,
   },
 
   -- File tree
   {
-    "nvim-tree/nvim-tree.lua",
-    event = "VeryLazy",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    keys = {
+      { "<leader>1", "<cmd>Neotree toggle<CR>", noremap = true, silent = true },
+      { "<leader>v", "<cmd>Neotree reveal<CR>", noremap = true, silent = true },
+    },
     config = function()
-      vim.keymap.set("n", "<leader>1", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
-      vim.keymap.set("n", "<leader>v", ":NvimTreeFindFile<CR>", { noremap = true, silent = true })
+      vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+      vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+      vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+      vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+      vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
-      require("nvim-tree").setup({
-        sort_by = "case_sensitive",
-        remove_keymaps = true,
-        view = { width = 30 },
-        renderer = { group_empty = true },
-        filters = { dotfiles = true },
-        on_attach = function(bufnr)
-          -- https://github.com/nvim-tree/nvim-tree.lua/blob/master/lua/nvim-tree/actions/init.lua#L7
-          local api = require('nvim-tree.api')
-          vim.keymap.set("n", "<Tab>", api.node.open.preview, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "<CR>", api.node.open.edit, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "k", api.fs.create, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "r", api.fs.rename_basename, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "R", api.fs.rename, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "d", api.fs.remove, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "x", api.fs.cut, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "c", api.fs.copy.node, { buffer = bufnr, noremap = true })
-          vim.keymap.set("n", "p", api.fs.paste, { buffer = bufnr, noremap = true })
-        end
+      require("neo-tree").setup({
+        popup_border_style = "rounded",
+        sort_case_insensitive = true,
+        sort_function = function(a, b)
+          if a.type == b.type then
+            return a.path > b.path
+          else
+            return a.type > b.type
+          end
+        end,
+        use_default_mappings = false,
+        -- ...source_selector...
+        event_handlers = {
+          {
+            event = 'after_render',
+            handler = function()
+              local state = require('neo-tree.sources.manager').get_state_for_window()
+              if state == nil then
+                return
+              end
+              if not require('neo-tree.sources.common.preview').is_active() then
+                state.config = { use_float = false }
+                state.commands.toggle_preview(state)
+              end
+            end
+          },
+          {
+            event = "neo_tree_window_before_close",
+            handler = function() require('neo-tree.sources.common.preview').hide() end
+          }
+        },
+        window = {
+          mappings = {
+                ["k"] = "toggle_preview",
+                ["<Tab>"] = function(state)
+              local node = state.tree:get_node()
+              if require("neo-tree.utils").is_expandable(node) then
+                state.commands.toggle_node(state)
+              else
+                state.commands.focus_preview()
+              end
+            end,
+                ["<CR>"] = function(state)
+              state.commands.open(state)
+
+              local node = state.tree:get_node()
+              if state.commands.clear_filte ~= nil then
+                state.commands.clear_filter(state)
+                require("neo-tree.sources.filesystem").navigate(state, state.path, node:get_id())
+              end
+            end,
+                ["a"] = "add",
+                ["A"] = "add_directory",
+                ["d"] = "delete",
+                ["r"] = "rename",
+                ["R"] = "refresh",
+                ["y"] = "copy_to_clipboard",
+                ["x"] = "cut_to_clipboard",
+                ["p"] = "paste_from_clipboard",
+                ["s"] = "prev_source",
+                ["S"] = "next_source",
+                ['z'] = 'close_all_subnodes',
+                ["Z"] = "close_all_nodes",
+            -- TODO
+            -- ["s"] = "open_vsplit",
+            -- ["S"] = "open_split",
+            -- ["t"] = "open_tabnew",
+            -- ["w"] = "open_with_window_picker",
+          }
+        },
+        filesystem = {
+          group_empty_dirs = true,
+          follow_current_file = true,
+          use_libuv_file_watcher = true,
+          window = {
+            mappings = {
+                  ["."] = "set_root",
+                  ["<BS>"] = "navigate_up",
+                  ["/"] = "filter_on_submit",
+                  ["<Esc>"] = "clear_filter",
+                  ["h"] = "toggle_hidden",
+                  ["m"] = "next_git_modified",
+                  ["M"] = "prev_git_modified",
+            }
+          }
+        },
+        buffers = {
+          window = {
+            mappings = {
+                  ["."] = "set_root",
+                  ["<BS>"] = "navigate_up",
+                  ["d"] = "buffer_delete",
+            }
+          },
+        },
+        git_status = {
+          window = {
+            mappings = {
+                  ["a"] = "git_add_file",
+                  ["A"] = "git_add_all",
+                  ["l"] = "git_unstage_file",
+                  ["r"] = "git_revert_file",
+                  ["c"] = "git_commit",
+                  ["C"] = "git_commit_and_push",
+                  ["p"] = "git_push",
+            }
+          }
+        }
       })
-    end,
+    end
   },
 
   -- Fuzz finder
   {
     "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
     dependencies = {
       'nvim-lua/plenary.nvim',
 
       -- Install a native sorter, for better performance
       "nvim-telescope/telescope-fzf-native.nvim",
     },
+    keys = {
+      {
+        '<leader>f',
+        function() require("telescope.builtin").find_files({ hidden = true, no_ignore = false }) end,
+        noremap = true,
+      },
+      { ',r', function() require("telescope.builtin").live_grep() end,   noremap = true },
+      { ',b', function() require("telescope.builtin").buffers() end,     noremap = true },
+      { ',e', function() require("telescope.builtin").diagnostics() end, noremap = true },
+    },
     config = function()
       local actions = require('telescope.actions')
-      local builtin = require("telescope.builtin")
-
       require('telescope').setup {
         defaults = {
           mappings = {
             -- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua#L133
             i = {
-              ["<CR>"] = actions.select_default,
-              ["<Esc>"] = actions.close,
-
-              ["<C-u>"] = actions.move_selection_previous,
-              ["<C-e>"] = actions.move_selection_next,
-              ["<M-u>"] = actions.preview_scrolling_up,
-              ["<M-e>"] = actions.preview_scrolling_down,
-
+                  ["<CR>"] = actions.select_default,
+                  ["<Esc>"] = actions.close,
+                  ["<C-u>"] = actions.move_selection_previous,
+                  ["<C-e>"] = actions.move_selection_next,
+                  ["<M-u>"] = actions.preview_scrolling_up,
+                  ["<M-e>"] = actions.preview_scrolling_down,
               -- TODO
               -- ["<C-x>"] = actions.select_horizontal,
               -- ["<C-v>"] = actions.select_vertical,
               -- ["<C-t>"] = actions.select_tab,
 
-              ["<Tab>"] = actions.toggle_selection,
-              ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+                  ["<Tab>"] = actions.toggle_selection,
+                  ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
             },
           }
         },
@@ -85,30 +189,15 @@ return {
           }
         }
       }
-      require('telescope').load_extension('fzf')
 
-      vim.keymap.set('n', '<leader>f', function()
-        builtin.find_files({
-          hidden = true,
-          no_ignore = false,
-        })
-      end)
-      vim.keymap.set('n', ',r', function()
-        builtin.live_grep()
-      end)
-      vim.keymap.set('n', ',b', function()
-        builtin.buffers()
-      end)
-      vim.keymap.set('n', ',e', function()
-        builtin.diagnostics()
-      end)
+      require('telescope').load_extension('fzf')
     end
   },
 
   -- Manage LSP/DAP servers
   {
     "williamboman/mason.nvim",
-    event = "VeryLazy",
+    cmd = "Mason",
     config = function()
       require("mason").setup {
         ui = {
@@ -120,7 +209,6 @@ return {
             uninstall_package = "x",
             cancel_installation = "<C-c>",
             apply_language_filter = "<C-f>",
-
             update_package = "<Nop>",
             check_package_version = "<Nop>",
             check_outdated_packages = "<Nop>",
@@ -133,36 +221,72 @@ return {
   -- Beautiful UIs for various LSP-related features, like hover doc
   {
     "glepnir/lspsaga.nvim",
-    event = "BufRead",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    keys = {
+      { "K",         "<cmd>Lspsaga hover_doc ++quiet ++keep<CR>", noremap = true,      silent = true },
+      { "<C-Enter>", "<cmd>Lspsaga code_action<CR>",              mode = { "n", "v" }, noremap = true, silent = true },
+      { "<leader>r", "<cmd>Lspsaga rename<CR>",                   noremap = true,      silent = true },
+      { "<leader>s", "<cmd>Lspsaga lsp_finder<CR>",               noremap = true,      silent = true },
+      { "<leader>l", "<cmd>Lspsaga show_line_diagnostics<CR>",    noremap = true,      silent = true },
+      { "<leader>b", "<cmd>Lspsaga goto_definition<CR>",          noremap = true,      silent = true },
+      { "<leader>B", "<cmd>Lspsaga peek_definition<CR>",          noremap = true,      silent = true },
+      { "<leader>m", "<cmd>Lspsaga goto_type_definition<CR>",     noremap = true,      silent = true },
+      { "<leader>M", "<cmd>Lspsaga peek_type_definition<CR>",     noremap = true,      silent = true },
+
+      {
+        "[e",
+        function() require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR }) end,
+        noremap = true,
+        silent = true
+      },
+      {
+        "]e",
+        function() require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR }) end,
+        noremap = true,
+        silent = true
+      },
+    },
     config = function()
       require("lspsaga").setup {
-
+        request_timeout = 10000,
+        finder = {
+          keys = {
+            jump_to = '<Tab>',
+            edit = { '<CR>' },
+            vsplit = '<Nop>', -- TODO
+            split = '<Nop>',  -- TODO
+            tabe = '<Nop>',   -- TODO
+            tabnew = '<Nop>', -- TODO
+            quit = { "q" },
+            close_in_preview = 'q'
+          },
+        },
+        definition = {
+          edit = "<CR>",
+          vsplit = "<Nop>", -- TODO
+          split = "<Nop>",  -- TODO
+          tabe = "<Nop>",   -- TODO
+          quit = "q",
+        },
+        lightbulb = { sign = false },
+        diagnostic = {
+          keys = {
+            exec_action = "<CR>",
+            go_action = "<Tab>"
+          },
+        },
+        rename = { quit = "q" },
+        outline = {
+          keys = {
+            jump = "<CR>",
+            expand_collapse = "<Tab>",
+          },
+        },
+        symbol_in_winbar = { enable = false },
       }
-
-      local opts = { noremap = true, silent = true }
-      vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>")
-      vim.keymap.set({ "n", "v", "i" }, "<C-Enter>", "<cmd>Lspsaga code_action<CR>", opts)
-
-      vim.keymap.set("n", "<leader>r", "<cmd>Lspsaga rename<CR>", opts)
-      vim.keymap.set("n", "<leader>s", "<cmd>Lspsaga lsp_finder<CR>", opts)
-      vim.keymap.set("n", "<leader>l", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
-
-      vim.keymap.set("n", "<leader>b", "<cmd>Lspsaga goto_definition<CR>", opts)
-      vim.keymap.set("n", "<leader>B", "<cmd>Lspsaga peek_definition<CR>", opts)
-
-      vim.keymap.set("n", "<leader>m", "<cmd>Lspsaga goto_type_definition<CR>", opts)
-      vim.keymap.set("n", "<leader>M", "<cmd>Lspsaga peek_type_definition<CR>", opts)
-
-      vim.keymap.set("n", "[e", function()
-        require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
-      end, opts)
-      vim.keymap.set("n", "]e", function()
-        require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
-      end, opts)
-
-      vim.keymap.set("n", "<M-o>", "<cmd>Lspsaga outline<CR>", opts)
-      vim.keymap.set({ "n", "t" }, "<M-z>", "<cmd>Lspsaga term_toggle<CR>", opts)
     end,
   },
 
@@ -209,12 +333,73 @@ return {
   {
     "RRethy/vim-illuminate",
     event = "BufRead",
+    dependencies = { "neovim/nvim-lspconfig" },
     config = function()
       require('illuminate').configure({
         providers = { 'lsp', 'treesitter', 'regex' },
         delay = 100,
-        filetypes_denylist = { "NvimTree" },
+        filetypes_denylist = { "NvimTree", "Outline" },
       })
+    end
+  },
+
+  -- Indent guides
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "BufRead",
+    dependencies = { "neovim/nvim-lspconfig" },
+    config = function()
+      require("indent_blankline").setup {
+        show_current_context = true,
+        show_current_context_start = true,
+      }
+    end
+  },
+
+  -- Terminal manager
+  {
+    "akinsho/toggleterm.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("toggleterm").setup {
+        open_mapping = "<C-\\>",
+      }
+
+      vim.api.nvim_create_autocmd("TermOpen term://*", {
+        group = vim.api.nvim_create_augroup("ToggleTerm", { clear = true }),
+        callback = function()
+          local opts = { buffer = 0 }
+          vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
+          vim.keymap.set('t', '<C-u>', [[<C-\><C-n>kkkkk]], opts)
+          vim.keymap.set('t', '<C-e>', [[<C-\><C-n>jjjjj]], opts)
+        end
+      })
+    end
+  },
+
+  -- A tree like view for symbols
+  {
+    "simrat39/symbols-outline.nvim",
+    keys = {
+      { "<leader>o", "<cmd>SymbolsOutline<CR>", noremap = true, silent = true },
+    },
+    config = function()
+      require("symbols-outline").setup {
+        keymaps = {
+          close = "q",
+          goto_location = "<CR>",
+          focus_location = "<Tab>",
+          hover_symbol = "<Nop>",
+          toggle_preview = "K",
+          rename_symbol = "r",
+          code_actions = "a",
+          fold = "n",
+          unfold = "i",
+          fold_all = "N",
+          unfold_all = "I",
+          fold_reset = "<Nop>",
+        },
+      }
     end
   }
 }

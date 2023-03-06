@@ -2,8 +2,19 @@ return {
   {
     "simrat39/rust-tools.nvim",
     event = "BufRead",
-    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "hrsh7th/cmp-nvim-lsp",
+    },
     config = function()
+      -- For better debugging experience
+      local dap_root = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
+      local dap_adapter = require("rust-tools.dap").get_codelldb_adapter(
+        dap_root .. "adapter/codelldb",
+        dap_root .. "lldb/lib/liblldb.so"
+      )
+      require("dap").adapters.rust = dap_adapter
+
       local rt = require("rust-tools")
       rt.setup({
         server = {
@@ -13,14 +24,11 @@ return {
             -- vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
           end,
         },
+        tools = {
+          hover_actions = { auto_focus = true },
+        },
+        dap = { adapter = dap_adapter },
       })
-
-      -- For better debugging experience
-      local codelldb_root = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
-      local codelldb_path = codelldb_root .. "adapter/codelldb"
-      local liblldb_path = codelldb_root .. "lldb/lib/liblldb.so"
-      require("dap").adapters.rust = require("rust-tools.dap").get_codelldb_adapter(
-        codelldb_path, liblldb_path)
     end
   }
 }

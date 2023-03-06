@@ -6,10 +6,11 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-calc",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lsp-signature-help",
 
-      -- For luasnip users.
+      -- For luasnip users
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
 
@@ -21,7 +22,7 @@ return {
       local luasnip = require('luasnip')
       local lspkind = require('lspkind')
       local mapping = {
-        ["<C-u>"] = cmp.mapping(function(fallback)
+            ["<C-u>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
             if not cmp.get_selected_entry() then
@@ -31,7 +32,7 @@ return {
             fallback()
           end
         end, { 'i', 'c' }),
-        ["<C-e>"] = cmp.mapping(function(fallback)
+            ["<C-e>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             if not cmp.get_selected_entry() then
               cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
@@ -44,7 +45,7 @@ return {
             fallback()
           end
         end, { 'i', 'c' }),
-        ["<Tab>"] = cmp.mapping(function()
+            ["<Tab>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.confirm({ select = true })
           elseif luasnip.expand_or_jumpable() then
@@ -53,9 +54,9 @@ return {
             vim.api.nvim_feedkeys("\t", "n", false)
           end
         end, { 'i', 'c' }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if luasnip.jumpable( -1) then
-            luasnip.jump( -1)
+            ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if luasnip.jumpable(-1) then
+            luasnip.jump(-1)
           else
             fallback()
           end
@@ -77,6 +78,7 @@ return {
           { name = "luasnip" },
         }, {
           { name = "buffer" },
+          { name = "calc" },
         }),
         formatting = {
           format = lspkind.cmp_format({
@@ -109,7 +111,7 @@ return {
 
   {
     "windwp/nvim-autopairs",
-    event = "VeryLazy",
+    event = "InsertEnter",
     config = function()
       require("nvim-autopairs").setup {
         disable_filetype = { "TelescopePrompt", "vim" },
