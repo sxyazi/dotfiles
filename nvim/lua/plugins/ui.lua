@@ -3,7 +3,38 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    config = true,
+    config = function()
+      require("lualine").setup {
+        options = {
+          ignore_focus = {
+            "dapui_watches",
+            "dapui_stacks",
+            "dapui_breakpoints",
+            "dapui_scopes",
+            "dapui_console",
+            "dap-repl",
+          },
+        },
+      }
+    end,
+  },
+
+  -- Improve the default `vim.ui` interfaces
+  {
+    "stevearc/dressing.nvim",
+    lazy = true,
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.input(...)
+      end
+    end,
   },
 
   -- File tree
@@ -31,22 +62,22 @@ return {
         sort_case_insensitive = true,
         sort_function = function(a, b)
           if a.type == b.type then
-            return a.path > b.path
+            return a.path < b.path
           else
-            return a.type > b.type
+            return a.type < b.type
           end
         end,
         use_default_mappings = false,
         -- ...source_selector...
         event_handlers = {
           {
-            event = 'after_render',
+            event = "after_render",
             handler = function()
-              local state = require('neo-tree.sources.manager').get_state_for_window()
+              local state = require("neo-tree.sources.manager").get_state_for_window()
               if state == nil then
                 return
               end
-              if not require('neo-tree.sources.common.preview').is_active() then
+              if not require("neo-tree.sources.common.preview").is_active() then
                 state.config = { use_float = false }
                 state.commands.toggle_preview(state)
               end
@@ -54,7 +85,7 @@ return {
           },
           {
             event = "neo_tree_window_before_close",
-            handler = function() require('neo-tree.sources.common.preview').hide() end
+            handler = function() require("neo-tree.sources.common.preview").hide() end
           }
         },
         window = {
@@ -87,7 +118,7 @@ return {
                 ["p"] = "paste_from_clipboard",
                 ["s"] = "prev_source",
                 ["S"] = "next_source",
-                ['z'] = 'close_all_subnodes',
+                ["z"] = "close_all_subnodes",
                 ["Z"] = "close_all_nodes",
             -- TODO
             -- ["s"] = "open_vsplit",
@@ -142,43 +173,69 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
-      'nvim-lua/plenary.nvim',
+      "nvim-lua/plenary.nvim",
 
       -- Install a native sorter, for better performance
       "nvim-telescope/telescope-fzf-native.nvim",
     },
     keys = {
       {
-        '<leader>f',
+        "<leader>f",
         function() require("telescope.builtin").find_files({ hidden = true, no_ignore = false }) end,
         noremap = true,
       },
-      { ',r', function() require("telescope.builtin").live_grep() end,   noremap = true },
-      { ',b', function() require("telescope.builtin").buffers() end,     noremap = true },
-      { ',e', function() require("telescope.builtin").diagnostics() end, noremap = true },
+      { ",r", function() require("telescope.builtin").live_grep() end,   noremap = true },
+      { ",b", function() require("telescope.builtin").buffers() end,     noremap = true },
+      { ",e", function() require("telescope.builtin").diagnostics() end, noremap = true },
     },
     config = function()
-      local actions = require('telescope.actions')
-      require('telescope').setup {
+      local actions = require("telescope.actions")
+      local trouble = require("trouble.providers.telescope")
+
+      local vimgrep_arguments = { unpack(require("telescope.config").values.vimgrep_arguments) }
+      table.insert(vimgrep_arguments, "--hidden")
+      table.insert(vimgrep_arguments, "--glob")
+      table.insert(vimgrep_arguments, "!lazy-lock.json")
+
+      require("telescope").setup {
         defaults = {
           mappings = {
             -- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua#L133
             i = {
-                  ["<CR>"] = actions.select_default,
-                  ["<Esc>"] = actions.close,
                   ["<C-u>"] = actions.move_selection_previous,
                   ["<C-e>"] = actions.move_selection_next,
                   ["<M-u>"] = actions.preview_scrolling_up,
                   ["<M-e>"] = actions.preview_scrolling_down,
+                  ["<C-T>"] = trouble.open_with_trouble,
               -- TODO
               -- ["<C-x>"] = actions.select_horizontal,
               -- ["<C-v>"] = actions.select_vertical,
               -- ["<C-t>"] = actions.select_tab,
-
-                  ["<Tab>"] = actions.toggle_selection,
-                  ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
             },
-          }
+            n = {
+                  ["<Esc>"] = actions.nop,
+                  ["q"] = actions.close,
+                  ["u"] = actions.move_selection_previous,
+                  ["e"] = actions.move_selection_next,
+                  ["<C-u>"] = actions.preview_scrolling_up,
+                  ["<C-e>"] = actions.preview_scrolling_down,
+                  ["t"] = trouble.open_with_trouble,
+              -- TODO
+              -- ["x"] = actions.select_horizontal,
+              -- ["v"] = actions.select_vertical,
+              -- ["t"] = actions.select_tab,
+            }
+          },
+          vimgrep_arguments = vimgrep_arguments,
+          buffer_previewer_maker = function(filepath, bufnr, opts)
+            filepath = vim.fn.expand(filepath)
+            vim.loop.fs_stat(filepath, function(_, stat)
+              if not stat then return end
+              if stat.size > 51200 then return end -- less than 50KiB
+
+              require("telescope.previewers").buffer_previewer_maker(filepath, bufnr, opts)
+            end)
+          end,
         },
         extensions = {
           fzf = {
@@ -190,7 +247,7 @@ return {
         }
       }
 
-      require('telescope').load_extension('fzf')
+      require("telescope").load_extension("fzf")
     end
   },
 
@@ -254,14 +311,14 @@ return {
         request_timeout = 10000,
         finder = {
           keys = {
-            jump_to = '<Tab>',
-            edit = { '<CR>' },
-            vsplit = '<Nop>', -- TODO
-            split = '<Nop>',  -- TODO
-            tabe = '<Nop>',   -- TODO
-            tabnew = '<Nop>', -- TODO
+            jump_to = "<Tab>",
+            edit = { "<CR>" },
+            vsplit = "<Nop>", -- TODO
+            split = "<Nop>",  -- TODO
+            tabe = "<Nop>",   -- TODO
+            tabnew = "<Nop>", -- TODO
             quit = { "q" },
-            close_in_preview = 'q'
+            close_in_preview = "q"
           },
         },
         definition = {
@@ -290,39 +347,70 @@ return {
     end,
   },
 
+  -- A pretty list to show diagnostics, references, and quickfix results
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { ",e", "<cmd>TroubleToggle workspace_diagnostics<CR>", noremap = true, silent = true },
+      { ",E", "<cmd>TroubleToggle document_diagnostics<CR>",  noremap = true, silent = true },
+      { ",f", "<cmd>TroubleToggle quickfix<CR>",              noremap = true, silent = true },
+    },
+    config = function()
+      require("trouble").setup {
+        action_keys = {
+          previous = "u",
+          next = "k",
+          jump = "<Tab>",
+          jump_close = "<CR>",
+          -- TODO
+          -- open_split = { "<c-x>" },
+          -- open_vsplit = { "<c-v>" },
+          -- open_tab = { "<c-t>" },
+          hover = "K",
+          toggle_mode = "s",
+          toggle_preview = "p",
+          toggle_fold = "zz",
+          open_folds = "zr",
+          close_folds = "zc",
+        },
+      }
+    end
+  },
+
   -- Git integration for buffers
   {
-    'lewis6991/gitsigns.nvim',
-    event = "BufRead",
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
-      require('gitsigns').setup {
+      require("gitsigns").setup {
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
           local opts = { buffer = bufnr }
-          vim.keymap.set({ 'n', 'v' }, '<leader>hs', gs.stage_hunk, opts)
-          vim.keymap.set('n', '<leader>hS', gs.stage_buffer, opts)
-          vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, opts)
+          vim.keymap.set({ "n", "v" }, "<leader>hs", gs.stage_hunk, opts)
+          vim.keymap.set("n", "<leader>hS", gs.stage_buffer, opts)
+          vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, opts)
 
-          vim.keymap.set({ 'n', 'v' }, '<leader>hr', gs.reset_hunk, opts)
-          vim.keymap.set('n', '<leader>hR', gs.reset_buffer, opts)
+          vim.keymap.set({ "n", "v" }, "<leader>hr", gs.reset_hunk, opts)
+          vim.keymap.set("n", "<leader>hR", gs.reset_buffer, opts)
 
-          vim.keymap.set('n', '<leader>hp', gs.preview_hunk, opts)
+          vim.keymap.set("n", "<leader>hp", gs.preview_hunk, opts)
 
-          vim.keymap.set('n', '<leader>hb', function() gs.blame_line { full = true } end, opts)
-          vim.keymap.set('n', '<leader>hd', gs.diffthis, opts)
-          vim.keymap.set('n', '<leader>hD', function() gs.diffthis('~') end, opts)
+          vim.keymap.set("n", "<leader>hb", function() gs.blame_line { full = true } end, opts)
+          vim.keymap.set("n", "<leader>hd", gs.diffthis, opts)
+          vim.keymap.set("n", "<leader>hD", function() gs.diffthis("~") end, opts)
 
           opts = { expr = true, buffer = bufnr }
-          vim.keymap.set('n', ']c', function()
-            if vim.wo.diff then return ']c' end
+          vim.keymap.set("n", "]c", function()
+            if vim.wo.diff then return "]c" end
             vim.schedule(function() gs.next_hunk() end)
-            return '<Ignore>'
+            return "<Ignore>"
           end, opts)
 
-          vim.keymap.set('n', '[c', function()
-            if vim.wo.diff then return '[c' end
+          vim.keymap.set("n", "[c", function()
+            if vim.wo.diff then return "[c" end
             vim.schedule(function() gs.prev_hunk() end)
-            return '<Ignore>'
+            return "<Ignore>"
           end, opts)
         end
       }
@@ -332,11 +420,11 @@ return {
   -- Highlighting other uses of the word under the cursor
   {
     "RRethy/vim-illuminate",
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = { "neovim/nvim-lspconfig" },
     config = function()
-      require('illuminate').configure({
-        providers = { 'lsp', 'treesitter', 'regex' },
+      require("illuminate").configure({
+        providers = { "lsp", "treesitter", "regex" },
         delay = 100,
         filetypes_denylist = { "NvimTree", "Outline" },
       })
@@ -346,7 +434,7 @@ return {
   -- Indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = { "neovim/nvim-lspconfig" },
     config = function()
       require("indent_blankline").setup {
@@ -356,28 +444,7 @@ return {
     end
   },
 
-  -- Terminal manager
-  {
-    "akinsho/toggleterm.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("toggleterm").setup {
-        open_mapping = "<C-\\>",
-      }
-
-      vim.api.nvim_create_autocmd("TermOpen term://*", {
-        group = vim.api.nvim_create_augroup("ToggleTerm", { clear = true }),
-        callback = function()
-          local opts = { buffer = 0 }
-          vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
-          vim.keymap.set('t', '<C-u>', [[<C-\><C-n>kkkkk]], opts)
-          vim.keymap.set('t', '<C-e>', [[<C-\><C-n>jjjjj]], opts)
-        end
-      })
-    end
-  },
-
-  -- A tree like view for symbols
+  -- A tree-like view for symbols
   {
     "simrat39/symbols-outline.nvim",
     keys = {

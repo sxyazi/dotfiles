@@ -20,4 +20,5 @@ tmux/plugins/
 
 !nvim/
 !nvim/**
+nvim/undo
 

@@ -1,51 +1,18 @@
+local lsp_attached = function(client, bufnr)
+  -- Format on save
+  if client.server_capabilities.documentFormattingProvider then
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
+      buffer = bufnr,
+      callback = function() vim.lsp.buf.format({ bufnr = bufnr }) end
+    })
+  end
+end
+
 return {
-  -- Configurations for build-in LSP of nvim
-  {
-    "neovim/nvim-lspconfig",
-    event = "BufRead",
-    config = function()
-      local on_attach = function(client, bufnr)
-        -- Format on save
-        if client.server_capabilities.documentFormattingProvider then
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = vim.api.nvim_create_augroup("Format", { clear = true }),
-            buffer = bufnr,
-            callback = function() vim.lsp.buf.formatting_seq_sync() end
-          })
-        end
-      end
-
-      -- Set up lspconfig
-      local lsp = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-      lsp.lua_ls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-            telemetry = { enable = false },
-          },
-        },
-      }
-      lsp.rust_analyzer.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-      }
-      lsp.marksman.setup {}
-    end
-  },
-
   {
     "williamboman/mason-lspconfig.nvim",
-    event = "BufRead",
+    event = "VeryLazy",
     config = function()
       require("mason-lspconfig").setup {
         ensure_installed = {
@@ -59,7 +26,7 @@ return {
           "html",
           "jsonls",
           "quick_lint_js", -- JavaScript
-          "ltex",          -- LaTeX
+          "texlab",        -- LaTeX
           "lua_ls",
           "marksman",      -- Markdown
           "ruff_lsp",      -- Python
@@ -74,5 +41,60 @@ return {
         automatic_installation = true,
       }
     end,
+  },
+
+  -- As a complement to Mason, integrating non-LSPs like Prettier
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        on_attach = lsp_attached,
+        sources = {
+          null_ls.builtins.formatting.prettierd,
+          null_ls.builtins.diagnostics.eslint_d.with({
+            diagnostics_format = "[eslint] #{m}\n(#{c})"
+          }),
+        },
+      })
+    end
+  },
+
+  -- Configurations for build-in LSP of nvim
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      -- Set up lspconfig
+      local lsp = require("lspconfig")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+      lsp.lua_ls.setup {
+        on_attach = lsp_attached,
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            runtime = { version = "LuaJIT" },
+            diagnostics = { globals = { "vim" } },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+            telemetry = { enable = false },
+          },
+        },
+      }
+      lsp.rust_analyzer.setup {
+        on_attach = lsp_attached,
+        capabilities = capabilities,
+      }
+      lsp.marksman.setup {
+        on_attach = lsp_attached,
+        capabilities = capabilities,
+      }
+    end
   },
 }

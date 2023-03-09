@@ -2,7 +2,6 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-vim.opt.mouse = ""
 vim.opt.swapfile = false
 vim.opt.undodir = os.getenv("HOME") .. "/.config/nvim/undo"
 vim.opt.undofile = true
@@ -21,5 +20,33 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldenable = false
+
+vim.opt.shortmess:append("I")
 vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
+
+
+-- Restore cursor position when opening a file
+-- https://github.com/neovim/neovim/issues/16339#issuecomment-1457394370
+vim.api.nvim_create_autocmd("BufRead", {
+  callback = function(opts)
+    vim.api.nvim_create_autocmd("BufWinEnter", {
+      once = true,
+      buffer = opts.buf,
+      callback = function()
+        local ft = vim.bo[opts.buf].filetype
+        local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+        if
+            not (ft:match("commit") and ft:match("rebase"))
+            and last_known_line > 1
+            and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+        then
+          vim.api.nvim_feedkeys('g`"', "x", false)
+        end
+      end,
+    })
+  end,
+})

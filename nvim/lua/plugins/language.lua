@@ -1,7 +1,7 @@
 return {
   {
     "simrat39/rust-tools.nvim",
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       "mfussenegger/nvim-dap",
       "hrsh7th/cmp-nvim-lsp",
@@ -11,9 +11,8 @@ return {
       local dap_root = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
       local dap_adapter = require("rust-tools.dap").get_codelldb_adapter(
         dap_root .. "adapter/codelldb",
-        dap_root .. "lldb/lib/liblldb.so"
+        dap_root .. "lldb/lib/liblldb.dylib"
       )
-      require("dap").adapters.rust = dap_adapter
 
       local rt = require("rust-tools")
       rt.setup({

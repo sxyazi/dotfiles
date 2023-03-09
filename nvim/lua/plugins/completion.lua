@@ -1,5 +1,12 @@
 return {
   {
+    "kylechui/nvim-surround",
+    event = { "BufReadPost", "BufNewFile" },
+    commit = "1d83fecd27c6b4b66cc529930552d205fbecb660",
+    config = true,
+  },
+
+  {
     "hrsh7th/nvim-cmp",
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
@@ -18,9 +25,9 @@ return {
       "onsails/lspkind.nvim",
     },
     config = function()
-      local cmp = require('cmp')
-      local luasnip = require('luasnip')
-      local lspkind = require('lspkind')
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      local lspkind = require("lspkind")
       local mapping = {
             ["<C-u>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
@@ -31,7 +38,7 @@ return {
           else
             fallback()
           end
-        end, { 'i', 'c' }),
+        end, { "i", "c" }),
             ["<C-e>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             if not cmp.get_selected_entry() then
@@ -44,7 +51,7 @@ return {
           else
             fallback()
           end
-        end, { 'i', 'c' }),
+        end, { "i", "c" }),
             ["<Tab>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.confirm({ select = true })
@@ -53,14 +60,14 @@ return {
           else
             vim.api.nvim_feedkeys("\t", "n", false)
           end
-        end, { 'i', 'c' }),
+        end, { "i", "c" }),
             ["<S-Tab>"] = cmp.mapping(function(fallback)
           if luasnip.jumpable(-1) then
             luasnip.jump(-1)
           else
             fallback()
           end
-        end, { 'i', 'c' }),
+        end, { "i", "c" }),
       }
 
       cmp.setup({
@@ -76,15 +83,15 @@ return {
           { name = "nvim_lsp" },
           { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
-        }, {
           { name = "buffer" },
+          { name = "path" },
           { name = "calc" },
         }),
         formatting = {
           format = lspkind.cmp_format({
-            mode = 'symbol',
+            mode = "symbol",
             maxwidth = 50,
-            ellipsis_char = '...',
+            ellipsis_char = "...",
           })
         }
       })
@@ -93,17 +100,16 @@ return {
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = mapping,
         sources = {
-          { name = "buffer" }
+          { name = "buffer" },
         }
       })
 
       -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline(':', {
+      cmp.setup.cmdline(":", {
         mapping = mapping,
         sources = cmp.config.sources({
-          { name = 'path' }
-        }, {
-          { name = 'cmdline' }
+          { name = "path" },
+          { name = "cmdline" },
         })
       })
     end
@@ -121,25 +127,23 @@ return {
   },
 
   {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    event = "BufRead",
-    dependencies = { "numToStr/Comment.nvim" },
+    "echasnovski/mini.comment",
+    event = "VeryLazy",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "JoosepAlviste/nvim-ts-context-commentstring",
+    },
     config = function()
-      require('Comment').setup {
-        toggler = {
-          line = '<leader>c',
-          block = '<Nop>',
-        },
-        opleader = {
-          line = '<leader>c',
-          block = '<Nop>',
-        },
+      require("mini.comment").setup {
         mappings = {
-          basic = true,
-          extra = false,
+          comment = '<leader>c',
+          comment_line = '<leader>c',
+          textobject = '<leader>c',
         },
-        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+        hooks = {
+          pre = function() require("ts_context_commentstring.internal").update_commentstring({}) end,
+        },
       }
     end
-  }
+  },
 }
