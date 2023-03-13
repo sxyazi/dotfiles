@@ -4,7 +4,7 @@ local lsp_attached = function(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
       buffer = bufnr,
-      callback = function() vim.lsp.buf.format({ bufnr = bufnr }) end
+      callback = function() vim.lsp.buf.format({ timeout_ms = 5000, bufnr = bufnr }) end
     })
   end
 end
@@ -88,6 +88,10 @@ return {
         },
       }
       lsp.rust_analyzer.setup {
+        on_attach = lsp_attached,
+        capabilities = capabilities,
+      }
+      lsp.ruff_lsp.setup {
         on_attach = lsp_attached,
         capabilities = capabilities,
       }

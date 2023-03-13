@@ -52,8 +52,8 @@ vim.keymap.set("v", "<C-u>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true
 vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 
 -- redo, undo
-vim.keymap.set("", "l", "u")
-vim.keymap.set("", "L", "<C-r>")
+vim.keymap.set("n", "l", "u", { noremap = true })
+vim.keymap.set("n", "L", "<C-r>", { noremap = true })
 
 -- copy, paste
 vim.keymap.set("", "Y", '"+y')
@@ -65,3 +65,6 @@ vim.keymap.set({ "n", "v" }, "=", "Nzzv")
 
 -- other keys
 vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "<Enter>",
+  [[ :lua require("nvim-treesitter.textsubjects").select("textsubjects-smart", false, vim.fn.getpos("."), vim.fn.getpos("."))<CR> ]],
+  { noremap = true, silent = true })

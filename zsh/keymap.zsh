@@ -6,12 +6,12 @@ function vi-yank-sysclip {
 zle -N vi-yank-sysclip
 
 # Menu
-bindkey -rpM menuselect ''
-bindkey -M menuselect '^[' send-break
-bindkey -M menuselect 'u' up-line-or-history
-bindkey -M menuselect 'e' down-line-or-history
-bindkey -M menuselect 'n' backward-char
-bindkey -M menuselect 'i' forward-char
+bindkey -rpM menuselect ""
+bindkey -M menuselect "^[" send-break
+bindkey -M menuselect "u"  up-line-or-history
+bindkey -M menuselect "e"  down-line-or-history
+bindkey -M menuselect "n"  backward-char
+bindkey -M menuselect "i"  forward-char
 
 # Command
 bindkey -rpM command ""
@@ -20,15 +20,18 @@ bindkey -M command "^M" accept-line
 
 # Normal mode
 bindkey -rpM vicmd ""
-bindkey -M vicmd "^L" clear-screen
-bindkey -M vicmd "^M" accept-line
-bindkey -M vicmd 'u' up-line-or-history
-bindkey -M vicmd 'e' down-line-or-history
-bindkey -M vicmd 'n' vi-backward-char
-bindkey -M vicmd "N" vi-first-non-blank
-bindkey -M vicmd "^N" vi-insert-bol
-bindkey -M vicmd 'i' vi-forward-char
-bindkey -M vicmd "I" vi-end-of-line
+bindkey -M vicmd "^[[A"     history-substring-search-up    # Up
+bindkey -M vicmd "^[[B"     history-substring-search-down  # Down
+bindkey -M vicmd "^W"       backward-delete-word
+bindkey -M vicmd "^L"       clear-screen
+bindkey -M vicmd "^M"       accept-line
+bindkey -M vicmd "u"        up-line
+bindkey -M vicmd "e"        down-line
+bindkey -M vicmd "n"        vi-backward-char
+bindkey -M vicmd "N"        vi-first-non-blank
+bindkey -M vicmd "^N"       vi-insert-bol
+bindkey -M vicmd "i"        vi-forward-char
+bindkey -M vicmd "I"        vi-end-of-line
 bindkey -M vicmd "^[[59;5u" vi-add-eol  # ^; in CSI u, configured in kitty.conf
 
 bindkey -M vicmd "b" vi-backward-word
@@ -63,16 +66,16 @@ bindkey -M vicmd "V" visual-line-mode
 bindkey -M vicmd "l" undo
 bindkey -M vicmd "L" redo
 
-bindkey -M vicmd ";" execute-named-cmd
-bindkey -M vicmd "." vi-repeat-change
-bindkey -M vicmd "," edit-command-line
+bindkey -M vicmd ";"  execute-named-cmd
+bindkey -M vicmd "."  vi-repeat-change
+bindkey -M vicmd ","  edit-command-line
 bindkey -M vicmd "\-" vi-repeat-search
-bindkey -M vicmd "=" vi-rev-repeat-search
+bindkey -M vicmd "="  vi-rev-repeat-search
 
 bindkey -M vicmd "0"-"9" digit-argument
-bindkey -M vicmd "<" vi-unindent
-bindkey -M vicmd ">" vi-indent
-bindkey -M vicmd "J" vi-join
+bindkey -M vicmd "<"     vi-unindent
+bindkey -M vicmd ">"     vi-indent
+bindkey -M vicmd "J"     vi-join
 
 bindkey -M vicmd "gu" vi-down-case
 bindkey -M vicmd "gU" vi-up-case
@@ -83,29 +86,34 @@ bindkey -M vicmd "gg" beginning-of-buffer-or-history
 bindkey -M vicmd "fb" vi-match-bracket
 
 # Insert mode
-bindkey -M viins "^?" backward-delete-char
-bindkey -M viins "^N" vi-insert-bol
+bindkey -M viins "^[[A"     history-substring-search-up    # Up
+bindkey -M viins "^[[B"     history-substring-search-down  # Down
+bindkey -M viins "^?"       backward-delete-char           # Backspace
+bindkey -M viins "^W"       backward-delete-word
+bindkey -M viins "^N"       vi-insert-bol
 bindkey -M viins "^[[59;5u" vi-add-eol  # ^; in CSI u, configured in kitty.conf
 
 # Visual mode
 bindkey -rpM visual ""
-bindkey -M visual "^[" deactivate-region
-bindkey -M visual "u" up-line
-bindkey -M visual "e" down-line
-bindkey -M visual "aw" select-a-word
-bindkey -M visual "aW" select-a-blank-word
-bindkey -M visual "aa" select-a-shell-word
-bindkey -M visual "kw" select-in-word
-bindkey -M visual "kW" select-in-blank-word
-bindkey -M visual "kk" select-in-shell-word
-bindkey -M visual "x" vi-delete
-bindkey -M visual "p" put-replace-selection
+bindkey -M visual "^["   deactivate-region              # Esc
+bindkey -M visual "^[[A" history-substring-search-up    # Up
+bindkey -M visual "^[[B" history-substring-search-down  # Down
+bindkey -M visual "u"    up-line
+bindkey -M visual "e"    down-line
+bindkey -M visual "aw"   select-a-word
+bindkey -M visual "aW"   select-a-blank-word
+bindkey -M visual "aa"   select-a-shell-word
+bindkey -M visual "kw"   select-in-word
+bindkey -M visual "kW"   select-in-blank-word
+bindkey -M visual "kk"   select-in-shell-word
+bindkey -M visual "x"    vi-delete
+bindkey -M visual "p"    put-replace-selection
 
 # Operator pending mode
 bindkey -rpM viopp ""
 bindkey -M viopp "^[" vi-cmd-mode
-bindkey -M viopp "u" down-line
-bindkey -M viopp "e" up-line
+bindkey -M viopp "u"  up-line
+bindkey -M viopp "e"  down-line
 bindkey -M viopp "aw" select-a-word
 bindkey -M viopp "aW" select-a-blank-word
 bindkey -M viopp "aa" select-a-shell-word

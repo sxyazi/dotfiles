@@ -28,6 +28,21 @@ vim.opt.shortmess:append("I")
 vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
 
+-- Diagnostic
+vim.opt.updatetime = 300
+vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float()]])
+
+vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+
+vim.diagnostic.config({
+  virtual_text = false,
+  float = { header = '', prefix = '' },
+  update_in_insert = true,
+  severity_sort = true,
+})
 
 -- Restore cursor position when opening a file
 -- https://github.com/neovim/neovim/issues/16339#issuecomment-1457394370

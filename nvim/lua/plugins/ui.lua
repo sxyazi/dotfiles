@@ -35,6 +35,33 @@ return {
         return vim.ui.input(...)
       end
     end,
+    opts = {
+      input = {
+        insert_only = false,
+        mappings = {
+          n = {
+            ["<CR>"] = "Confirm",
+            ["<Esc>"] = "Close",
+            ["<C-w>"] = "Close",
+          },
+          i = {
+            ["<CR>"] = "Confirm",
+            ["<C-w>"] = "Close",
+            ["<C-u>"] = "HistoryPrev",
+            ["<C-e>"] = "HistoryNext",
+          },
+        },
+      },
+      select = {
+        builtin = {
+          mappings = {
+            ["<CR>"] = "Confirm",
+            ["<Esc>"] = "Close",
+            ["<C-w>"] = "Close",
+          },
+        },
+      },
+    }
   },
 
   -- File tree
@@ -52,10 +79,6 @@ return {
     },
     config = function()
       vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
-      vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
-      vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
-      vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
-      vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
       require("neo-tree").setup({
         popup_border_style = "rounded",
@@ -67,6 +90,7 @@ return {
             return a.type < b.type
           end
         end,
+        use_popups_for_input = false,
         use_default_mappings = false,
         -- ...source_selector...
         event_handlers = {
@@ -90,8 +114,8 @@ return {
         },
         window = {
           mappings = {
-                ["k"] = "toggle_preview",
-                ["<Tab>"] = function(state)
+            ["k"] = "toggle_preview",
+            ["<Tab>"] = function(state)
               local node = state.tree:get_node()
               if require("neo-tree.utils").is_expandable(node) then
                 state.commands.toggle_node(state)
@@ -99,7 +123,7 @@ return {
                 state.commands.focus_preview()
               end
             end,
-                ["<CR>"] = function(state)
+            ["<CR>"] = function(state)
               state.commands.open(state)
 
               local node = state.tree:get_node()
@@ -108,18 +132,18 @@ return {
                 require("neo-tree.sources.filesystem").navigate(state, state.path, node:get_id())
               end
             end,
-                ["a"] = "add",
-                ["A"] = "add_directory",
-                ["d"] = "delete",
-                ["r"] = "rename",
-                ["R"] = "refresh",
-                ["y"] = "copy_to_clipboard",
-                ["x"] = "cut_to_clipboard",
-                ["p"] = "paste_from_clipboard",
-                ["s"] = "prev_source",
-                ["S"] = "next_source",
-                ["z"] = "close_all_subnodes",
-                ["Z"] = "close_all_nodes",
+            ["a"] = "add",
+            ["A"] = "add_directory",
+            ["d"] = "delete",
+            ["r"] = "rename",
+            ["R"] = "refresh",
+            ["y"] = "copy_to_clipboard",
+            ["x"] = "cut_to_clipboard",
+            ["p"] = "paste_from_clipboard",
+            ["s"] = "prev_source",
+            ["S"] = "next_source",
+            ["z"] = "close_all_subnodes",
+            ["Z"] = "close_all_nodes",
             -- TODO
             -- ["s"] = "open_vsplit",
             -- ["S"] = "open_split",
@@ -133,35 +157,35 @@ return {
           use_libuv_file_watcher = true,
           window = {
             mappings = {
-                  ["."] = "set_root",
-                  ["<BS>"] = "navigate_up",
-                  ["/"] = "filter_on_submit",
-                  ["<Esc>"] = "clear_filter",
-                  ["h"] = "toggle_hidden",
-                  ["m"] = "next_git_modified",
-                  ["M"] = "prev_git_modified",
+              ["."] = "set_root",
+              ["<BS>"] = "navigate_up",
+              ["/"] = "filter_on_submit",
+              ["<Esc>"] = "clear_filter",
+              ["h"] = "toggle_hidden",
+              ["m"] = "next_git_modified",
+              ["M"] = "prev_git_modified",
             }
           }
         },
         buffers = {
           window = {
             mappings = {
-                  ["."] = "set_root",
-                  ["<BS>"] = "navigate_up",
-                  ["d"] = "buffer_delete",
+              ["."] = "set_root",
+              ["<BS>"] = "navigate_up",
+              ["d"] = "buffer_delete",
             }
           },
         },
         git_status = {
           window = {
             mappings = {
-                  ["a"] = "git_add_file",
-                  ["A"] = "git_add_all",
-                  ["l"] = "git_unstage_file",
-                  ["r"] = "git_revert_file",
-                  ["c"] = "git_commit",
-                  ["C"] = "git_commit_and_push",
-                  ["p"] = "git_push",
+              ["a"] = "git_add_file",
+              ["A"] = "git_add_all",
+              ["l"] = "git_unstage_file",
+              ["r"] = "git_revert_file",
+              ["c"] = "git_commit",
+              ["C"] = "git_commit_and_push",
+              ["p"] = "git_push",
             }
           }
         }
@@ -202,24 +226,28 @@ return {
           mappings = {
             -- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua#L133
             i = {
-                  ["<C-u>"] = actions.move_selection_previous,
-                  ["<C-e>"] = actions.move_selection_next,
-                  ["<M-u>"] = actions.preview_scrolling_up,
-                  ["<M-e>"] = actions.preview_scrolling_down,
-                  ["<C-T>"] = trouble.open_with_trouble,
+              ["<C-w>"] = actions.close,
+              ["<C-u>"] = actions.move_selection_previous,
+              ["<C-e>"] = actions.move_selection_next,
+              ["<M-u>"] = actions.preview_scrolling_up,
+              ["<M-e>"] = actions.preview_scrolling_down,
+              ["<C-t>"] = trouble.open_with_trouble,
               -- TODO
               -- ["<C-x>"] = actions.select_horizontal,
               -- ["<C-v>"] = actions.select_vertical,
               -- ["<C-t>"] = actions.select_tab,
             },
             n = {
-                  ["<Esc>"] = actions.nop,
-                  ["q"] = actions.close,
-                  ["u"] = actions.move_selection_previous,
-                  ["e"] = actions.move_selection_next,
-                  ["<C-u>"] = actions.preview_scrolling_up,
-                  ["<C-e>"] = actions.preview_scrolling_down,
-                  ["t"] = trouble.open_with_trouble,
+              ["<Esc>"] = actions.close,
+              ["<C-w>"] = actions.close,
+              ["u"] = actions.move_selection_previous,
+              ["e"] = actions.move_selection_next,
+              ["<C-u>"] = actions.move_selection_previous,
+              ["<C-e>"] = actions.move_selection_next,
+              ["<M-u>"] = actions.preview_scrolling_up,
+              ["<M-e>"] = actions.preview_scrolling_down,
+              ["t"] = trouble.open_with_trouble,
+              ["<C-t>"] = trouble.open_with_trouble,
               -- TODO
               -- ["x"] = actions.select_horizontal,
               -- ["v"] = actions.select_vertical,
@@ -467,6 +495,23 @@ return {
           fold_reset = "<Nop>",
         },
       }
+    end
+  },
+
+  -- Seamless navigation between tmux panes and vim splits
+  {
+    "christoomey/vim-tmux-navigator",
+    config = function()
+      -- require "nvim-tmux-navigation".setup {
+      --   keybindings = {
+      --     up = "<C-u>",
+      --     down = "<C-e>",
+      --     left = "<C-n>",
+      --     right = "<C-i>",
+      --     -- last_active = "<C-\\>",
+      --     -- next = "<C-Space>",
+      --   }
+      -- }
     end
   }
 }

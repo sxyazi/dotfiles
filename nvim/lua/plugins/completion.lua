@@ -2,7 +2,6 @@ return {
   {
     "kylechui/nvim-surround",
     event = { "BufReadPost", "BufNewFile" },
-    commit = "1d83fecd27c6b4b66cc529930552d205fbecb660",
     config = true,
   },
 
@@ -29,7 +28,7 @@ return {
       local luasnip = require("luasnip")
       local lspkind = require("lspkind")
       local mapping = {
-            ["<C-u>"] = cmp.mapping(function(fallback)
+        ["<C-u>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
             if not cmp.get_selected_entry() then
@@ -39,7 +38,7 @@ return {
             fallback()
           end
         end, { "i", "c" }),
-            ["<C-e>"] = cmp.mapping(function(fallback)
+        ["<C-e>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             if not cmp.get_selected_entry() then
               cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
@@ -52,7 +51,7 @@ return {
             fallback()
           end
         end, { "i", "c" }),
-            ["<Tab>"] = cmp.mapping(function()
+        ["<Tab>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.confirm({ select = true })
           elseif luasnip.expand_or_jumpable() then
@@ -61,7 +60,7 @@ return {
             vim.api.nvim_feedkeys("\t", "n", false)
           end
         end, { "i", "c" }),
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
           if luasnip.jumpable(-1) then
             luasnip.jump(-1)
           else
@@ -80,11 +79,11 @@ return {
         },
         mapping = mapping,
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
+          { name = "nvim_lsp",               keyword_length = 2 },
           { name = "nvim_lsp_signature_help" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "luasnip",                keyword_length = 2 },
+          { name = "buffer",                 keyword_length = 2 },
+          { name = "path",                   keyword_length = 3 },
           { name = "calc" },
         }),
         formatting = {
@@ -100,7 +99,7 @@ return {
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = mapping,
         sources = {
-          { name = "buffer" },
+          { name = "buffer", keyword_length = 2 },
         }
       })
 
@@ -108,8 +107,8 @@ return {
       cmp.setup.cmdline(":", {
         mapping = mapping,
         sources = cmp.config.sources({
-          { name = "path" },
-          { name = "cmdline" },
+          { name = "cmdline", keyword_length = 2 },
+          { name = "path",    keyword_length = 3 },
         })
       })
     end
