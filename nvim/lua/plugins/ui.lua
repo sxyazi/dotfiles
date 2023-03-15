@@ -74,8 +74,8 @@ return {
       "MunifTanjim/nui.nvim",
     },
     keys = {
-      { "<leader>1", "<cmd>Neotree toggle<CR>", noremap = true, silent = true },
-      { "<leader>v", "<cmd>Neotree reveal<CR>", noremap = true, silent = true },
+      { "<leader>1", ":Neotree toggle<CR>", noremap = true, silent = true },
+      { "<leader>v", ":Neotree reveal<CR>", noremap = true, silent = true },
     },
     config = function()
       vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
@@ -311,15 +311,15 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     keys = {
-      { "K",         "<cmd>Lspsaga hover_doc ++quiet ++keep<CR>", noremap = true,      silent = true },
-      { "<C-Enter>", "<cmd>Lspsaga code_action<CR>",              mode = { "n", "v" }, noremap = true, silent = true },
-      { "<leader>r", "<cmd>Lspsaga rename<CR>",                   noremap = true,      silent = true },
-      { "<leader>s", "<cmd>Lspsaga lsp_finder<CR>",               noremap = true,      silent = true },
-      { "<leader>l", "<cmd>Lspsaga show_line_diagnostics<CR>",    noremap = true,      silent = true },
-      { "<leader>b", "<cmd>Lspsaga goto_definition<CR>",          noremap = true,      silent = true },
-      { "<leader>B", "<cmd>Lspsaga peek_definition<CR>",          noremap = true,      silent = true },
-      { "<leader>m", "<cmd>Lspsaga goto_type_definition<CR>",     noremap = true,      silent = true },
-      { "<leader>M", "<cmd>Lspsaga peek_type_definition<CR>",     noremap = true,      silent = true },
+      { "K",         ":Lspsaga hover_doc ++quiet ++keep<CR>", noremap = true,      silent = true },
+      { "<C-Enter>", ":Lspsaga code_action<CR>",              mode = { "n", "v" }, noremap = true, silent = true },
+      { "<leader>r", ":Lspsaga rename<CR>",                   noremap = true,      silent = true },
+      { "<leader>s", ":Lspsaga lsp_finder<CR>",               noremap = true,      silent = true },
+      { "<leader>l", ":Lspsaga show_line_diagnostics<CR>",    noremap = true,      silent = true },
+      { "<leader>b", ":Lspsaga goto_definition<CR>",          noremap = true,      silent = true },
+      { "<leader>B", ":Lspsaga peek_definition<CR>",          noremap = true,      silent = true },
+      { "<leader>m", ":Lspsaga goto_type_definition<CR>",     noremap = true,      silent = true },
+      { "<leader>M", ":Lspsaga peek_type_definition<CR>",     noremap = true,      silent = true },
 
       {
         "[e",
@@ -375,14 +375,23 @@ return {
     end,
   },
 
+  -- Standalone UI for nvim-lsp progress
+  {
+    "j-hui/fidget.nvim",
+    event = "VeryLazy",
+    opts = {
+      window = { blend = 0 },
+    },
+  },
+
   -- A pretty list to show diagnostics, references, and quickfix results
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     keys = {
-      { ",e", "<cmd>TroubleToggle workspace_diagnostics<CR>", noremap = true, silent = true },
-      { ",E", "<cmd>TroubleToggle document_diagnostics<CR>",  noremap = true, silent = true },
-      { ",f", "<cmd>TroubleToggle quickfix<CR>",              noremap = true, silent = true },
+      { ",e", ":TroubleToggle workspace_diagnostics<CR>", noremap = true, silent = true },
+      { ",E", ":TroubleToggle document_diagnostics<CR>",  noremap = true, silent = true },
+      { ",f", ":TroubleToggle quickfix<CR>",              noremap = true, silent = true },
     },
     config = function()
       require("trouble").setup {
@@ -454,7 +463,7 @@ return {
       require("illuminate").configure({
         providers = { "lsp", "treesitter", "regex" },
         delay = 100,
-        filetypes_denylist = { "NvimTree", "Outline" },
+        filetypes_denylist = { "TelescopePrompt", "DressingInput", "NvimTree", "Outline" },
       })
     end
   },
@@ -476,7 +485,7 @@ return {
   {
     "simrat39/symbols-outline.nvim",
     keys = {
-      { "<leader>o", "<cmd>SymbolsOutline<CR>", noremap = true, silent = true },
+      { ",o", ":SymbolsOutline<CR>", noremap = true, silent = true },
     },
     config = function()
       require("symbols-outline").setup {

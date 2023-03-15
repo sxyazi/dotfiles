@@ -2,6 +2,10 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+vim.opt.timeoutlen = 500
+vim.opt.ttimeoutlen = 10
+vim.opt.lazyredraw = true
+
 vim.opt.swapfile = false
 vim.opt.undodir = os.getenv("HOME") .. "/.config/nvim/undo"
 vim.opt.undofile = true
@@ -10,9 +14,14 @@ vim.opt.number = true
 vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 5
+vim.opt.linebreak = true
+vim.opt.showbreak = "↳"
+vim.opt.virtualedit = "block"
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.infercase = true
 vim.opt.hlsearch = false
 
 vim.opt.tabstop = 2
@@ -24,6 +33,7 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldenable = false
 
+vim.opt.showmode = false
 vim.opt.shortmess:append("I")
 vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
@@ -39,7 +49,7 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSig
 
 vim.diagnostic.config({
   virtual_text = false,
-  float = { header = '', prefix = '' },
+  float = { header = '', prefix = '', focusable = false },
   update_in_insert = true,
   severity_sort = true,
 })

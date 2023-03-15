@@ -55,16 +55,25 @@ vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true
 vim.keymap.set("n", "l", "u", { noremap = true })
 vim.keymap.set("n", "L", "<C-r>", { noremap = true })
 
--- copy, paste
+-- yank, paste
 vim.keymap.set("", "Y", '"+y')
 vim.keymap.set("x", "p", '"_dP')
+vim.keymap.set("n", "x", '"_x')
 
 -- search keys
 vim.keymap.set({ "n", "v" }, "-", "nzzv")
 vim.keymap.set({ "n", "v" }, "=", "Nzzv")
 
+-- tab management
+vim.keymap.set({ "n", "v" }, "tt", ":tabe<CR>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "tT", ":tab split<CR>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "tn", ":-tabnext<CR>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "ti", ":+tabnext<CR>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "tN", ":-tabmove<CR>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { noremap = true, silent = true })
+
 -- other keys
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<Enter>",
-  [[ :lua require("nvim-treesitter.textsubjects").select("textsubjects-smart", false, vim.fn.getpos("."), vim.fn.getpos("."))<CR> ]],
+  [[ :lua require("nvim-treesitter.textsubjects").select("textsubjects-smart", true, vim.fn.getpos("."), vim.fn.getpos("."))<CR> ]],
   { noremap = true, silent = true })

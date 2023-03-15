@@ -79,12 +79,14 @@ return {
         },
         mapping = mapping,
         sources = cmp.config.sources({
-          { name = "nvim_lsp",               keyword_length = 2 },
+          { name = "nvim_lsp" },
           { name = "nvim_lsp_signature_help" },
-          { name = "luasnip",                keyword_length = 2 },
-          { name = "buffer",                 keyword_length = 2 },
-          { name = "path",                   keyword_length = 3 },
+          { name = "luasnip" },
           { name = "calc" },
+        }, {
+          { name = "path", keyword_length = 3 },
+        }, {
+          { name = "buffer" },
         }),
         formatting = {
           format = lspkind.cmp_format({
@@ -107,8 +109,9 @@ return {
       cmp.setup.cmdline(":", {
         mapping = mapping,
         sources = cmp.config.sources({
-          { name = "cmdline", keyword_length = 2 },
-          { name = "path",    keyword_length = 3 },
+          { name = "cmdline", keyword_length = 2 }
+        }, {
+          { name = "path", keyword_length = 3 },
         })
       })
     end
