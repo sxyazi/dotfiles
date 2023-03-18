@@ -7,8 +7,10 @@ mappings = {
     "right": "i",
 }
 
+
 def main(args):
     pass
+
 
 @result_handler(no_ui=True)
 def handle_result(args, answer, target_window_id, boss):
@@ -31,7 +33,9 @@ def handle_result(args, answer, target_window_id, boss):
 
     # https://github.com/chancez/dotfiles/blob/master/kitty/.config/kitty/relative_resize.py
     def resize(direction):
-        neighbors = boss.active_tab.current_layout.neighbors_for_window(window, boss.active_tab.windows)
+        neighbors = boss.active_tab.current_layout.neighbors_for_window(
+            window, boss.active_tab.windows
+        )
         top, bottom = neighbors.get("top"), neighbors.get("bottom")
         left, right = neighbors.get("left"), neighbors.get("right")
 
@@ -76,4 +80,3 @@ def handle_result(args, answer, target_window_id, boss):
         resize(args[2])
     elif act == "move":
         move(args[2])
-

@@ -1,9 +1,15 @@
 # Widgets
-function vi-yank-sysclip {
+function vi-yank-wrapped {
+  local last_key="$KEYS[-1]"
+  local ori_buffer="$CUTBUFFER"
+
   zle vi-yank
-  echo "$CUTBUFFER" | pbcopy -i
+  if [[ "$last_key" = "Y" ]] then
+    echo "$CUTBUFFER" | pbcopy -i
+    CUTBUFFER="$ori_buffer"
+  fi
 }
-zle -N vi-yank-sysclip
+zle -N vi-yank-wrapped
 
 # Menu
 bindkey -rpM menuselect ""
@@ -20,19 +26,20 @@ bindkey -M command "^M" accept-line
 
 # Normal mode
 bindkey -rpM vicmd ""
-bindkey -M vicmd "^[[A"     history-substring-search-up    # Up
-bindkey -M vicmd "^[[B"     history-substring-search-down  # Down
-bindkey -M vicmd "^W"       backward-delete-word
-bindkey -M vicmd "^L"       clear-screen
-bindkey -M vicmd "^M"       accept-line
-bindkey -M vicmd "u"        up-line
-bindkey -M vicmd "e"        down-line
-bindkey -M vicmd "n"        vi-backward-char
-bindkey -M vicmd "N"        vi-first-non-blank
-bindkey -M vicmd "^N"       vi-insert-bol
-bindkey -M vicmd "i"        vi-forward-char
-bindkey -M vicmd "I"        vi-end-of-line
-bindkey -M vicmd "^[[59;5u" vi-add-eol  # ^; in CSI u, configured in kitty.conf
+bindkey -M vicmd "^[[A"      history-substring-search-up    # Up
+bindkey -M vicmd "^[[B"      history-substring-search-down  # Down
+bindkey -M vicmd "^W"        backward-delete-word
+bindkey -M vicmd "^L"        clear-screen
+bindkey -M vicmd "^M"        accept-line
+bindkey -M vicmd "u"         up-line
+bindkey -M vicmd "e"         down-line
+bindkey -M vicmd "n"         vi-backward-char
+bindkey -M vicmd "N"         vi-first-non-blank
+bindkey -M vicmd "^N"        vi-insert-bol
+bindkey -M vicmd "i"         vi-forward-char
+bindkey -M vicmd "I"         vi-end-of-line
+bindkey -M vicmd "^[[105;5u" vi-add-eol  # Ctrl+i in CSI u, configured in kitty.conf and tmux.conf both
+bindkey -M vicmd "^[[44;5u"  edit-command-line # Ctrl+, in CSI u, configured in kitty.conf and tmux.conf both
 
 bindkey -M vicmd "b" vi-backward-word
 bindkey -M vicmd "B" vi-backward-blank-word
@@ -56,8 +63,8 @@ bindkey -M vicmd "X" vi-backward-delete-char
 bindkey -M vicmd "r" vi-replace-chars
 bindkey -M vicmd "R" vi-replace
 
-bindkey -M vicmd "y" vi-yank
-bindkey -M vicmd "Y" vi-yank-sysclip
+bindkey -M vicmd "y" vi-yank-wrapped
+bindkey -M vicmd "Y" vi-yank-wrapped
 bindkey -M vicmd "p" vi-put-after
 bindkey -M vicmd "P" vi-put-before
 
@@ -66,7 +73,7 @@ bindkey -M vicmd "V" visual-line-mode
 bindkey -M vicmd "l" undo
 bindkey -M vicmd "L" redo
 
-bindkey -M vicmd ";"  execute-named-cmd
+# bindkey -M vicmd ";"  execute-named-cmd
 bindkey -M vicmd "."  vi-repeat-change
 bindkey -M vicmd ","  edit-command-line
 bindkey -M vicmd "\-" vi-repeat-search
@@ -86,12 +93,13 @@ bindkey -M vicmd "gg" beginning-of-buffer-or-history
 bindkey -M vicmd "fb" vi-match-bracket
 
 # Insert mode
-bindkey -M viins "^[[A"     history-substring-search-up    # Up
-bindkey -M viins "^[[B"     history-substring-search-down  # Down
-bindkey -M viins "^?"       backward-delete-char           # Backspace
-bindkey -M viins "^W"       backward-delete-word
-bindkey -M viins "^N"       vi-insert-bol
-bindkey -M viins "^[[59;5u" vi-add-eol  # ^; in CSI u, configured in kitty.conf
+bindkey -M viins "^[[A"      history-substring-search-up    # Up
+bindkey -M viins "^[[B"      history-substring-search-down  # Down
+bindkey -M viins "^?"        backward-delete-char           # Backspace
+bindkey -M viins "^W"        backward-delete-word
+bindkey -M viins "^N"        vi-insert-bol
+bindkey -M viins "^[[105;5u" vi-add-eol  # Ctrl+i in CSI u, configured in kitty.conf
+bindkey -M viins "^[[44;5u"  edit-command-line # Ctrl+, in CSI u, configured in kitty.conf and tmux.conf both
 
 # Visual mode
 bindkey -rpM visual ""

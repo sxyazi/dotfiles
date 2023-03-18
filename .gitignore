@@ -22,3 +22,6 @@ tmux/plugins/
 !nvim/**
 nvim/undo
 
+!rules/
+!rules/**
+

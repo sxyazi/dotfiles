@@ -75,5 +75,5 @@ vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { noremap = true, silent = t
 -- other keys
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<Enter>",
-  [[ :lua require("nvim-treesitter.textsubjects").select("textsubjects-smart", true, vim.fn.getpos("."), vim.fn.getpos("."))<CR> ]],
+  [[ :lua require("nvim-treesitter.textsubjects").select("textsubjects-smart", false, vim.fn.getpos("."), vim.fn.getpos("."))<CR> ]],
   { noremap = true, silent = true })

@@ -46,7 +46,7 @@ zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' file-sort change
-zstyle ':completion:*' matcher-list 'm:{[:l:][:u:]}={[:u:][:l:]}' 'r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
 source $ZDOTDIR/keymap.zsh
 
 # Initialize tools

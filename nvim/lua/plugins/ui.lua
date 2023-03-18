@@ -6,6 +6,11 @@ return {
     config = function()
       require("lualine").setup {
         options = {
+          disabled_filetypes = {
+            statusline = {
+              "neo-tree"
+            },
+          },
           ignore_focus = {
             "dapui_watches",
             "dapui_stacks",
@@ -208,9 +213,8 @@ return {
         function() require("telescope.builtin").find_files({ hidden = true, no_ignore = false }) end,
         noremap = true,
       },
-      { ",r", function() require("telescope.builtin").live_grep() end,   noremap = true },
-      { ",b", function() require("telescope.builtin").buffers() end,     noremap = true },
-      { ",e", function() require("telescope.builtin").diagnostics() end, noremap = true },
+      { ",r", function() require("telescope.builtin").live_grep() end, noremap = true },
+      { ",a", function() require("telescope.builtin").buffers() end,   noremap = true },
     },
     config = function()
       local actions = require("telescope.actions")
@@ -314,8 +318,7 @@ return {
       { "K",         ":Lspsaga hover_doc ++quiet ++keep<CR>", noremap = true,      silent = true },
       { "<C-Enter>", ":Lspsaga code_action<CR>",              mode = { "n", "v" }, noremap = true, silent = true },
       { "<leader>r", ":Lspsaga rename<CR>",                   noremap = true,      silent = true },
-      { "<leader>s", ":Lspsaga lsp_finder<CR>",               noremap = true,      silent = true },
-      { "<leader>l", ":Lspsaga show_line_diagnostics<CR>",    noremap = true,      silent = true },
+      { "<leader>l", ":Lspsaga lsp_finder<CR>",               noremap = true,      silent = true },
       { "<leader>b", ":Lspsaga goto_definition<CR>",          noremap = true,      silent = true },
       { "<leader>B", ":Lspsaga peek_definition<CR>",          noremap = true,      silent = true },
       { "<leader>m", ":Lspsaga goto_type_definition<CR>",     noremap = true,      silent = true },
@@ -363,7 +366,7 @@ return {
             go_action = "<Tab>"
           },
         },
-        rename = { quit = "q" },
+        rename = { quit = "q", in_select = false },
         outline = {
           keys = {
             jump = "<CR>",
@@ -424,18 +427,18 @@ return {
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
           local opts = { buffer = bufnr }
-          vim.keymap.set({ "n", "v" }, "<leader>hs", gs.stage_hunk, opts)
-          vim.keymap.set("n", "<leader>hS", gs.stage_buffer, opts)
-          vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk, opts)
+          vim.keymap.set({ "n", "v" }, "<leader>gs", gs.stage_hunk, opts)
+          vim.keymap.set("n", "<leader>gS", gs.stage_buffer, opts)
+          vim.keymap.set("n", "<leader>gu", gs.undo_stage_hunk, opts)
 
-          vim.keymap.set({ "n", "v" }, "<leader>hr", gs.reset_hunk, opts)
-          vim.keymap.set("n", "<leader>hR", gs.reset_buffer, opts)
+          vim.keymap.set({ "n", "v" }, "<leader>gr", gs.reset_hunk, opts)
+          vim.keymap.set("n", "<leader>gR", gs.reset_buffer, opts)
 
-          vim.keymap.set("n", "<leader>hp", gs.preview_hunk, opts)
+          vim.keymap.set("n", "<leader>gp", gs.preview_hunk, opts)
 
-          vim.keymap.set("n", "<leader>hb", function() gs.blame_line { full = true } end, opts)
-          vim.keymap.set("n", "<leader>hd", gs.diffthis, opts)
-          vim.keymap.set("n", "<leader>hD", function() gs.diffthis("~") end, opts)
+          vim.keymap.set("n", "<leader>gb", function() gs.blame_line { full = true } end, opts)
+          vim.keymap.set("n", "<leader>gd", gs.diffthis, opts)
+          vim.keymap.set("n", "<leader>gD", function() gs.diffthis("~") end, opts)
 
           opts = { expr = true, buffer = bufnr }
           vim.keymap.set("n", "]c", function()
@@ -463,7 +466,13 @@ return {
       require("illuminate").configure({
         providers = { "lsp", "treesitter", "regex" },
         delay = 100,
-        filetypes_denylist = { "TelescopePrompt", "DressingInput", "NvimTree", "Outline" },
+        filetypes_denylist = {
+          "TelescopePrompt",
+          "DressingInput",
+          "neo-tree",
+          "Outline",
+          "sagarename",
+        },
       })
     end
   },
@@ -506,21 +515,4 @@ return {
       }
     end
   },
-
-  -- Seamless navigation between tmux panes and vim splits
-  {
-    "christoomey/vim-tmux-navigator",
-    config = function()
-      -- require "nvim-tmux-navigation".setup {
-      --   keybindings = {
-      --     up = "<C-u>",
-      --     down = "<C-e>",
-      --     left = "<C-n>",
-      --     right = "<C-i>",
-      --     -- last_active = "<C-\\>",
-      --     -- next = "<C-Space>",
-      --   }
-      -- }
-    end
-  }
 }
