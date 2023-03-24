@@ -25,6 +25,15 @@ def handle_result(args, answer, target_window_id, boss):
         window.write_to_child(f"\x1b[119;8u{act[1]}{secound}")
         return
 
+    def split(direction):
+        if direction == "top" or direction == "bottom":
+            boss.launch("--cwd=current", "--location=hsplit")
+        else:
+            boss.launch("--cwd=current", "--location=vsplit")
+
+        if direction == "top" or direction == "left":
+            boss.active_tab.move_window(direction)
+
     def close():
         boss.close_window()
 
@@ -72,7 +81,9 @@ def handle_result(args, answer, target_window_id, boss):
         boss.active_tab.move_window(direction)
 
     act = act[1:]
-    if act == "close":
+    if act == "split":
+        split(args[2])
+    elif act == "close":
         close()
     elif act == "jump":
         jump(args[2])

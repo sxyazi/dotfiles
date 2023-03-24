@@ -30,3 +30,7 @@ def handle_result(args, answer, target_window_id, boss):
         # Otherwise send a ^I
         else:
             window.write_to_child("\x09")
+
+    elif args[1] == "S-s":
+        if exec[-4:] == "nvim":
+            window.write_to_child("\x1b[115;8u")

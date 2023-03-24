@@ -11,17 +11,18 @@ zsh/.zsh_history
 zsh/.zcompdump
 zsh/.zcompcache
 
-!fish/
-!fish/config.fish
-
 !tmux/
 !tmux/**
 tmux/plugins/
 
 !nvim/
 !nvim/**
-nvim/undo
 
 !rules/
 !rules/**
+
+!ranger
+!ranger/**
+ranger/**/__init__.py
+ranger/**/__pycache__
 

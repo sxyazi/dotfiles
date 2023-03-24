@@ -9,8 +9,6 @@ vim.keymap.set("", "<Tab>", "<Nop>") -- Will be handled in `plugins/completion.l
 -- reserved keys
 vim.keymap.set("", "s", "<Nop>")
 vim.keymap.set("", "S", "<Nop>")
-vim.keymap.set("", "j", "<Nop>")
-vim.keymap.set("", "J", "<Nop>")
 vim.keymap.set("", "o", "<Nop>")
 vim.keymap.set("", "O", "<Nop>")
 
@@ -57,12 +55,13 @@ vim.keymap.set("n", "L", "<C-r>", { noremap = true })
 
 -- yank, paste
 vim.keymap.set("", "Y", '"+y')
-vim.keymap.set("x", "p", '"_dP')
+vim.keymap.set("x", "p", '"_dp')
+vim.keymap.set("x", "P", '"_dP')
 vim.keymap.set("n", "x", '"_x')
 
 -- search keys
-vim.keymap.set({ "n", "v" }, "-", "nzzv")
-vim.keymap.set({ "n", "v" }, "=", "Nzzv")
+vim.keymap.set({ "n", "v" }, "-", "n")
+vim.keymap.set({ "n", "v" }, "=", "N")
 
 -- tab management
 vim.keymap.set({ "n", "v" }, "tt", ":tabe<CR>", { noremap = true, silent = true })
@@ -73,7 +72,5 @@ vim.keymap.set({ "n", "v" }, "tN", ":-tabmove<CR>", { noremap = true, silent = t
 vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { noremap = true, silent = true })
 
 -- other keys
-vim.keymap.set("n", "J", "mzJ`z")
-vim.keymap.set("n", "<Enter>",
-  [[ :lua require("nvim-treesitter.textsubjects").select("textsubjects-smart", false, vim.fn.getpos("."), vim.fn.getpos("."))<CR> ]],
-  { noremap = true, silent = true })
+vim.keymap.set("", "<C-S-M-s>", ":w<CR>", { noremap = true, silent = true })
+vim.keymap.set("i", "<C-S-M-s>", "<Esc>:w<CR>a", { noremap = true, silent = true })

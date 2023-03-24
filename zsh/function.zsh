@@ -1,3 +1,32 @@
+# Alias
+alias ..="cd .."
+alias ...="cd ../.."
+
+alias p="pwd"
+alias o="open ."
+alias l="exa --icons --group-directories-first"
+alias ls="exa -al --icons --group-directories-first"
+alias vim="nvim"
+alias cat="bat --theme Dracula"
+alias ssh="kitty +kitten ssh"
+alias du="dust -r -n 999999999"
+alias icpng="mkdir converted-images; sips -s format png * --out converted-images"
+alias icjpg="mkdir converted-images; sips -s format jpeg * --out converted-images"
+
+alias gs="git status"
+alias ga="git add -A"
+alias gc="git commit -v"
+alias gc!="git commit -v --amend --no-edit"
+alias gl="git pull"
+alias gp="git push"
+alias gp!="git push --force"
+alias gcl="git clone"
+alias gf="git fetch --all"
+alias gb="git branch"
+alias gr="git rebase"
+alias gt='cd "$(git rev-parse --show-toplevel)"'
+
+
 # Store commands in history only if successful
 # CREDITS:
 # https://gist.github.com/danydev/4ca4f5c523b19b17e9053dfa9feb246d

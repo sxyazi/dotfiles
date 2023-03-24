@@ -13,6 +13,7 @@ zle -N vi-yank-wrapped
 
 # Menu
 bindkey -rpM menuselect ""
+bindkey -M menuselect "^I" complete-word
 bindkey -M menuselect "^[" send-break
 bindkey -M menuselect "u"  up-line-or-history
 bindkey -M menuselect "e"  down-line-or-history
@@ -26,20 +27,20 @@ bindkey -M command "^M" accept-line
 
 # Normal mode
 bindkey -rpM vicmd ""
-bindkey -M vicmd "^[[A"      history-substring-search-up    # Up
-bindkey -M vicmd "^[[B"      history-substring-search-down  # Down
 bindkey -M vicmd "^W"        backward-delete-word
 bindkey -M vicmd "^L"        clear-screen
 bindkey -M vicmd "^M"        accept-line
 bindkey -M vicmd "u"         up-line
+bindkey -M vicmd "^U"        history-substring-search-up
 bindkey -M vicmd "e"         down-line
+bindkey -M vicmd "^E"        history-substring-search-down
 bindkey -M vicmd "n"         vi-backward-char
 bindkey -M vicmd "N"         vi-first-non-blank
 bindkey -M vicmd "^N"        vi-insert-bol
 bindkey -M vicmd "i"         vi-forward-char
 bindkey -M vicmd "I"         vi-end-of-line
-bindkey -M vicmd "^[[105;5u" vi-add-eol  # Ctrl+i in CSI u, configured in kitty.conf and tmux.conf both
-bindkey -M vicmd "^[[44;5u"  edit-command-line # Ctrl+, in CSI u, configured in kitty.conf and tmux.conf both
+bindkey -M vicmd "^[[105;5u" vi-add-eol         # Ctrl+i in CSI u, configured in kitty.conf and tmux.conf both
+bindkey -M vicmd "^[[44;5u"  edit-command-line  # Ctrl+, in CSI u, configured in kitty.conf and tmux.conf both
 
 bindkey -M vicmd "b" vi-backward-word
 bindkey -M vicmd "B" vi-backward-blank-word
@@ -93,21 +94,21 @@ bindkey -M vicmd "gg" beginning-of-buffer-or-history
 bindkey -M vicmd "fb" vi-match-bracket
 
 # Insert mode
-bindkey -M viins "^[[A"      history-substring-search-up    # Up
-bindkey -M viins "^[[B"      history-substring-search-down  # Down
-bindkey -M viins "^?"        backward-delete-char           # Backspace
+bindkey -M viins "^?"        backward-delete-char  # Backspace
 bindkey -M viins "^W"        backward-delete-word
+bindkey -M viins "^U"        history-substring-search-up
+bindkey -M viins "^E"        history-substring-search-down
 bindkey -M viins "^N"        vi-insert-bol
-bindkey -M viins "^[[105;5u" vi-add-eol  # Ctrl+i in CSI u, configured in kitty.conf
-bindkey -M viins "^[[44;5u"  edit-command-line # Ctrl+, in CSI u, configured in kitty.conf and tmux.conf both
+bindkey -M viins "^[[105;5u" vi-add-eol            # Ctrl+i in CSI u, configured in kitty.conf
+bindkey -M viins "^[[44;5u"  edit-command-line     # Ctrl+, in CSI u, configured in kitty.conf and tmux.conf both
 
 # Visual mode
 bindkey -rpM visual ""
-bindkey -M visual "^["   deactivate-region              # Esc
-bindkey -M visual "^[[A" history-substring-search-up    # Up
-bindkey -M visual "^[[B" history-substring-search-down  # Down
+bindkey -M visual "^["   deactivate-region  # Esc
 bindkey -M visual "u"    up-line
+bindkey -M visual "^U"   history-substring-search-up
 bindkey -M visual "e"    down-line
+bindkey -M visual "^E"   history-substring-search-down
 bindkey -M visual "aw"   select-a-word
 bindkey -M visual "aW"   select-a-blank-word
 bindkey -M visual "aa"   select-a-shell-word
