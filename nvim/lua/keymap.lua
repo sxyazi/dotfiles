@@ -74,3 +74,5 @@ vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { noremap = true, silent = t
 -- other keys
 vim.keymap.set("", "<C-S-M-s>", ":w<CR>", { noremap = true, silent = true })
 vim.keymap.set("i", "<C-S-M-s>", "<Esc>:w<CR>a", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-r>", ":filetype detect<CR>", { noremap = true, silent = true })
+vim.keymap.set("i", "<C-r>", "<Esc>:filetype detect<CR>a", { noremap = true, silent = true })

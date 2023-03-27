@@ -3,7 +3,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 alias p="pwd"
-alias o="open ."
+alias r="source ranger"
 alias l="exa --icons --group-directories-first"
 alias ls="exa -al --icons --group-directories-first"
 alias vim="nvim"

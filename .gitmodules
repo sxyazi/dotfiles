@@ -1,0 +1,9 @@
+[submodule "ranger/ranger/plugins/ranger_devicons"]
+	path = ranger/ranger/plugins/ranger_devicons
+	url = https://github.com/alexanderjeurissen/ranger_devicons.git
+[submodule "ranger/plugins/ranger_devicons"]
+	path = ranger/plugins/ranger_devicons
+	url = https://github.com/alexanderjeurissen/ranger_devicons.git
+[submodule "ranger/plugins/zoxide"]
+	path = ranger/plugins/zoxide
+	url = https://github.com/jchook/ranger-zoxide.git

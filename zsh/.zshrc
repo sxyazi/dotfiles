@@ -4,9 +4,10 @@ setopt INTERACTIVE_COMMENTS
 setopt HIST_IGNORE_ALL_DUPS
 
 # PATH
-export PATH=~/.composer/vendor/bin:$PATH
-export PATH=~/.cargo/bin:$PATH
-export PATH=~/go/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.composer/vendor/bin:$PATH
+export PATH=$HOME/.cargo/bin:$PATH
+export PATH=$HOME/go/bin:$PATH
 if [[ "$(uname -sm)" = "Darwin arm64" ]] then export PATH=/opt/homebrew/bin:$PATH; fi
 
 # Autoload
