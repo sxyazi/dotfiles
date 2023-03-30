@@ -519,6 +519,7 @@ return {
 					"neo-tree-popup",
 					"Outline",
 					"sagarename",
+					"sagacodeaction",
 				},
 			})
 		end

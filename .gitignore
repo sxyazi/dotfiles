@@ -26,3 +26,7 @@ tmux/plugins/
 ranger/**/__init__.py
 ranger/**/__pycache__
 
+!mpv
+!mpv/**
+mpv/watch_later
+
