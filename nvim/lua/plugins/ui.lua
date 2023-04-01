@@ -6,12 +6,7 @@ return {
 		config = function()
 			require("lualine").setup {
 				options = {
-					disabled_filetypes = {
-						statusline = {
-							"neo-tree",
-							"neo-tree-popup",
-						},
-					},
+					globalstatus = true,
 					ignore_focus = {
 						"dapui_watches",
 						"dapui_stacks",
@@ -21,6 +16,7 @@ return {
 						"dap-repl",
 					},
 				},
+				extensions = { "neo-tree" },
 			}
 		end,
 	},
@@ -362,45 +358,55 @@ return {
 				silent = true
 			},
 		},
-		config = function()
-			require("lspsaga").setup {
-				request_timeout = 10000,
-				finder = {
-					keys = {
-						jump_to = "<Tab>",
-						edit = { "<CR>" },
-						vsplit = "<Nop>", -- TODO
-						split = "<Nop>", -- TODO
-						tabe = "<Nop>", -- TODO
-						tabnew = "<Nop>", -- TODO
-						quit = { "q" },
-						close_in_preview = "q"
-					},
+		opts = {
+			scroll_preview = {
+				scroll_down = "<C-u>",
+				scroll_up = "<C-e>",
+			},
+			request_timeout = 10000,
+			finder = {
+				keys = {
+					expand_or_jump = "<Tab>",
+					vsplit = "s",
+					split = "S",
+					tabe = "t",
+					tabnew = "T",
+					quit = { "<ESC>" },
+					close_in_preview = "<ESC>",
 				},
-				definition = {
-					edit = "<CR>",
-					vsplit = "<Nop>", -- TODO
-					split = "<Nop>", -- TODO
-					tabe = "<Nop>", -- TODO
-					quit = "q",
+			},
+			definition = {
+				edit = "<CR>",
+				vsplit = "s",
+				split = "S",
+				tabe = "t",
+				quit = "<ESC>",
+			},
+			code_action = {
+				keys = {
+					quit = "<ESC>",
+					exec = "<CR>",
 				},
-				lightbulb = { sign = false },
-				diagnostic = {
-					keys = {
-						exec_action = "<CR>",
-						go_action = "<Tab>"
-					},
+			},
+			lightbulb = { sign = false },
+			diagnostic = {
+				keys = {
+					exec_action = "<CR>",
+					quit = "<ESC>",
+					go_action = "<Tab>",
+					expand_or_jump = "<Tab>",
+					quit_in_show = { "<ESC>" },
 				},
-				rename = { quit = "q", in_select = false },
-				outline = {
-					keys = {
-						jump = "<CR>",
-						expand_collapse = "<Tab>",
-					},
+			},
+			rename = { quit = "<C-w>", in_select = true },
+			outline = {
+				keys = {
+					expand_or_collapse = "<Tab>",
+					quit = "<ESC>",
 				},
-				symbol_in_winbar = { enable = false },
-			}
-		end,
+			},
+			symbol_in_winbar = { enable = false },
+		},
 	},
 
 	-- Standalone UI for nvim-lsp progress
@@ -517,9 +523,10 @@ return {
 					"DressingInput",
 					"neo-tree",
 					"neo-tree-popup",
-					"Outline",
 					"sagarename",
 					"sagacodeaction",
+					"lspsagafinder",
+					"Outline",
 				},
 			})
 		end
@@ -532,6 +539,8 @@ return {
 		dependencies = { "neovim/nvim-lspconfig" },
 		config = function()
 			require("indent_blankline").setup {
+				filetype_exclude = { "help", "neo-tree", "Trouble" },
+				show_trailing_blankline_indent = false,
 				show_current_context = true,
 				show_current_context_start = true,
 			}

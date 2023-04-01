@@ -1,5 +1,6 @@
 local M = {
 	ts_langs = {
+		-- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
 		"bash",
 		"c",
 		"cmake",
@@ -25,9 +26,11 @@ local M = {
 		"javascript",
 		"json",
 		"json5",
+		"jsonc",
 		"kdl",
 		"latex",
 		"lua",
+		"luap",
 		"make",
 		"markdown",
 		"markdown_inline",
