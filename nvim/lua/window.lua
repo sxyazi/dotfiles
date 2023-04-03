@@ -2,7 +2,7 @@ local mappings = {
 	k = "top",
 	j = "bottom",
 	h = "left",
-	l = "right"
+	l = "right",
 }
 
 local function jump(direction)
@@ -89,7 +89,6 @@ local function move(direction)
 	end
 end
 
-
 vim.api.nvim_create_user_command("WindowJumpTop", function() jump("k") end, {})
 vim.api.nvim_create_user_command("WindowJumpBottom", function() jump("j") end, {})
 vim.api.nvim_create_user_command("WindowJumpLeft", function() jump("h") end, {})
@@ -106,24 +105,18 @@ vim.api.nvim_create_user_command("WindowMoveLeft", function() move("h") end, {})
 vim.api.nvim_create_user_command("WindowMoveRight", function() move("l") end, {})
 
 local function map_set(key, cmd)
-	vim.keymap.set("", "<C-S-M-w>" .. key, string.format(":%s<CR>", cmd),
-		{ noremap = true, silent = true })
-	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>a", cmd),
-		{ noremap = true, silent = true })
+	vim.keymap.set("", "<C-S-M-w>" .. key, string.format(":%s<CR>", cmd), { silent = true })
+	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>a", cmd), { silent = true })
 end
 
 -- Splitting, Closing
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
-vim.keymap.set("n", "su", ":set nosplitbelow<CR>:split<CR>:set splitbelow<CR>",
-	{ noremap = true, silent = true })
-vim.keymap.set("n", "se", ":set splitbelow<CR>:split<CR>",
-	{ noremap = true, silent = true })
-vim.keymap.set("n", "sn", ":set nosplitright<CR>:vsplit<CR>:set splitright<CR>",
-	{ noremap = true, silent = true })
-vim.keymap.set("n", "si", ":set splitright<CR>:vsplit<CR>",
-	{ noremap = true, silent = true })
+vim.keymap.set("n", "su", ":set nosplitbelow<CR>:split<CR>:set splitbelow<CR>", { silent = true })
+vim.keymap.set("n", "se", ":set splitbelow<CR>:split<CR>", { silent = true })
+vim.keymap.set("n", "sn", ":set nosplitright<CR>:vsplit<CR>:set splitright<CR>", { silent = true })
+vim.keymap.set("n", "si", ":set splitright<CR>:vsplit<CR>", { silent = true })
 
 map_set("c", "q")
 

@@ -46,33 +46,46 @@ vim.keymap.set("n", "<C-i>", "A")
 vim.keymap.set("i", "<C-i>", "<Esc>A")
 
 -- visual mode keys
-vim.keymap.set("v", "<C-u>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
-vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set("v", "<C-u>", ":m '<-2<CR>gv=gv", { silent = true })
+vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { silent = true })
 
 -- redo, undo
-vim.keymap.set("n", "l", "u", { noremap = true })
-vim.keymap.set("n", "L", "<C-r>", { noremap = true })
+vim.keymap.set("n", "l", "u")
+vim.keymap.set("n", "L", "<C-r>")
 
 -- yank, paste
-vim.keymap.set("", "Y", '"+y')
 vim.keymap.set("x", "p", '"_dp')
 vim.keymap.set("x", "P", '"_dP')
+
+vim.keymap.set("", "Y", '"+y')
 vim.keymap.set("n", "x", '"_x')
+
+vim.keymap.set("n", "dw", 'vb"_d')
+vim.keymap.set("n", "cw", 'vb"_c')
 
 -- search keys
 vim.keymap.set({ "n", "v" }, "-", "n")
 vim.keymap.set({ "n", "v" }, "=", "N")
 
 -- tab management
-vim.keymap.set({ "n", "v" }, "tt", ":tabe<CR>", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "tT", ":tab split<CR>", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "tn", ":-tabnext<CR>", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "ti", ":+tabnext<CR>", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "tN", ":-tabmove<CR>", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "tt", ":tabe<CR>", { silent = true })
+vim.keymap.set({ "n", "v" }, "tT", ":tab split<CR>", { silent = true })
+vim.keymap.set({ "n", "v" }, "tn", ":-tabnext<CR>", { silent = true })
+vim.keymap.set({ "n", "v" }, "ti", ":+tabnext<CR>", { silent = true })
+vim.keymap.set({ "n", "v" }, "tN", ":-tabmove<CR>", { silent = true })
+vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { silent = true })
 
 -- other keys
-vim.keymap.set("", "<C-S-M-s>", ":w<CR>", { noremap = true, silent = true })
-vim.keymap.set("i", "<C-S-M-s>", "<Esc>:w<CR>a", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-r>", ":filetype detect<CR>", { noremap = true, silent = true })
-vim.keymap.set("i", "<C-r>", "<Esc>:filetype detect<CR>a", { noremap = true, silent = true })
+vim.keymap.set("", "<C-S-M-s>", ":w<CR>", { silent = true })
+vim.keymap.set("i", "<C-S-M-s>", "<Esc>:w<CR>a", { silent = true })
+
+vim.keymap.set("", "<C-a>", "ggVG$")
+vim.keymap.set({ "i", "v" }, "<C-a>", "<Esc>ggVG$")
+
+vim.keymap.set("", "<C-r>", ":filetype detect<CR>", { silent = true })
+vim.keymap.set("i", "<C-r>", "<Esc>:filetype detect<CR>a", { silent = true })
+
+vim.keymap.set("", "<C-->", "<C-a>")
+vim.keymap.set({ "i", "v" }, "<C-->", "<Esc><C-a>a")
+vim.keymap.set("", "<C-=>", "<C-x>")
+vim.keymap.set({ "i", "v" }, "<C-=>", "<Esc><C-x>a")

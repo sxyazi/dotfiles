@@ -39,6 +39,9 @@ local M = {
 		"eslint_d", -- linter
 		"prettierd", -- formatter
 
+		-- Lua
+		"stylua", -- formatter
+
 		-- Python
 		"ruff", -- linter
 		"black", -- formatter
@@ -49,11 +52,11 @@ function M.lsp_attached(client, bufnr)
 	-- Format on save
 	local group = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
 	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_clear_autocmds({ group = group, buffer = bufnr })
+		vim.api.nvim_clear_autocmds { group = group, buffer = bufnr }
 		vim.api.nvim_create_autocmd("BufWritePre", {
 			group = group,
 			buffer = bufnr,
-			callback = function() vim.lsp.buf.format() end
+			callback = function() vim.lsp.buf.format() end,
 		})
 	end
 end
@@ -61,7 +64,6 @@ end
 function M.lua_setup()
 	require("lspconfig").lua_ls.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
-		on_attach = M.lsp_attached,
 		settings = {
 			Lua = {
 				runtime = { version = "LuaJIT" },
@@ -84,7 +86,7 @@ end
 
 function M.rust_setup()
 	local rt = require("rust-tools")
-	rt.setup({
+	rt.setup {
 		server = {
 			capabilities = require("cmp_nvim_lsp").default_capabilities(),
 			on_attach = function(client, bufnr)
@@ -95,11 +97,11 @@ function M.rust_setup()
 		tools = {
 			hover_actions = { auto_focus = true },
 		},
-	})
+	}
 end
 
 function M.python_setup()
-	-- disable hint, which are covered by ruff-lsp
+	-- disable hint, which are covered by `ruff`
 	-- https://github.com/lkhphuc/dotfiles/blob/6de9bd6fd5526c337445dc40000ec1573d4e351e/nvim/lua/plugins/extras/python.lua#L9
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	capabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
@@ -116,7 +118,7 @@ function M.python_setup()
 					},
 					typeCheckingMode = "off",
 				},
-			}
+			},
 		},
 	}
 end
@@ -127,7 +129,7 @@ function M.json_setup()
 		on_attach = M.lsp_attached,
 		settings = {
 			json = {
-				schemas = require('schemastore').json.schemas(),
+				schemas = require("schemastore").json.schemas(),
 				validate = { enable = true },
 			},
 		},
@@ -140,7 +142,7 @@ function M.yaml_setup()
 		on_attach = M.lsp_attached,
 		settings = {
 			yaml = {
-				schemas = require('schemastore').yaml.schemas(),
+				schemas = require("schemastore").yaml.schemas(),
 			},
 		},
 	}
@@ -165,7 +167,10 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			{ "williamboman/mason-lspconfig.nvim", opts = { ensure_installed = M.mason_lsp, automatic_installation = true } },
+			{
+				"williamboman/mason-lspconfig.nvim",
+				opts = { ensure_installed = M.mason_lsp, automatic_installation = true },
+			},
 			"simrat39/rust-tools.nvim",
 			"b0o/SchemaStore.nvim",
 		},
@@ -180,7 +185,7 @@ return {
 			M.yaml_setup()
 			M.toml_setup()
 			M.markdown_setup()
-		end
+		end,
 	},
 
 	-- Integrating non-LSPs like Prettier
@@ -188,12 +193,15 @@ return {
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			{ "jayp0521/mason-null-ls.nvim", opts = { ensure_installed = M.mason_null, automatic_installation = true } },
+			{
+				"jayp0521/mason-null-ls.nvim",
+				opts = { ensure_installed = M.mason_null, automatic_installation = true },
+			},
 		},
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			local nls = require("null-ls")
-			nls.setup({
+			nls.setup {
 				on_attach = M.lsp_attached,
 				sources = {
 					-- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
@@ -204,15 +212,15 @@ return {
 					nls.builtins.diagnostics.actionlint,
 
 					-- Golang
-					nls.builtins.diagnostics.revive.with({
+					nls.builtins.diagnostics.revive.with {
 						args = {
 							"-config",
 							vim.fn.expand("$HOME/.config/rules/revive.toml"),
 							"-formatter",
 							"json",
 							"./...",
-						}
-					}),
+						},
+					},
 					nls.builtins.formatting.goimports,
 
 					-- JavaScript
@@ -220,12 +228,23 @@ return {
 					nls.builtins.diagnostics.eslint_d,
 					nls.builtins.formatting.prettierd,
 
+					-- Lua
+					nls.builtins.formatting.stylua.with {
+						args = require("null-ls.helpers").range_formatting_args_factory({
+							"--config-path",
+							vim.fn.expand("$HOME/.config/rules/stylua.toml"),
+							"--stdin-filepath",
+							"$FILENAME",
+							"-",
+						}, "--range-start", "--range-end", { row_offset = -1, col_offset = -1 }),
+					},
+
 					-- Python
 					nls.builtins.diagnostics.ruff,
 					nls.builtins.formatting.ruff,
 					nls.builtins.formatting.black,
 				},
-			})
-		end
+			}
+		end,
 	},
 }

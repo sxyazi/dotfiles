@@ -5,10 +5,12 @@ vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.showbreak = "↳"
-vim.opt.whichwrap = 'h,l,<,>'
+vim.opt.whichwrap = "h,l,<,>"
 
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 5
+
+vim.opt.inccommand = "split"
 vim.opt.virtualedit = "block"
 
 -- Searching
@@ -42,34 +44,33 @@ vim.opt.laststatus = 3
 vim.opt.shortmess:append("Ic")
 
 -- Cache file
-vim.opt.swapfile         = false
-vim.opt.undofile         = true
-vim.opt.undodir          = vim.fn.expand("$HOME/.cache/nvim/undo")
-vim.opt.backupdir        = vim.fn.expand("$HOME/.cache/nvim/backup")
-vim.opt.viewdir          = vim.fn.expand("$HOME/.cache/nvim/view")
+vim.opt.swapfile = false
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.expand("$HOME/.cache/nvim/undo")
+vim.opt.backupdir = vim.fn.expand("$HOME/.cache/nvim/backup")
+vim.opt.viewdir = vim.fn.expand("$HOME/.cache/nvim/view")
 
 -- Rendering
-vim.opt.termguicolors    = true
-vim.opt.lazyredraw       = true
+vim.opt.termguicolors = true
+vim.opt.lazyredraw = true
 
 -- Misc
-vim.opt.history          = 1000
-vim.opt.wildignorecase   = true
+vim.opt.history = 1000
+vim.opt.wildignorecase = true
 
-vim.opt.timeoutlen       = 500
-vim.opt.ttimeoutlen      = 10
+vim.opt.ttimeoutlen = 10
 
-vim.g.loaded_gzip        = 1
-vim.g.loaded_netrw       = 1
+vim.g.loaded_gzip = 1
+vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_matchparen  = 1
-vim.g.loaded_tar         = 1
-vim.g.loaded_tarPlugin   = 1
-vim.g.loaded_zipPlugin   = 1
-vim.g.loaded_zip         = 1
+vim.g.loaded_matchparen = 1
+vim.g.loaded_tar = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_zipPlugin = 1
+vim.g.loaded_zip = 1
 
 -- Diagnostic
-vim.opt.updatetime       = 300
+vim.opt.updatetime = 300
 vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float()]])
 
 vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
@@ -77,12 +78,12 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSi
 vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
-vim.diagnostic.config({
+vim.diagnostic.config {
 	virtual_text = false,
-	float = { header = '', prefix = '', focusable = false },
+	float = { header = "", prefix = "", focusable = false },
 	update_in_insert = true,
 	severity_sort = true,
-})
+}
 
 -- Restore cursor position when opening a file
 -- https://github.com/neovim/neovim/issues/16339#issuecomment-1457394370

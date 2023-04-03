@@ -1,8 +1,17 @@
 return {
 	{
-		"kylechui/nvim-surround",
-		event = { "BufReadPost", "BufNewFile" },
-		config = true,
+		"L3MON4D3/LuaSnip",
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			config = function()
+				vim.schedule(function() require("luasnip.loaders.from_vscode").load() end)
+			end,
+		},
+		opts = {
+			history = true,
+			delete_check_events = "TextChanged",
+		},
+		lazy = true,
 	},
 
 	{
@@ -16,7 +25,6 @@ return {
 			"hrsh7th/cmp-calc",
 
 			-- For luasnip users
-			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
 
 			-- Vscode-like completion popup
@@ -27,11 +35,13 @@ return {
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
 			local mapping = {
+				["<C-w>"] = cmp.mapping.abort(),
+				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-u>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
-						cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+						cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
 						if not cmp.get_selected_entry() then
-							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+							cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
 						end
 					else
 						fallback()
@@ -40,19 +50,21 @@ return {
 				["<C-e>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						if not cmp.get_selected_entry() then
-							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+							cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
 						end
-						cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+						cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
 						if not cmp.get_selected_entry() then
-							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+							cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
 						end
 					else
 						fallback()
 					end
 				end, { "i", "c" }),
+				-- ["<C-n>"] = cmp.mapping.scroll_docs(-4),
+				-- ["<C-i>"] = cmp.mapping.scroll_docs(4),
 				["<Tab>"] = cmp.mapping(function()
 					if cmp.visible() then
-						cmp.confirm({ select = true })
+						cmp.confirm { select = true }
 					elseif luasnip.expand_or_jumpable() then
 						luasnip.expand_or_jump()
 					else
@@ -68,11 +80,15 @@ return {
 				end, { "i", "c" }),
 			}
 
-			cmp.setup({
+			cmp.setup {
 				preselect = cmp.PreselectMode.None,
 				mapping = mapping,
 				snippet = {
 					expand = function(args) luasnip.lsp_expand(args.body) end,
+				},
+				window = {
+					completion = cmp.config.window.bordered(),
+					documentation = cmp.config.window.bordered(),
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -83,60 +99,48 @@ return {
 					{ name = "buffer" },
 				}),
 				formatting = {
-					format = lspkind.cmp_format({
+					format = lspkind.cmp_format {
 						mode = "symbol",
 						maxwidth = 50,
 						ellipsis_char = "...",
-					})
+					},
 				},
 				experimental = { ghost_text = true },
-			})
+			}
 
 			-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = mapping,
 				sources = {
 					{ name = "buffer", keyword_length = 2 },
-				}
+				},
 			})
 
 			-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 			cmp.setup.cmdline(":", {
 				mapping = mapping,
 				sources = cmp.config.sources({
-					{ name = "cmdline", keyword_length = 2 }
+					{ name = "cmdline", keyword_length = 2 },
 				}, {
 					{ name = "path", keyword_length = 3 },
-				})
+				}),
 			})
-		end
-	},
-
-	{
-		"ray-x/lsp_signature.nvim",
-		event = "InsertEnter",
-		opts = {
-			bind = true,
-			-- noice = false,
-			fix_pos = true,
-			hint_enable = false,
-			handler_opts = {
-				border = "rounded"
-			},
-		},
-	},
-
-	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
-		config = function()
-			require("nvim-autopairs").setup {
-				disable_filetype = { "TelescopePrompt", "vim" },
-				check_ts = true,
-			}
 		end,
 	},
 
+	{
+		"kylechui/nvim-surround",
+		event = { "BufReadPost", "BufNewFile" },
+		config = true,
+	},
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		opts = {
+			disable_filetype = { "TelescopePrompt", "vim" },
+			check_ts = true,
+		},
+	},
 	{
 		"echasnovski/mini.comment",
 		dependencies = {
@@ -146,26 +150,25 @@ return {
 		keys = {
 			{ "<leader>c", nil, mode = { "n", "o", "x" } },
 		},
-		config = function()
-			require("mini.comment").setup {
-				mappings = {
-					comment = "<leader>c",
-					comment_line = "<leader>c",
-					textobject = "<leader>c",
-				},
-				hooks = {
-					pre = function() require("ts_context_commentstring.internal").update_commentstring({}) end,
-				},
-			}
-		end
+		opts = {
+			mappings = {
+				comment = "<leader>c",
+				comment_line = "<leader>c",
+				textobject = "<leader>c",
+			},
+			hooks = {
+				pre = function() require("ts_context_commentstring.internal").update_commentstring {} end,
+			},
+		},
+		config = function(_, opts) require("mini.comment").setup(opts) end,
 	},
 
 	-- Switch between single-line and multiline forms of code
 	{
 		"Wansmer/treesj",
 		keys = {
-			{ "j", ":TSJJoin<CR>",  noremap = true, silent = true },
-			{ "J", ":TSJSplit<CR>", noremap = true, silent = true },
+			{ "j", ":TSJJoin<CR>",  silent = true },
+			{ "J", ":TSJSplit<CR>", silent = true },
 		},
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {
@@ -181,7 +184,6 @@ return {
 			{
 				"<leader>r",
 				function() return ":IncRename " .. vim.fn.expand("<cword>") end,
-				noremap = true,
 				silent = true,
 				expr = true,
 			},
@@ -190,5 +192,20 @@ return {
 			preview_empty_name = true,
 			input_buffer_type = "dressing",
 		},
-	}
+	},
+
+	-- LSP signature hint as you type
+	{
+		"ray-x/lsp_signature.nvim",
+		event = "InsertEnter",
+		opts = {
+			bind = true,
+			-- noice = false,
+			fix_pos = true,
+			hint_enable = false,
+			handler_opts = {
+				border = "rounded",
+			},
+		},
+	},
 }

@@ -1,5 +1,5 @@
 local M = {
-	last = ""
+	last = "",
 }
 
 local notify = require("notify")
@@ -12,7 +12,9 @@ function M.current_function_name()
 		node = node:parent()
 	end
 
-	if not node then return "" end
+	if not node then
+		return ""
+	end
 	return vim.treesitter.query.get_node_text(node:child(1), 0)
 end
 
@@ -28,13 +30,11 @@ function M.go_run(last)
 
 	M.last = name
 	if name:find("Test") == 1 then
-		vim.fn.system("kitty @ kitten testing.py " ..
-			escape(vim.fn.expand("%:p:h")) .. " " ..
-			escape("go test -run " .. name))
+		vim.fn.system(
+			"kitty @ kitten testing.py " .. escape(vim.fn.expand("%:p:h")) .. " " .. escape("go test -run " .. name)
+		)
 	elseif name == "main" then
-		vim.fn.system("kitty @ kitten testing.py " ..
-			escape(vim.fn.expand("%:p:h")) .. " " ..
-			escape("go run ."))
+		vim.fn.system("kitty @ kitten testing.py " .. escape(vim.fn.expand("%:p:h")) .. " " .. escape("go run ."))
 	else
 		notify("unsupported test")
 	end

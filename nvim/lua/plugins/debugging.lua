@@ -6,7 +6,7 @@ local M = {
 		-- "js",
 		"node2",
 		"python",
-	}
+	},
 }
 
 function M.go_setup()
@@ -16,28 +16,28 @@ function M.go_setup()
 		executable = {
 			command = "dlv",
 			args = { "dap", "-l", "127.0.0.1:${port}" },
-		}
+		},
 	}
 	require("dap").configurations.go = {
 		{
 			name = "Debug",
 			type = "delve",
 			request = "launch",
-			program = "${file}"
+			program = "${file}",
 		},
 		{
 			name = "Debug test",
 			type = "delve",
 			request = "launch",
 			mode = "test",
-			program = "${file}"
+			program = "${file}",
 		},
 		{
 			name = "Debug test (go.mod)",
 			type = "delve",
 			request = "launch",
 			mode = "test",
-			program = "./${relativeFileDirname}"
+			program = "./${relativeFileDirname}",
 		},
 		{
 			name = "Attach to process",
@@ -53,10 +53,8 @@ function M.rust_setup()
 	local dap = require("dap")
 	local dap_root = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
 
-	dap.adapters.codelldb = require("rust-tools.dap").get_codelldb_adapter(
-		dap_root .. "adapter/codelldb",
-		dap_root .. "lldb/lib/liblldb.dylib"
-	)
+	dap.adapters.codelldb =
+			require("rust-tools.dap").get_codelldb_adapter(dap_root .. "adapter/codelldb", dap_root .. "lldb/lib/liblldb.dylib")
 
 	dap.configurations.rust = {
 		{
@@ -139,21 +137,24 @@ return {
 			{ "theHamsta/nvim-dap-virtual-text", opts = { all_references = true } },
 		},
 		keys = {
-			{ "<leader>d", ":lua require('dap').continue()<CR>",          noremap = true, silent = true },
-			{ ",b",        ":lua require('dap').toggle_breakpoint()<CR>", noremap = true, silent = true },
+			{ "<leader>d", ":lua require('dap').continue()<CR>",          silent = true },
+			{ ",b",        ":lua require('dap').toggle_breakpoint()<CR>", silent = true },
 		},
 		config = function()
-			local listeners                         = require("dap").listeners
+			local listeners = require("dap").listeners
 			listeners.after.event_initialized.dapui = function() require("dapui").open() end
 			listeners.before.event_terminated.dapui = function() require("dapui").close() end
-			listeners.before.event_exited.dapui     = function() require("dapui").close() end
+			listeners.before.event_exited.dapui = function() require("dapui").close() end
 
 			vim.api.nvim_set_hl(0, "DapBreakpoint", { ctermbg = 0, fg = "#993939", bg = "#31353f" })
 			vim.api.nvim_set_hl(0, "DapLogPoint", { ctermbg = 0, fg = "#61afef", bg = "#31353f" })
 			vim.api.nvim_set_hl(0, "DapStopped", { ctermbg = 0, fg = "#98c379", bg = "#31353f" })
 
 			vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapBreakpoint", numhl = "DapBreakpoint" })
-			vim.fn.sign_define("DapBreakpointCondition", { text = "ﳁ", texthl = "DapBreakpoint", numhl = "DapBreakpoint" })
+			vim.fn.sign_define(
+				"DapBreakpointCondition",
+				{ text = "ﳁ", texthl = "DapBreakpointCondition", numhl = "DapBreakpointCondition" }
+			)
 			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DapBreakpoint", numhl = "DapBreakpoint" })
 			vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DapLogPoint", numhl = "DapLogPoint" })
 			vim.fn.sign_define("DapStopped", { text = "", texthl = "DapStopped", numhl = "DapStopped" })
@@ -162,7 +163,7 @@ return {
 			M.rust_setup()
 			M.js_setup()
 			M.python_setup()
-		end
+		end,
 	},
 
 	-- A UI for `nvim-dap`
@@ -177,7 +178,7 @@ return {
 				open = "<CR>",
 				remove = "d",
 				repl = "r",
-				toggle = "t"
+				toggle = "t",
 			},
 		},
 	},
