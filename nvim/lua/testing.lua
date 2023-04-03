@@ -2,12 +2,10 @@ local M = {
 	last = "",
 }
 
-local notify = require("notify")
 local escape = vim.fn.shellescape
-local ts_utils = require("nvim-treesitter.ts_utils")
 
 function M.current_function_name()
-	local node = ts_utils.get_node_at_cursor()
+	local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
 	while node and node:type() ~= "function_declaration" do
 		node = node:parent()
 	end
@@ -25,7 +23,7 @@ function M.go_run(last)
 	end
 
 	if not name then
-		return notify("no function name found")
+		return require("notify")("no function name found")
 	end
 
 	M.last = name
@@ -36,7 +34,7 @@ function M.go_run(last)
 	elseif name == "main" then
 		vim.fn.system("kitty @ kitten testing.py " .. escape(vim.fn.expand("%:p:h")) .. " " .. escape("go run ."))
 	else
-		notify("unsupported test")
+		require("notify")("unsupported test")
 	end
 end
 
