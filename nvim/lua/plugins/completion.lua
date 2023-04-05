@@ -13,16 +13,34 @@ return {
 		},
 		lazy = true,
 	},
+	{
+		"zbirenbaum/copilot.lua",
+		build = ":Copilot auth",
+		cmd = "Copilot",
+		event = { "InsertEnter", "CmdlineEnter" },
+		opts = {
+			panel = { enabled = false },
+			suggestion = {
+				enabled = true,
+				auto_trigger = true,
+				keymap = {
+					accept = "<Tab>",
+					prev = "<M-[>",
+					next = "<M-]>",
+					dismiss = "<C-w>",
+				},
+			},
+		},
+	},
 
 	{
 		"hrsh7th/nvim-cmp",
 		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = {
 			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-calc",
+			"hrsh7th/cmp-path",
 
 			-- For luasnip users
 			"saadparwaiz1/cmp_luasnip",
@@ -32,59 +50,22 @@ return {
 		},
 		config = function()
 			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			local lspkind = require("lspkind")
-			local mapping = {
-				["<C-w>"] = cmp.mapping.abort(),
-				["<C-Space>"] = cmp.mapping.complete(),
-				["<C-u>"] = cmp.mapping(function(fallback)
-					if cmp.visible() then
-						cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
-						if not cmp.get_selected_entry() then
-							cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
-						end
-					else
-						fallback()
-					end
-				end, { "i", "c" }),
-				["<C-e>"] = cmp.mapping(function(fallback)
-					if cmp.visible() then
-						if not cmp.get_selected_entry() then
-							cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-						end
-						cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-						if not cmp.get_selected_entry() then
-							cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-						end
-					else
-						fallback()
-					end
-				end, { "i", "c" }),
-				-- ["<C-n>"] = cmp.mapping.scroll_docs(-4),
-				-- ["<C-i>"] = cmp.mapping.scroll_docs(4),
-				["<Tab>"] = cmp.mapping(function()
-					if cmp.visible() then
-						cmp.confirm { select = true }
-					elseif luasnip.expand_or_jumpable() then
-						luasnip.expand_or_jump()
-					else
-						vim.api.nvim_feedkeys("\t", "n", false)
-					end
-				end, { "i", "c" }),
-				["<S-Tab>"] = cmp.mapping(function(fallback)
-					if luasnip.jumpable(-1) then
-						luasnip.jump(-1)
-					else
-						fallback()
-					end
-				end, { "i", "c" }),
-			}
-
 			cmp.setup {
 				preselect = cmp.PreselectMode.None,
-				mapping = mapping,
+				mapping = {
+					["<C-w>"] = cmp.mapping.abort(),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-u>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
+					["<C-e>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
+					["<C-n>"] = cmp.mapping.scroll_docs(-4),
+					["<C-i>"] = cmp.mapping.scroll_docs(4),
+					["<CR>"] = cmp.mapping.confirm { select = true },
+				},
 				snippet = {
-					expand = function(args) luasnip.lsp_expand(args.body) end,
+					expand = function(args) require("luasnip").lsp_expand(args.body) end,
+				},
+				completion = {
+					completeopt = "menu,menuone,noinsert",
 				},
 				window = {
 					completion = cmp.config.window.bordered(),
@@ -94,12 +75,11 @@ return {
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
 					{ name = "path" },
-					{ name = "calc" },
 				}, {
 					{ name = "buffer" },
 				}),
 				formatting = {
-					format = lspkind.cmp_format {
+					format = require("lspkind").cmp_format {
 						mode = "symbol",
 						maxwidth = 50,
 						ellipsis_char = "...",
@@ -108,17 +88,43 @@ return {
 				experimental = { ghost_text = true },
 			}
 
-			-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+			local mapping = {
+				["<C-w>"] = {
+					c = cmp.mapping.abort(),
+				},
+				["<Tab>"] = cmp.mapping(function()
+					if cmp.visible() then
+						cmp.select_next_item()
+					else
+						cmp.complete()
+					end
+				end, { "c" }),
+				["<S-Tab>"] = cmp.mapping(function()
+					if cmp.visible() then
+						cmp.select_prev_item()
+					else
+						cmp.complete()
+					end
+				end, { "c" }),
+			}
+
+			-- Use buffer source for `/` and `?`
 			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = mapping,
+				completion = {
+					completeopt = "menu,menuone,noselect",
+				},
 				sources = {
 					{ name = "buffer", keyword_length = 2 },
 				},
 			})
 
-			-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+			-- Use cmdline & path source for ':'
 			cmp.setup.cmdline(":", {
 				mapping = mapping,
+				completion = {
+					completeopt = "menu,menuone,noselect",
+				},
 				sources = cmp.config.sources({
 					{ name = "cmdline", keyword_length = 2 },
 				}, {

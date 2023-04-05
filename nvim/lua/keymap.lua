@@ -25,9 +25,11 @@ vim.keymap.set("", "I", "$")
 vim.keymap.set("n", "<C-u>", "5<C-y>")
 vim.keymap.set("v", "<C-u>", "5<C-y>")
 vim.keymap.set("i", "<C-u>", "<Esc>5<C-y>a")
+vim.keymap.set("c", "<C-u>", "<Up>")
 vim.keymap.set("n", "<C-e>", "5<C-e>")
 vim.keymap.set("v", "<C-e>", "5<C-e>")
 vim.keymap.set("i", "<C-e>", "<Esc>5<C-e>a")
+vim.keymap.set("c", "<C-e>", "<Down>")
 
 -- word navigation keys
 vim.keymap.set("", "h", "e")
