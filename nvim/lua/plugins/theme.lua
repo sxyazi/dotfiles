@@ -45,7 +45,7 @@ return {
 				markdown = true,
 				mason = true,
 				neotree = true,
-				noice = false,
+				noice = true,
 				notify = true,
 				telescope = true,
 				treesitter = true,
@@ -53,7 +53,10 @@ return {
 				ts_rainbow2 = true,
 				dap = { enabled = true, enable_ui = true },
 				indent_blankline = { enabled = true },
-				native_lsp = { enabled = true },
+				native_lsp = {
+					enabled = true,
+					underlines = { hints = {} },
+				},
 			},
 		},
 		config = function(_, opts)

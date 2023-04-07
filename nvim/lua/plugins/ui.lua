@@ -16,6 +16,32 @@ return {
 					"dap-repl",
 				},
 			},
+			sections = {
+				lualine_a = { "mode" },
+				lualine_b = { "branch", "diff", "diagnostics" },
+				lualine_c = { "filename" },
+				lualine_x = { "filetype" },
+				lualine_y = {
+					function()
+						local progress = require("lualine.components.progress")()
+						local count = vim.fn.searchcount { maxcount = 999, timeout = 500 }
+						if next(count) then
+							progress = progress .. string.format(" [%d/%d]", count.current, math.min(count.total, count.maxcount))
+						end
+						return progress
+					end,
+				},
+				lualine_z = {
+					function()
+						local loc = require("lualine.components.location")()
+						local sel = require("lualine.components.selectioncount")()
+						if sel ~= "" then
+							loc = loc .. " (" .. sel .. " sel)"
+						end
+						return loc
+					end,
+				},
+			},
 			extensions = { "neo-tree" },
 		},
 	},
@@ -23,8 +49,77 @@ return {
 	-- Notification manager for NeoVim
 	{
 		"rcarriga/nvim-notify",
-		lazy = true,
-		config = true,
+		event = "VeryLazy",
+		opts = {
+			background_colour = "#000000",
+		},
+	},
+
+	-- Completely replaces the UI for messages, cmdline and the popupmenu
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			{ "MunifTanjim/nui.nvim", lazy = true },
+			"rcarriga/nvim-notify",
+		},
+		opts = {
+			lsp = {
+				override = {
+					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+					["vim.lsp.util.stylize_markdown"] = true,
+					["cmp.entry.get_documentation"] = true,
+				},
+			},
+			presets = {
+				bottom_search = true,
+				command_palette = true,
+				long_message_to_split = true,
+				inc_rename = true,
+				lsp_doc_border = true,
+			},
+			views = {
+				mini = {
+					win_options = { winblend = 0 },
+				},
+			},
+			routes = {
+				{
+					view = "notify",
+					filter = {
+						event = "msg_show",
+						any = {
+							{ find = " bytes written" },
+
+							{ find = " changes; before #" },
+							{ find = " changes; after #" },
+							{ find = "1 change; before #" },
+							{ find = "1 change; after #" },
+
+							{ find = " fewer lines" },
+							{ find = " more lines" },
+							{ find = "1 more line" },
+							{ find = "1 line less" },
+
+							{ find = "Already at newest change" },
+							{ find = "E21: Cannot make changes, 'modifiable' is off" },
+						},
+					},
+					opts = { skip = true },
+				},
+				{
+					view = "mini",
+					filter = {
+						any = {
+							{ find = "formatting" },
+							{ find = "Diagnosing" },
+							{ find = "Diagnostics" },
+						},
+					},
+					opts = { skip = true },
+				},
+			},
+		},
 	},
 
 	-- Improve the default `vim.ui` interfaces
@@ -79,9 +174,9 @@ return {
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v2.x",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
+			{ "nvim-lua/plenary.nvim",       lazy = true },
+			{ "nvim-tree/nvim-web-devicons", lazy = true },
+			{ "MunifTanjim/nui.nvim",        lazy = true },
 		},
 		keys = {
 			{ "<leader>1", ":Neotree toggle<CR>", silent = true },
@@ -206,13 +301,13 @@ return {
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
+			{ "nvim-lua/plenary.nvim", lazy = true },
 
 			-- Install a native sorter, for better performance
 			"nvim-telescope/telescope-fzf-native.nvim",
 		},
 		keys = {
-			{ "<leader><leader>", function() require("telescope.builtin").oldfiles() end },
+			{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
 			{ "<leader>/",        function() require("telescope.builtin").live_grep() end },
 			{ "<leader>;",        function() require("telescope.builtin").command_history() end },
 			{
@@ -314,6 +409,7 @@ return {
 			}
 
 			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("noice")
 		end,
 	},
 
@@ -343,7 +439,7 @@ return {
 	{
 		"glepnir/lspsaga.nvim",
 		dependencies = {
-			"nvim-tree/nvim-web-devicons",
+			{ "nvim-tree/nvim-web-devicons", lazy = true },
 			"nvim-treesitter/nvim-treesitter",
 		},
 		keys = {
@@ -420,40 +516,12 @@ return {
 		},
 	},
 
-	-- Standalone UI for nvim-lsp progress
-	{
-		"j-hui/fidget.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		opts = {
-			timer = {
-				spinner_rate = 200,
-				fidget_decay = 200,
-				task_decay = 100,
-			},
-			window = {
-				blend = 0,
-			},
-			fmt = {
-				task = function(task_name, message, percentage)
-					local name = (task_name or ""):lower()
-					if name:find("formatting") or name:find("diagnosing") or name:find("diagnostics") then
-						return false
-					end
-					return string.format(
-						"%s%s [%s]",
-						message,
-						percentage and string.format(" (%s%%)", percentage) or "",
-						task_name
-					)
-				end,
-			},
-		},
-	},
-
 	-- A pretty list to show diagnostics, references, and quickfix results
 	{
 		"folke/trouble.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		dependencies = {
+			{ "nvim-tree/nvim-web-devicons", lazy = true },
+		},
 		cmd = { "TroubleToggle", "Trouble" },
 		keys = {
 			{ ",e", ":TroubleToggle workspace_diagnostics<CR>", silent = true },

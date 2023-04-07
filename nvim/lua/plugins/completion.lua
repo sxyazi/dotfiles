@@ -7,11 +7,11 @@ return {
 				vim.schedule(function() require("luasnip.loaders.from_vscode").lazy_load() end)
 			end,
 		},
+		lazy = true,
 		opts = {
 			history = true,
 			delete_check_events = "TextChanged",
 		},
-		lazy = true,
 	},
 	{
 		"zbirenbaum/copilot.lua",
@@ -24,13 +24,24 @@ return {
 				enabled = true,
 				auto_trigger = true,
 				keymap = {
-					accept = "<Tab>",
+					accept = false,
 					prev = "<M-[>",
 					next = "<M-]>",
 					dismiss = "<C-w>",
 				},
 			},
 		},
+		config = function(_, opts)
+			require("copilot").setup(opts)
+
+			vim.keymap.set("i", "<Tab>", function()
+				if require("copilot.suggestion").is_visible() then
+					require("copilot.suggestion").accept()
+				else
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
+				end
+			end, { silent = true })
+		end,
 	},
 
 	{
@@ -196,22 +207,6 @@ return {
 		},
 		opts = {
 			preview_empty_name = true,
-			input_buffer_type = "dressing",
-		},
-	},
-
-	-- LSP signature hint as you type
-	{
-		"ray-x/lsp_signature.nvim",
-		event = "InsertEnter",
-		opts = {
-			bind = true,
-			-- noice = false,
-			fix_pos = true,
-			hint_enable = false,
-			handler_opts = {
-				border = "rounded",
-			},
 		},
 	},
 }

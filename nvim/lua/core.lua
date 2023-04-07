@@ -10,7 +10,6 @@ vim.opt.whichwrap = "h,l,<,>"
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 5
 
-vim.opt.inccommand = "split"
 vim.opt.virtualedit = "block"
 
 -- Searching
@@ -37,11 +36,11 @@ vim.opt.pumheight = 15
 vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.cmdheight = 0
-vim.opt.signcolumn = "yes"
+vim.opt.laststatus = 3
 
 vim.opt.ruler = false
-vim.opt.laststatus = 3
-vim.opt.shortmess:append("Ic")
+vim.opt.signcolumn = "yes"
+vim.opt.shortmess = "fimnxsTAIcF"
 
 -- Cache file
 vim.opt.swapfile = false
@@ -52,7 +51,6 @@ vim.opt.viewdir = vim.fn.expand("$HOME/.cache/nvim/view")
 
 -- Rendering
 vim.opt.termguicolors = true
-vim.opt.lazyredraw = true
 
 -- Misc
 vim.opt.history = 1000
@@ -96,9 +94,9 @@ vim.api.nvim_create_autocmd("BufRead", {
 				local ft = vim.bo[opts.buf].filetype
 				local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
 				if
-						not (ft:match("commit") and ft:match("rebase"))
-						and last_known_line > 1
-						and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+					not (ft:match("commit") and ft:match("rebase"))
+					and last_known_line > 1
+					and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
 				then
 					vim.api.nvim_feedkeys('g`"', "x", false)
 				end

@@ -171,8 +171,8 @@ return {
 				"williamboman/mason-lspconfig.nvim",
 				opts = { ensure_installed = M.mason_lsp, automatic_installation = true },
 			},
-			"simrat39/rust-tools.nvim",
-			"b0o/SchemaStore.nvim",
+			{ "simrat39/rust-tools.nvim", lazy = true },
+			{ "b0o/SchemaStore.nvim",     lazy = true },
 		},
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
@@ -192,7 +192,7 @@ return {
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
+			{ "nvim-lua/plenary.nvim", lazy = true },
 			{
 				"jayp0521/mason-null-ls.nvim",
 				opts = { ensure_installed = M.mason_null, automatic_installation = true },
