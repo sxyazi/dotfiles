@@ -180,6 +180,39 @@ return {
 		config = function(_, opts) require("mini.comment").setup(opts) end,
 	},
 
+	{
+		"mg979/vim-visual-multi",
+		keys = { "<C-k>", "<C-S-k>", "<C-u>", "<C-e>" },
+		init = function()
+			vim.g.VM_default_mappings = 0
+			vim.g.VM_maps = {
+				["i"] = "k",
+				["I"] = "K",
+				["I BS"] = "",
+				["Find Prev"] = "[",
+				["Find Next"] = "]",
+				-- Add selection
+				["Find Under"] = "<C-k>",
+				["Find Subword Under"] = "<C-k>",
+				["Select All"] = "<C-S-k>",
+				["Add Cursor Up"] = "<C-u>",
+				["Add Cursor Down"] = "<C-e>",
+				-- Undo and Redo
+				["Undo"] = "l",
+				["Redo"] = "L",
+			}
+			vim.g.VM_custom_motions = {
+				["u"] = "k",
+				["e"] = "j",
+				["n"] = "h",
+				["N"] = "0",
+				["i"] = "l",
+				["I"] = "$",
+				["h"] = "e",
+			}
+		end,
+	},
+
 	-- Switch between single-line and multiline forms of code
 	{
 		"Wansmer/treesj",

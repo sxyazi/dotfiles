@@ -22,14 +22,10 @@ vim.keymap.set("", "N", "^")
 vim.keymap.set("", "i", "l")
 vim.keymap.set("", "I", "$")
 
-vim.keymap.set("n", "<C-u>", "5<C-y>")
-vim.keymap.set("v", "<C-u>", "5<C-y>")
-vim.keymap.set("i", "<C-u>", "<Esc>5<C-y>a")
 vim.keymap.set("c", "<C-u>", "<Up>")
-vim.keymap.set("n", "<C-e>", "5<C-e>")
-vim.keymap.set("v", "<C-e>", "5<C-e>")
-vim.keymap.set("i", "<C-e>", "<Esc>5<C-e>a")
+vim.keymap.set("v", "<C-u>", ":m '<-2<CR>gv=gv", { silent = true })
 vim.keymap.set("c", "<C-e>", "<Down>")
+vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { silent = true })
 
 -- word navigation keys
 vim.keymap.set("", "h", "e")
@@ -46,10 +42,6 @@ vim.keymap.set("n", "<C-n>", "I")
 vim.keymap.set("i", "<C-n>", "<Esc>I")
 vim.keymap.set("n", "<C-i>", "A")
 vim.keymap.set("i", "<C-i>", "<Esc>A")
-
--- visual mode keys
-vim.keymap.set("v", "<C-u>", ":m '<-2<CR>gv=gv", { silent = true })
-vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { silent = true })
 
 -- redo, undo
 vim.keymap.set("n", "l", "u")

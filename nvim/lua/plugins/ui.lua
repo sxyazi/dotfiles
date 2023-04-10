@@ -21,16 +21,7 @@ return {
 				lualine_b = { "branch", "diff", "diagnostics" },
 				lualine_c = { "filename" },
 				lualine_x = { "filetype" },
-				lualine_y = {
-					function()
-						local progress = require("lualine.components.progress")()
-						local count = vim.fn.searchcount { maxcount = 999, timeout = 500 }
-						if next(count) then
-							progress = progress .. string.format(" [%d/%d]", count.current, math.min(count.total, count.maxcount))
-						end
-						return progress
-					end,
-				},
+				lualine_y = { "progress" },
 				lualine_z = {
 					function()
 						local loc = require("lualine.components.location")()
@@ -88,20 +79,37 @@ return {
 					view = "notify",
 					filter = {
 						event = "msg_show",
+						kind = { "echo" },
+					},
+					opts = { skip = true },
+				},
+				{
+					view = "notify",
+					filter = {
+						event = "msg_show",
+						kind = "",
 						any = {
+							-- Save
 							{ find = " bytes written" },
 
+							-- Redo/Undo
 							{ find = " changes; before #" },
 							{ find = " changes; after #" },
 							{ find = "1 change; before #" },
 							{ find = "1 change; after #" },
 
+							-- Yank
+							{ find = " lines yanked" },
+
+							-- Bulk edit
 							{ find = " fewer lines" },
 							{ find = " more lines" },
 							{ find = "1 more line" },
 							{ find = "1 line less" },
 
+							-- General messages
 							{ find = "Already at newest change" },
+							{ find = "Already at oldest change" },
 							{ find = "E21: Cannot make changes, 'modifiable' is off" },
 						},
 					},
