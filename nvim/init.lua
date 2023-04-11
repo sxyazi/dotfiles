@@ -1,5 +1,6 @@
 require("core")
 require("keymap")
+require("terminal")
 require("window")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -23,12 +24,14 @@ require("lazy").setup("plugins", {
 	performance = {
 		rtp = {
 			disabled_plugins = {
+				"editorconfig",
 				"gzip",
 				"health",
 				"man",
 				"matchit",
 				"matchparen",
 				"netrwPlugin",
+				"nvim",
 				"rplugin",
 				"shada",
 				"spellfile",

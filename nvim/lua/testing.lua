@@ -13,7 +13,7 @@ function M.current_function_name()
 	if not node then
 		return ""
 	end
-	return vim.treesitter.query.get_node_text(node:child(1), 0)
+	return vim.treesitter.get_node_text(node:child(1), 0)
 end
 
 function M.go_run(last)
@@ -28,11 +28,9 @@ function M.go_run(last)
 
 	M.last = name
 	if name:find("Test") == 1 then
-		vim.fn.system(
-			"kitty @ kitten testing.py " .. escape(vim.fn.expand("%:p:h")) .. " " .. escape("go test -run " .. name)
-		)
+		require("terminal").exec(vim.fn.expand("%:p:h"), "go test -run " .. name)
 	elseif name == "main" then
-		vim.fn.system("kitty @ kitten testing.py " .. escape(vim.fn.expand("%:p:h")) .. " " .. escape("go run ."))
+		require("terminal").exec(vim.fn.expand("%:p:h"), "go run .")
 	else
 		require("notify")("unsupported test")
 	end

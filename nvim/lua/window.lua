@@ -9,6 +9,10 @@ local function jump(direction)
 	local prev = vim.fn.winnr()
 	vim.cmd("wincmd " .. direction)
 
+	if vim.bo.buftype == "terminal" then
+		vim.cmd("startinsert")
+	end
+
 	if vim.fn.winnr() == prev then
 		-- the `--to=$KITTY_LISTEN_ON` env is passed automatically
 		vim.fn.system("kitty @ kitten window.py +jump " .. mappings[direction])
@@ -104,9 +108,15 @@ vim.api.nvim_create_user_command("WindowMoveBottom", function() move("j") end, {
 vim.api.nvim_create_user_command("WindowMoveLeft", function() move("h") end, {})
 vim.api.nvim_create_user_command("WindowMoveRight", function() move("l") end, {})
 
-local function map_set(key, cmd)
+local function map_set(key, cmd, term)
 	vim.keymap.set("", "<C-S-M-w>" .. key, string.format(":%s<CR>", cmd), { silent = true })
 	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>a", cmd), { silent = true })
+
+	if term == 1 then
+		vim.keymap.set("t", "<C-S-M-w>" .. key, string.format("<C-\\><C-n>:%s<CR>", cmd), { silent = true })
+	elseif term == 2 then
+		vim.keymap.set("t", "<C-S-M-w>" .. key, string.format("<C-\\><C-n>:%s<CR>:startinsert<CR>", cmd), { silent = true })
+	end
 end
 
 -- Splitting, Closing
@@ -118,22 +128,22 @@ vim.keymap.set("n", "se", ":set splitbelow<CR>:split<CR>", { silent = true })
 vim.keymap.set("n", "sn", ":set nosplitright<CR>:vsplit<CR>:set splitright<CR>", { silent = true })
 vim.keymap.set("n", "si", ":set splitright<CR>:vsplit<CR>", { silent = true })
 
-map_set("c", "q")
+map_set("c", "q", 0)
 
 -- Jumping
-map_set("ju", "WindowJumpTop")
-map_set("je", "WindowJumpBottom")
-map_set("jn", "WindowJumpLeft")
-map_set("ji", "WindowJumpRight")
+map_set("ju", "WindowJumpTop", 1)
+map_set("je", "WindowJumpBottom", 1)
+map_set("jn", "WindowJumpLeft", 1)
+map_set("ji", "WindowJumpRight", 1)
 
 -- Resizeing
-map_set("ru", "WindowResizeTop")
-map_set("re", "WindowResizeBottom")
-map_set("rn", "WindowResizeLeft")
-map_set("ri", "WindowResizeRight")
+map_set("ru", "WindowResizeTop", 2)
+map_set("re", "WindowResizeBottom", 2)
+map_set("rn", "WindowResizeLeft", 2)
+map_set("ri", "WindowResizeRight", 2)
 
 -- Moveing
-map_set("mu", "WindowMoveTop")
-map_set("me", "WindowMoveBottom")
-map_set("mn", "WindowMoveLeft")
-map_set("mi", "WindowMoveRight")
+map_set("mu", "WindowMoveTop", 2)
+map_set("me", "WindowMoveBottom", 2)
+map_set("mn", "WindowMoveLeft", 2)
+map_set("mi", "WindowMoveRight", 2)
