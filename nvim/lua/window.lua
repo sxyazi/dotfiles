@@ -119,7 +119,23 @@ local function map_set(key, cmd, term)
 	end
 end
 
--- Splitting, Closing
+local function on_close(mode)
+	return function()
+		local ft = vim.bo.filetype
+		if ft == "TelescopePrompt" then
+			return "<C-w>w"
+		end
+		if mode == "c" then
+			return "<Esc>"
+		end
+		if mode == "i" then
+			return "<Esc>:q<CR>"
+		end
+		return ":q<CR>"
+	end
+end
+
+-- Splitting
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
@@ -128,7 +144,10 @@ vim.keymap.set("n", "se", ":set splitbelow<CR>:split<CR>", { silent = true })
 vim.keymap.set("n", "sn", ":set nosplitright<CR>:vsplit<CR>:set splitright<CR>", { silent = true })
 vim.keymap.set("n", "si", ":set splitright<CR>:vsplit<CR>", { silent = true })
 
-map_set("c", "q", 0)
+-- Closing
+vim.keymap.set("", "<C-S-M-w>c", on_close(""), { expr = true, silent = true })
+vim.keymap.set("i", "<C-S-M-w>c", on_close("i"), { expr = true, silent = true })
+vim.keymap.set("c", "<C-S-M-w>c", on_close("c"), { expr = true, silent = true })
 
 -- Jumping
 map_set("ju", "WindowJumpTop", 1)

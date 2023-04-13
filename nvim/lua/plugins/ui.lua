@@ -182,9 +182,9 @@ return {
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v2.x",
 		dependencies = {
-			{ "nvim-lua/plenary.nvim",       lazy = true },
+			{ "nvim-lua/plenary.nvim", lazy = true },
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
-			{ "MunifTanjim/nui.nvim",        lazy = true },
+			{ "MunifTanjim/nui.nvim", lazy = true },
 		},
 		keys = {
 			{ "<leader>1", ":Neotree toggle<CR>", silent = true },
@@ -312,12 +312,12 @@ return {
 			{ "nvim-lua/plenary.nvim", lazy = true },
 
 			-- Install a native sorter, for better performance
-			"nvim-telescope/telescope-fzf-native.nvim",
+			{ "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
 		},
 		keys = {
 			{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
-			{ "<leader>/",        function() require("telescope.builtin").live_grep() end },
-			{ "<leader>;",        function() require("telescope.builtin").command_history() end },
+			{ "<leader>/", function() require("telescope.builtin").live_grep() end },
+			{ "<leader>;", function() require("telescope.builtin").command_history() end },
 			{
 				"<leader>e",
 				function() require("telescope.builtin").find_files() end,
@@ -350,7 +350,6 @@ return {
 					mappings = {
 						-- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua#L133
 						i = {
-							["<C-w>"] = actions.close,
 							["<C-u>"] = actions.cycle_history_prev,
 							["<C-e>"] = actions.cycle_history_next,
 							["<M-u>"] = actions.preview_scrolling_up,
@@ -361,8 +360,6 @@ return {
 							["<C-S-t>"] = trouble.open_with_trouble,
 						},
 						n = {
-							["<Esc>"] = actions.close,
-							["<C-w>"] = actions.close,
 							["u"] = actions.move_selection_previous,
 							["e"] = actions.move_selection_next,
 							["U"] = function(prompt_bufnr) require("telescope.actions.set").shift_selection(prompt_bufnr, -5) end,
@@ -375,6 +372,8 @@ return {
 							["S"] = actions.select_horizontal,
 							["t"] = actions.select_tab,
 							["T"] = trouble.open_with_trouble,
+							["k"] = false, -- disable default keybinding
+							["<Esc>"] = false, -- disable default keybinding
 						},
 					},
 					vimgrep_arguments = vimgrep_arguments,
@@ -451,13 +450,13 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 		},
 		keys = {
-			{ "K",         ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
-			{ "<C-Enter>", ":Lspsaga code_action<CR>",              mode = { "n", "v" }, silent = true },
-			{ "<leader>l", ":Lspsaga lsp_finder<CR>",               silent = true },
-			{ "<leader>b", ":Lspsaga goto_definition<CR>",          silent = true },
-			{ "<leader>B", ":Lspsaga peek_definition<CR>",          silent = true },
-			{ "<leader>m", ":Lspsaga goto_type_definition<CR>",     silent = true },
-			{ "<leader>M", ":Lspsaga peek_type_definition<CR>",     silent = true },
+			{ "K", ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
+			{ "<C-Enter>", ":Lspsaga code_action<CR>", mode = { "n", "v" }, silent = true },
+			{ "<leader>l", ":Lspsaga lsp_finder<CR>", silent = true },
+			{ "<leader>b", ":Lspsaga goto_definition<CR>", silent = true },
+			{ "<leader>B", ":Lspsaga peek_definition<CR>", silent = true },
+			{ "<leader>m", ":Lspsaga goto_type_definition<CR>", silent = true },
+			{ "<leader>M", ":Lspsaga peek_type_definition<CR>", silent = true },
 
 			{
 				"[;",
@@ -513,7 +512,6 @@ return {
 					quit_in_show = { "<ESC>" },
 				},
 			},
-			rename = { quit = "<C-w>", in_select = true },
 			outline = {
 				keys = {
 					expand_or_collapse = "<Tab>",
@@ -521,6 +519,65 @@ return {
 				},
 			},
 			symbol_in_winbar = { enable = false },
+		},
+	},
+
+	-- Find and replace with dark power
+	{
+		"nvim-pack/nvim-spectre",
+		dependencies = {
+			{ "nvim-lua/plenary.nvim", lazy = true },
+		},
+		keys = {
+			{ "<leader>f", function() require("spectre").open() end },
+		},
+		opts = {
+			live_update = true,
+			highlight = {
+				search = "DiffDelete",
+				replace = "DiffAdd",
+			},
+			mapping = {
+				["toggle_line"] = {
+					map = "<Tab>",
+					cmd = ":lua require('spectre').toggle_line()<CR>",
+				},
+				["enter_file"] = {
+					map = "<CR>",
+					cmd = ":lua require('spectre.actions').select_entry()<CR>",
+				},
+				["send_to_qf"] = { map = "<Nop>" },
+				["replace_cmd"] = { map = "<Nop>" },
+				["show_option_menu"] = { map = "<Nop>" },
+				["run_current_replace"] = {
+					map = "r",
+					cmd = ":lua require('spectre.actions').run_current_replace()<CR>",
+				},
+				["run_replace"] = {
+					map = "R",
+					cmd = ":lua require('spectre.actions').run_replace()<CR>",
+				},
+				["change_view_mode"] = {
+					map = "v",
+					cmd = ":lua require('spectre').change_view()<CR>",
+				},
+				["change_replace_sed"] = { map = "<Nop>" },
+				["change_replace_oxi"] = { map = "<Nop>" },
+				["toggle_live_update"] = { map = "<Nop>" },
+				["toggle_ignore_case"] = {
+					map = "tc",
+					cmd = ":lua require('spectre').change_options('ignore-case')<CR>",
+				},
+				["toggle_ignore_hidden"] = {
+					map = "th",
+					cmd = ":lua require('spectre').change_options('hidden')<CR>",
+				},
+				["resume_last_search"] = {
+					map = "l",
+					cmd = ":lua require('spectre').resume_last_search()<CR>",
+				},
+			},
+			is_insert_mode = true,
 		},
 	},
 
@@ -533,8 +590,8 @@ return {
 		cmd = { "TroubleToggle", "Trouble" },
 		keys = {
 			{ ",e", ":TroubleToggle workspace_diagnostics<CR>", silent = true },
-			{ ",E", ":TroubleToggle document_diagnostics<CR>",  silent = true },
-			{ ",f", ":TroubleToggle quickfix<CR>",              silent = true },
+			{ ",E", ":TroubleToggle document_diagnostics<CR>", silent = true },
+			{ ",f", ":TroubleToggle quickfix<CR>", silent = true },
 			{
 				"[q",
 				function()
@@ -642,6 +699,7 @@ return {
 				"sagarename",
 				"sagacodeaction",
 				"lspsagafinder",
+				"spectre_panel",
 				"Outline",
 			},
 			min_count_to_highlight = 2,

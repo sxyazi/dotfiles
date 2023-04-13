@@ -182,7 +182,12 @@ return {
 
 	{
 		"mg979/vim-visual-multi",
-		keys = { "<C-k>", "<C-S-k>", "<C-u>", "<C-e>" },
+		keys = {
+			{ "<C-k>",   nil, mode = { "n", "v" } },
+			{ "<C-S-k>", nil, mode = { "n", "v" } },
+			{ "<C-u>",   nil, mode = { "n", "v" } },
+			{ "<C-e>",   nil, mode = { "n", "v" } },
+		},
 		init = function()
 			vim.g.VM_default_mappings = 0
 			vim.g.VM_maps = {

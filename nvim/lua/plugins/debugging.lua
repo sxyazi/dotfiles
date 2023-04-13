@@ -137,8 +137,8 @@ return {
 			{ "theHamsta/nvim-dap-virtual-text", opts = { all_references = true } },
 		},
 		keys = {
-			{ "<leader>d", ":lua require('dap').continue()<CR>",          silent = true },
-			{ ",b",        ":lua require('dap').toggle_breakpoint()<CR>", silent = true },
+			{ "<leader>d", function() require("dap").continue() end },
+			{ ",b",        function() require("dap").toggle_breakpoint() end },
 		},
 		config = function()
 			local listeners = require("dap").listeners

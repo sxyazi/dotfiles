@@ -29,11 +29,6 @@ return {
 			background = { light = "latte", dark = "macchiato" },
 			transparent_background = true,
 			term_colors = true,
-			custom_highlights = function(C)
-				return {
-					TreesitterContext = { bg = C.mantle, fg = C.text },
-				}
-			end,
 			integrations = {
 				bufferline = false,
 				cmp = true,
