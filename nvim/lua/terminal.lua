@@ -58,6 +58,7 @@ vim.keymap.set("t", "<C-\\>", "<C-\\><C-n>:hide<CR>", { silent = true })
 vim.keymap.set("t", "<C-S-M-w>c", "<C-\\><C-n>:bwipeout!<CR>", { silent = true })
 
 -- Move cursor to the end of line, specific to zsh
+vim.keymap.set("t", "<Tab>", "<Tab>")
 vim.keymap.set("t", "<C-i>", "\x1b[105;5u")
 
 return M

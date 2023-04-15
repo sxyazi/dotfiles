@@ -1,5 +1,6 @@
 local M = {
-	last = "",
+	last_unit = nil,
+	last_cwd = nil,
 }
 
 local escape = vim.fn.shellescape
@@ -17,20 +18,19 @@ function M.current_function_name()
 end
 
 function M.go_run(last)
-	local name = M.last
 	if not last then
-		name = M.current_function_name()
+		M.last_unit = M.current_function_name()
+		M.last_cwd = vim.fn.expand("%:p:h")
 	end
 
-	if not name then
+	if not M.last_unit then
 		return require("notify")("no function name found")
 	end
 
-	M.last = name
-	if name:find("Test") == 1 then
-		require("terminal").exec(vim.fn.expand("%:p:h"), "go test -run " .. name)
-	elseif name == "main" then
-		require("terminal").exec(vim.fn.expand("%:p:h"), "go run .")
+	if M.last_unit:find("Test") == 1 then
+		require("terminal").exec(M.last_cwd, "go test -run '^" .. M.last_unit .. "$'")
+	elseif M.last_unit == "main" then
+		require("terminal").exec(M.last_cwd, "go run .")
 	else
 		require("notify")("unsupported test")
 	end

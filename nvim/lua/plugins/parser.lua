@@ -83,7 +83,7 @@ return {
 
 				autotag = { enable = true },
 				context_commentstring = { enable = true, enable_autocmd = false },
-				rainbow = { enable = true, strategy = require("ts-rainbow.strategy.local") },
+				rainbow = { enable = true, strategy = require("ts-rainbow").strategy.global },
 				textobjects = {
 					move = {
 						enable = true,

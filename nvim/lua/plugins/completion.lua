@@ -70,7 +70,7 @@ return {
 					["<C-e>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
 					["<C-n>"] = cmp.mapping.scroll_docs(-4),
 					["<C-i>"] = cmp.mapping.scroll_docs(4),
-					["<CR>"] = cmp.mapping.confirm { select = true },
+					["<CR>"] = cmp.mapping.confirm { select = true, behavior = cmp.ConfirmBehavior.Replace },
 				},
 				snippet = {
 					expand = function(args) require("luasnip").lsp_expand(args.body) end,
@@ -183,10 +183,10 @@ return {
 	{
 		"mg979/vim-visual-multi",
 		keys = {
-			{ "<C-k>",   nil, mode = { "n", "v" } },
+			{ "<C-k>", nil, mode = { "n", "v" } },
 			{ "<C-S-k>", nil, mode = { "n", "v" } },
-			{ "<C-u>",   nil, mode = { "n", "v" } },
-			{ "<C-e>",   nil, mode = { "n", "v" } },
+			{ "<C-u>", nil, mode = { "n", "v" } },
+			{ "<C-e>", nil, mode = { "n", "v" } },
 		},
 		init = function()
 			vim.g.VM_default_mappings = 0
@@ -222,7 +222,7 @@ return {
 	{
 		"Wansmer/treesj",
 		keys = {
-			{ "j", ":TSJJoin<CR>",  silent = true },
+			{ "j", ":TSJJoin<CR>", silent = true },
 			{ "J", ":TSJSplit<CR>", silent = true },
 		},
 		dependencies = { "nvim-treesitter/nvim-treesitter" },

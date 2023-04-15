@@ -182,9 +182,9 @@ return {
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v2.x",
 		dependencies = {
-			{ "nvim-lua/plenary.nvim", lazy = true },
+			{ "nvim-lua/plenary.nvim",       lazy = true },
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
-			{ "MunifTanjim/nui.nvim", lazy = true },
+			{ "MunifTanjim/nui.nvim",        lazy = true },
 		},
 		keys = {
 			{ "<leader>1", ":Neotree toggle<CR>", silent = true },
@@ -309,15 +309,15 @@ return {
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
-			{ "nvim-lua/plenary.nvim", lazy = true },
+			{ "nvim-lua/plenary.nvim",                    lazy = true },
 
 			-- Install a native sorter, for better performance
 			{ "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
 		},
 		keys = {
 			{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
-			{ "<leader>/", function() require("telescope.builtin").live_grep() end },
-			{ "<leader>;", function() require("telescope.builtin").command_history() end },
+			{ "<leader>/",        function() require("telescope.builtin").live_grep() end },
+			{ "<leader>;",        function() require("telescope.builtin").command_history() end },
 			{
 				"<leader>e",
 				function() require("telescope.builtin").find_files() end,
@@ -450,13 +450,13 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 		},
 		keys = {
-			{ "K", ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
-			{ "<C-Enter>", ":Lspsaga code_action<CR>", mode = { "n", "v" }, silent = true },
-			{ "<leader>l", ":Lspsaga lsp_finder<CR>", silent = true },
-			{ "<leader>b", ":Lspsaga goto_definition<CR>", silent = true },
-			{ "<leader>B", ":Lspsaga peek_definition<CR>", silent = true },
-			{ "<leader>m", ":Lspsaga goto_type_definition<CR>", silent = true },
-			{ "<leader>M", ":Lspsaga peek_type_definition<CR>", silent = true },
+			{ "K",         ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
+			{ "<C-Enter>", ":Lspsaga code_action<CR>",              mode = { "n", "v" }, silent = true },
+			{ "<leader>l", ":Lspsaga lsp_finder<CR>",               silent = true },
+			{ "<leader>b", ":Lspsaga goto_definition<CR>",          silent = true },
+			{ "<leader>B", ":Lspsaga peek_definition<CR>",          silent = true },
+			{ "<leader>m", ":Lspsaga goto_type_definition<CR>",     silent = true },
+			{ "<leader>M", ":Lspsaga peek_type_definition<CR>",     silent = true },
 
 			{
 				"[;",
@@ -590,8 +590,8 @@ return {
 		cmd = { "TroubleToggle", "Trouble" },
 		keys = {
 			{ ",e", ":TroubleToggle workspace_diagnostics<CR>", silent = true },
-			{ ",E", ":TroubleToggle document_diagnostics<CR>", silent = true },
-			{ ",f", ":TroubleToggle quickfix<CR>", silent = true },
+			{ ",E", ":TroubleToggle document_diagnostics<CR>",  silent = true },
+			{ ",f", ":TroubleToggle quickfix<CR>",              silent = true },
 			{
 				"[q",
 				function()
