@@ -73,14 +73,13 @@ return {
 				incremental_selection = {
 					enable = true,
 					keymaps = {
-						init_selection = "<Enter>",
-						node_incremental = "<Enter>",
-						node_decremental = "<S-Enter>",
+						init_selection = "<CR>",
+						node_incremental = "<CR>",
+						node_decremental = "<S-CR>",
 						scope_incremental = false,
 					},
 				},
 				indent = { enable = true },
-
 				autotag = { enable = true },
 				context_commentstring = { enable = true, enable_autocmd = false },
 				rainbow = { enable = true, strategy = require("ts-rainbow").strategy.global },

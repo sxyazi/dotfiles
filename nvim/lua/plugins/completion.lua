@@ -27,7 +27,7 @@ return {
 					accept = false,
 					prev = "<M-[>",
 					next = "<M-]>",
-					dismiss = "<C-w>",
+					dismiss = false,
 				},
 			},
 		},
@@ -64,13 +64,13 @@ return {
 			cmp.setup {
 				preselect = cmp.PreselectMode.None,
 				mapping = {
-					["<C-w>"] = cmp.mapping.abort(),
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-u>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
 					["<C-e>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
 					["<C-n>"] = cmp.mapping.scroll_docs(-4),
 					["<C-i>"] = cmp.mapping.scroll_docs(4),
-					["<CR>"] = cmp.mapping.confirm { select = true, behavior = cmp.ConfirmBehavior.Replace },
+					["<CR>"] = cmp.mapping.confirm { select = true },
+					["<S-CR>"] = cmp.mapping.confirm { select = true, behavior = cmp.ConfirmBehavior.Replace },
 				},
 				snippet = {
 					expand = function(args) require("luasnip").lsp_expand(args.body) end,
@@ -96,13 +96,9 @@ return {
 						ellipsis_char = "...",
 					},
 				},
-				experimental = { ghost_text = true },
 			}
 
 			local mapping = {
-				["<C-w>"] = {
-					c = cmp.mapping.abort(),
-				},
 				["<Tab>"] = cmp.mapping(function()
 					if cmp.visible() then
 						cmp.select_next_item()

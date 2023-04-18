@@ -13,16 +13,16 @@ local M = {
 		"jsonls",
 		"pyright",
 		"quick_lint_js", -- JavaScript
-		"texlab",      -- LaTeX
+		"texlab", -- LaTeX
 		"lua_ls",
-		"marksman",    -- Markdown
+		"marksman", -- Markdown
 		"rust_analyzer",
-		"sqlls",       -- SQL
-		"taplo",       -- TOML
+		"sqlls", -- SQL
+		"taplo", -- TOML
 		"tailwindcss",
-		"tsserver",    -- TypeScript
-		"lemminx",     -- XML
-		"yamlls",      -- YAML
+		"tsserver", -- TypeScript
+		"lemminx", -- XML
+		"yamlls", -- YAML
 	},
 	mason_null = {
 		-- Bash
@@ -32,7 +32,7 @@ local M = {
 		"actionlint", -- linter
 
 		-- Golang
-		"revive",  -- linter
+		"revive", -- linter
 		"goimports", -- formatter
 
 		-- JavaScript
@@ -50,13 +50,41 @@ local M = {
 
 function M.lsp_attached(client, bufnr)
 	-- Format on save
-	local group = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
+	local version = nil
+	local function on_formatted(err, result, ctx)
+		if err ~= nil then
+			require("vim.lsp.log").error(string.format("[%s] %d: %s", client.name, err.code, err.message))
+			return
+		end
+		if result == nil or not vim.api.nvim_buf_is_loaded(ctx.bufnr) then
+			return
+		end
+		if vim.api.nvim_buf_get_var(ctx.bufnr, "changedtick") ~= version then
+			return
+		end
+
+		vim.lsp.util.apply_text_edits(result, ctx.bufnr, "utf-16")
+		if vim.api.nvim_get_current_buf() == ctx.bufnr then
+			vim.b.format_saving = true
+			vim.cmd("update")
+			vim.b.format_saving = false
+		end
+	end
 	if client.supports_method("textDocument/formatting") then
+		local group = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
 		vim.api.nvim_clear_autocmds { group = group, buffer = bufnr }
-		vim.api.nvim_create_autocmd("BufWritePre", {
+		vim.api.nvim_create_autocmd("BufWritePost", {
 			group = group,
 			buffer = bufnr,
-			callback = function() vim.lsp.buf.format() end,
+			callback = function()
+				if vim.b.format_saving then
+					return
+				end
+
+				local params = vim.lsp.util.make_formatting_params()
+				version = vim.api.nvim_buf_get_var(bufnr, "changedtick")
+				client.request("textDocument/formatting", params, on_formatted, bufnr)
+			end,
 		})
 	end
 end
@@ -91,7 +119,7 @@ function M.rust_setup()
 			capabilities = require("cmp_nvim_lsp").default_capabilities(),
 			on_attach = function(client, bufnr)
 				M.lsp_attached(client, bufnr)
-				vim.keymap.set("n", "<C-Enter>", rt.hover_actions.hover_actions, { buffer = bufnr })
+				vim.keymap.set("n", "<C-CR>", rt.hover_actions.hover_actions, { buffer = bufnr })
 			end,
 		},
 		tools = {
@@ -172,7 +200,7 @@ return {
 				opts = { ensure_installed = M.mason_lsp, automatic_installation = true },
 			},
 			{ "simrat39/rust-tools.nvim", lazy = true },
-			{ "b0o/SchemaStore.nvim",     lazy = true },
+			{ "b0o/SchemaStore.nvim", lazy = true },
 		},
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()

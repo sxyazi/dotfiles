@@ -135,12 +135,10 @@ return {
 		"stevearc/dressing.nvim",
 		lazy = true,
 		init = function()
-			---@diagnostic disable-next-line: duplicate-set-field
 			vim.ui.select = function(...)
 				require("lazy").load { plugins = { "dressing.nvim" } }
 				return vim.ui.select(...)
 			end
-			---@diagnostic disable-next-line: duplicate-set-field
 			vim.ui.input = function(...)
 				require("lazy").load { plugins = { "dressing.nvim" } }
 				return vim.ui.input(...)
@@ -154,11 +152,9 @@ return {
 					n = {
 						["<CR>"] = "Confirm",
 						["<Esc>"] = "Close",
-						["<C-w>"] = "Close",
 					},
 					i = {
 						["<CR>"] = "Confirm",
-						["<C-w>"] = "Close",
 						["<C-u>"] = "HistoryPrev",
 						["<C-e>"] = "HistoryNext",
 					},
@@ -170,7 +166,6 @@ return {
 					mappings = {
 						["<CR>"] = "Confirm",
 						["<Esc>"] = "Close",
-						["<C-w>"] = "Close",
 					},
 				},
 			},
@@ -182,9 +177,9 @@ return {
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v2.x",
 		dependencies = {
-			{ "nvim-lua/plenary.nvim",       lazy = true },
+			{ "nvim-lua/plenary.nvim", lazy = true },
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
-			{ "MunifTanjim/nui.nvim",        lazy = true },
+			{ "MunifTanjim/nui.nvim", lazy = true },
 		},
 		keys = {
 			{ "<leader>1", ":Neotree toggle<CR>", silent = true },
@@ -203,7 +198,6 @@ return {
 			end,
 			use_popups_for_input = false,
 			use_default_mappings = false,
-			-- ...source_selector...
 			event_handlers = {
 				{
 					event = "after_render",
@@ -225,24 +219,41 @@ return {
 			},
 			window = {
 				mappings = {
-					["<Tab>"] = function(state)
+					["n"] = function(state)
 						local node = state.tree:get_node()
-						if require("neo-tree.utils").is_expandable(node) then
+						local foldable = require("neo-tree.utils").is_expandable(node) and node:is_expanded()
+
+						if foldable then
 							state.commands.toggle_node(state)
-						else
-							state.commands.focus_preview()
+						elseif node:get_parent_id() then
+							require("neo-tree.sources.filesystem").navigate(state, state.path, node:get_parent_id())
 						end
 					end,
-					["<CR>"] = function(state)
-						state.commands.open(state)
+					["i"] = function(state)
+						local node = state.tree:get_node()
+						local expandable = require("neo-tree.utils").is_expandable(node)
 
-						if state.commands.clear_filter and state.search_pattern then
-							local fs = require("neo-tree.sources.filesystem")
-							local node = state.tree:get_node()
-							fs.reset_search(state, false, false)
-							fs.navigate(state, state.path, node:get_id(), function() require("neo-tree").close_all() end)
-						else
-							require("neo-tree").close_all()
+						-- if it's a file, open it
+						if not expandable then
+							state.commands.open(state)
+
+							if state.commands.clear_filter and state.search_pattern then
+								local fs = require("neo-tree.sources.filesystem")
+								local node = state.tree:get_node()
+								fs.reset_search(state, false, false)
+								fs.navigate(state, state.path, node:get_id(), function() require("neo-tree").close_all() end)
+							else
+								require("neo-tree").close_all()
+							end
+							return
+						end
+
+						-- if it's a directory, expand or jump into it
+						if not node:is_expanded() then
+							state.commands.toggle_node(state)
+						elseif node:has_children() then
+							local child = state.tree:get_nodes(node:get_id())[1]
+							require("neo-tree.sources.filesystem").navigate(state, state.path, child:get_id())
 						end
 					end,
 					["a"] = "add",
@@ -266,7 +277,6 @@ return {
 			},
 			filesystem = {
 				group_empty_dirs = true,
-				follow_current_file = true,
 				use_libuv_file_watcher = true,
 				window = {
 					mappings = {
@@ -309,15 +319,15 @@ return {
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
-			{ "nvim-lua/plenary.nvim",                    lazy = true },
+			{ "nvim-lua/plenary.nvim", lazy = true },
 
 			-- Install a native sorter, for better performance
 			{ "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
 		},
 		keys = {
 			{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
-			{ "<leader>/",        function() require("telescope.builtin").live_grep() end },
-			{ "<leader>;",        function() require("telescope.builtin").command_history() end },
+			{ "<leader>/", function() require("telescope.builtin").live_grep() end },
+			{ "<leader>;", function() require("telescope.builtin").command_history() end },
 			{
 				"<leader>e",
 				function() require("telescope.builtin").find_files() end,
@@ -450,13 +460,13 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 		},
 		keys = {
-			{ "K",         ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
-			{ "<C-Enter>", ":Lspsaga code_action<CR>",              mode = { "n", "v" }, silent = true },
-			{ "<leader>l", ":Lspsaga lsp_finder<CR>",               silent = true },
-			{ "<leader>b", ":Lspsaga goto_definition<CR>",          silent = true },
-			{ "<leader>B", ":Lspsaga peek_definition<CR>",          silent = true },
-			{ "<leader>m", ":Lspsaga goto_type_definition<CR>",     silent = true },
-			{ "<leader>M", ":Lspsaga peek_type_definition<CR>",     silent = true },
+			{ "K", ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
+			{ "<C-CR>", ":Lspsaga code_action<CR>", mode = { "n", "v" }, silent = true },
+			{ "<leader>l", ":Lspsaga lsp_finder<CR>", silent = true },
+			{ "<leader>b", ":Lspsaga goto_definition<CR>", silent = true },
+			{ "<leader>B", ":Lspsaga peek_definition<CR>", silent = true },
+			{ "<leader>m", ":Lspsaga goto_type_definition<CR>", silent = true },
+			{ "<leader>M", ":Lspsaga peek_type_definition<CR>", silent = true },
 
 			{
 				"[;",
@@ -532,7 +542,6 @@ return {
 			{ "<leader>f", function() require("spectre").open() end },
 		},
 		opts = {
-			live_update = true,
 			highlight = {
 				search = "DiffDelete",
 				replace = "DiffAdd",
@@ -558,7 +567,7 @@ return {
 					cmd = ":lua require('spectre.actions').run_replace()<CR>",
 				},
 				["change_view_mode"] = {
-					map = "v",
+					map = "tv",
 					cmd = ":lua require('spectre').change_view()<CR>",
 				},
 				["change_replace_sed"] = { map = "<Nop>" },
@@ -590,8 +599,8 @@ return {
 		cmd = { "TroubleToggle", "Trouble" },
 		keys = {
 			{ ",e", ":TroubleToggle workspace_diagnostics<CR>", silent = true },
-			{ ",E", ":TroubleToggle document_diagnostics<CR>",  silent = true },
-			{ ",f", ":TroubleToggle quickfix<CR>",              silent = true },
+			{ ",E", ":TroubleToggle document_diagnostics<CR>", silent = true },
+			{ ",f", ":TroubleToggle quickfix<CR>", silent = true },
 			{
 				"[q",
 				function()
