@@ -63,7 +63,7 @@ function M.lsp_attached(client, bufnr)
 			return
 		end
 
-		vim.lsp.util.apply_text_edits(result, ctx.bufnr, "utf-16")
+		vim.lsp.util.apply_text_edits(result, ctx.bufnr, client.offset_encoding or "utf-16")
 		if vim.api.nvim_get_current_buf() == ctx.bufnr then
 			vim.b.format_saving = true
 			vim.cmd("update")

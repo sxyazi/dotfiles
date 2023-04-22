@@ -44,8 +44,12 @@ require("lazy").setup("plugins", {
 	},
 })
 
-local config = require("lazy.view.config")
-config.commands.install.key_plugin = nil
-config.commands.update.key_plugin = nil
+local commands = require("lazy.view.config").commands
+commands.install = nil
+commands.update = nil
+commands.clean = nil
+commands.check = nil
+commands.restore.button = false
+commands.help = nil
 
 require("testing")

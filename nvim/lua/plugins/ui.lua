@@ -122,6 +122,8 @@ return {
 							{ find = "formatting" },
 							{ find = "Diagnosing" },
 							{ find = "Diagnostics" },
+							{ find = "diagnostics" },
+							{ find = "Processing full semantic tokens" },
 						},
 					},
 					opts = { skip = true },
@@ -198,25 +200,25 @@ return {
 			end,
 			use_popups_for_input = false,
 			use_default_mappings = false,
-			event_handlers = {
-				{
-					event = "after_render",
-					handler = function()
-						local state = require("neo-tree.sources.manager").get_state_for_window()
-						if state == nil then
-							return
-						end
-						if not require("neo-tree.sources.common.preview").is_active() then
-							state.config = { use_float = false }
-							state.commands.toggle_preview(state)
-						end
-					end,
-				},
-				{
-					event = "neo_tree_window_before_close",
-					handler = function() require("neo-tree.sources.common.preview").hide() end,
-				},
-			},
+			-- event_handlers = {
+			-- 	{
+			-- 		event = "after_render",
+			-- 		handler = function()
+			-- 			local state = require("neo-tree.sources.manager").get_state_for_window()
+			-- 			if state == nil then
+			-- 				return
+			-- 			end
+			-- 			if not require("neo-tree.sources.common.preview").is_active() then
+			-- 				state.config = { use_float = false }
+			-- 				state.commands.toggle_preview(state)
+			-- 			end
+			-- 		end,
+			-- 	},
+			-- 	{
+			-- 		event = "neo_tree_window_before_close",
+			-- 		handler = function() require("neo-tree.sources.common.preview").hide() end,
+			-- 	},
+			-- },
 			window = {
 				mappings = {
 					["n"] = function(state)
@@ -250,6 +252,17 @@ return {
 
 						-- if it's a directory, expand or jump into it
 						if not node:is_expanded() then
+							state.commands.toggle_node(state)
+						elseif node:has_children() then
+							local child = state.tree:get_nodes(node:get_id())[1]
+							require("neo-tree.sources.filesystem").navigate(state, state.path, child:get_id())
+						end
+					end,
+					["<Tab>"] = function(state)
+						local node = state.tree:get_node()
+						if not require("neo-tree.utils").is_expandable(node) then
+							state.commands.open(state)
+						elseif not node:is_expanded() then
 							state.commands.toggle_node(state)
 						elseif node:has_children() then
 							local child = state.tree:get_nodes(node:get_id())[1]
@@ -481,6 +494,7 @@ return {
 		},
 		opts = {
 			ui = {
+				border = "rounded",
 				kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
 			},
 			scroll_preview = {
@@ -490,7 +504,7 @@ return {
 			request_timeout = 10000,
 			finder = {
 				keys = {
-					expand_or_jump = "<Tab>",
+					expand_or_jump = "<CR>",
 					vsplit = "s",
 					split = "S",
 					tabe = "t",
@@ -513,18 +527,18 @@ return {
 				},
 			},
 			lightbulb = { sign = false },
+			hover = { open_link = "o" },
 			diagnostic = {
 				keys = {
 					exec_action = "<CR>",
 					quit = "<ESC>",
-					go_action = "<Tab>",
 					expand_or_jump = "<Tab>",
 					quit_in_show = { "<ESC>" },
 				},
 			},
 			outline = {
 				keys = {
-					expand_or_collapse = "<Tab>",
+					expand_or_jump = "<CR>",
 					quit = "<ESC>",
 				},
 			},
@@ -702,14 +716,15 @@ return {
 			delay = 200,
 			filetypes_denylist = {
 				"TelescopePrompt",
-				"DressingInput",
 				"neo-tree",
 				"neo-tree-popup",
+				"DressingInput",
 				"sagarename",
 				"sagacodeaction",
 				"lspsagafinder",
 				"spectre_panel",
 				"Outline",
+				"checkhealth",
 			},
 			min_count_to_highlight = 2,
 		},
