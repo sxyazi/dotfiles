@@ -20,6 +20,7 @@ tmux/plugins/
 
 !rules/
 !rules/**
+rules/**/node_modules
 
 !ranger
 !ranger/**

@@ -17,7 +17,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins", {
-	concurrency = 10,
 	change_detection = {
 		notify = false,
 	},

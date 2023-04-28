@@ -37,22 +37,13 @@ return {
 		},
 	},
 
-	-- Notification manager for NeoVim
-	{
-		"rcarriga/nvim-notify",
-		event = "VeryLazy",
-		opts = {
-			background_colour = "#000000",
-		},
-	},
-
 	-- Completely replaces the UI for messages, cmdline and the popupmenu
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
 		dependencies = {
 			{ "MunifTanjim/nui.nvim", lazy = true },
-			"rcarriga/nvim-notify",
+			{ "rcarriga/nvim-notify", lazy = true, opts = { background_colour = "#000000" } },
 		},
 		opts = {
 			lsp = {
@@ -76,7 +67,20 @@ return {
 			},
 			routes = {
 				{
-					view = "notify",
+					filter = {
+						event = "notify",
+						any = {
+							-- Neo-tree
+							{ find = "Toggling hidden files: true" },
+							{ find = "Toggling hidden files: false" },
+
+							-- Telescope
+							{ find = "Nothing currently selected" },
+						},
+					},
+					opts = { skip = true },
+				},
+				{
 					filter = {
 						event = "msg_show",
 						kind = { "echo" },
@@ -84,7 +88,6 @@ return {
 					opts = { skip = true },
 				},
 				{
-					view = "notify",
 					filter = {
 						event = "msg_show",
 						kind = "",
@@ -116,8 +119,8 @@ return {
 					opts = { skip = true },
 				},
 				{
-					view = "mini",
 					filter = {
+						event = "lsp",
 						any = {
 							{ find = "formatting" },
 							{ find = "Diagnosing" },
@@ -356,9 +359,15 @@ return {
 				"-g",
 				"!.git/",
 				"-g",
+				"!node_modules/",
+				"-g",
+				"!package-lock.json",
+				"-g",
 				"!go.sum",
 				"-g",
 				"!lazy-lock.json",
+				"-g",
+				"!.zsh_history",
 			}
 
 			local vimgrep_arguments = { unpack(require("telescope.config").values.vimgrep_arguments) }
@@ -448,6 +457,9 @@ return {
 		"williamboman/mason.nvim",
 		cmd = "Mason",
 		opts = {
+			pip = {
+				upgrade_pip = true,
+			},
 			ui = {
 				keymaps = {
 					-- https://github.com/williamboman/mason.nvim/blob/main/lua/mason/settings.lua#L87

@@ -18,6 +18,7 @@ export VISUAL="nvim"
 
 export HOMEBREW_NO_ANALYTICS=1
 export RANGER_LOAD_DEFAULT_RC="FALSE"
+export PNPM_HOME=/Users/$USER/Library/pnpm
 
 export FZF_DEFAULT_COMMAND="fd $__FD_COMMAND"
 export FZF_DEFAULT_OPTS="

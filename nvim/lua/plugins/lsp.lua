@@ -7,12 +7,12 @@ local M = {
 		"cssls",
 		"dockerls",
 		"docker_compose_language_service",
+		"eslint",
 		"emmet_ls",
 		"gopls", -- Golang
 		"html",
 		"jsonls",
 		"pyright",
-		"quick_lint_js", -- JavaScript
 		"texlab", -- LaTeX
 		"lua_ls",
 		"marksman", -- Markdown
@@ -20,7 +20,7 @@ local M = {
 		"sqlls", -- SQL
 		"taplo", -- TOML
 		"tailwindcss",
-		"tsserver", -- TypeScript
+		"tsserver", -- JS/TS
 		"lemminx", -- XML
 		"yamlls", -- YAML
 	},
@@ -35,55 +35,70 @@ local M = {
 		"revive", -- linter
 		"goimports", -- formatter
 
-		-- JavaScript
-		"eslint_d", -- linter
-		"prettierd", -- formatter
-
 		-- Lua
 		"stylua", -- formatter
 
 		-- Python
 		"ruff", -- linter
 		"black", -- formatter
+
+		-- Markdown
+		"prettier", -- formatter
 	},
 }
 
 function M.lsp_attached(client, bufnr)
 	-- Format on save
-	local version = nil
-	local function on_formatted(err, result, ctx)
-		if err ~= nil then
-			require("vim.lsp.log").error(string.format("[%s] %d: %s", client.name, err.code, err.message))
-			return
-		end
-		if result == nil or not vim.api.nvim_buf_is_loaded(ctx.bufnr) then
-			return
-		end
-		if vim.api.nvim_buf_get_var(ctx.bufnr, "changedtick") ~= version then
-			return
-		end
+	local request_id = nil
+	local request_inc = 0
+	local reset_formatting = function()
+		vim.b.format_processing = nil
+		request_id = nil
+	end
+	local function on_formatted(inc)
+		return function(err, result, ctx)
+			if inc ~= request_inc then
+				return
+			end
+			if vim.b.format_processing ~= vim.api.nvim_buf_get_var(ctx.bufnr, "changedtick") then
+				return
+			end
+			if err then
+				require("vim.lsp.log").error(string.format("[%s] %d: %s", client.name, err.code, err.message))
+				return reset_formatting()
+			end
+			if not result or not vim.api.nvim_buf_is_loaded(ctx.bufnr) then
+				return
+			end
 
-		vim.lsp.util.apply_text_edits(result, ctx.bufnr, client.offset_encoding or "utf-16")
-		if vim.api.nvim_get_current_buf() == ctx.bufnr then
-			vim.b.format_saving = true
-			vim.cmd("update")
-			vim.b.format_saving = false
+			vim.lsp.util.apply_text_edits(result, ctx.bufnr, client.offset_encoding)
+			if vim.api.nvim_get_current_buf() == ctx.bufnr then
+				vim.cmd("update")
+			end
+			reset_formatting()
 		end
 	end
 	if client.supports_method("textDocument/formatting") then
+		local params = vim.lsp.util.make_formatting_params()
 		local group = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
 		vim.api.nvim_clear_autocmds { group = group, buffer = bufnr }
 		vim.api.nvim_create_autocmd("BufWritePost", {
 			group = group,
 			buffer = bufnr,
 			callback = function()
-				if vim.b.format_saving then
+				local tick = vim.api.nvim_buf_get_var(bufnr, "changedtick")
+				if vim.b.format_processing == tick then
 					return
+				else
+					vim.b.format_processing = tick
 				end
 
-				local params = vim.lsp.util.make_formatting_params()
-				version = vim.api.nvim_buf_get_var(bufnr, "changedtick")
-				client.request("textDocument/formatting", params, on_formatted, bufnr)
+				if request_id ~= nil then
+					client.cancel_request(request_id)
+				end
+
+				request_inc = request_inc + 1
+				_, request_id = client.request("textDocument/formatting", params, on_formatted(request_inc), bufnr)
 			end,
 		})
 	end
@@ -112,6 +127,27 @@ function M.go_setup()
 	}
 end
 
+function M.ts_setup()
+	require("lspconfig").tsserver.setup {
+		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+	}
+	require("lspconfig").eslint.setup {
+		settings = {
+			-- https://github.com/Microsoft/vscode-eslint#settings-options
+			packageManager = "pnpm",
+			useESLintClass = true,
+			experimental = {
+				useFlatConfig = true,
+			},
+		},
+		on_attach = function(client, bufnr)
+			client.server_capabilities.documentFormattingProvider = true
+			client.server_capabilities.documentRangeFormattingProvider = true
+			M.lsp_attached(client, bufnr)
+		end,
+	}
+end
+
 function M.rust_setup()
 	local rt = require("rust-tools")
 	rt.setup {
@@ -129,7 +165,7 @@ function M.rust_setup()
 end
 
 function M.python_setup()
-	-- disable hint, which are covered by `ruff`
+	-- disable hints, which are covered by `ruff`
 	-- https://github.com/lkhphuc/dotfiles/blob/6de9bd6fd5526c337445dc40000ec1573d4e351e/nvim/lua/plugins/extras/python.lua#L9
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	capabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
@@ -186,7 +222,6 @@ end
 function M.markdown_setup()
 	require("lspconfig").marksman.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
-		on_attach = M.lsp_attached,
 	}
 end
 
@@ -207,6 +242,7 @@ return {
 			-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 			M.lua_setup()
 			M.go_setup()
+			M.ts_setup()
 			M.rust_setup()
 			M.python_setup()
 			M.json_setup()
@@ -251,11 +287,6 @@ return {
 					},
 					nls.builtins.formatting.goimports,
 
-					-- JavaScript
-					nls.builtins.code_actions.eslint_d,
-					nls.builtins.diagnostics.eslint_d,
-					nls.builtins.formatting.prettierd,
-
 					-- Lua
 					nls.builtins.formatting.stylua.with {
 						args = require("null-ls.helpers").range_formatting_args_factory({
@@ -271,6 +302,17 @@ return {
 					nls.builtins.diagnostics.ruff,
 					nls.builtins.formatting.ruff,
 					nls.builtins.formatting.black,
+
+					-- Markdown
+					-- nls.builtins.formatting.prettier.with {
+					-- 	cwd = function(params)
+					-- 		local cwd = require("null-ls.builtins.formatting.prettier")._opts.cwd(params)
+					-- 		if cwd then
+					-- 			return cwd
+					-- 		end
+					-- 		return vim.fn.expand("$HOME/.config/rules")
+					-- 	end,
+					-- },
 				},
 			}
 		end,

@@ -1,0 +1,20 @@
+{
+	"name": "eslint",
+	"type": "module",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "sxyazi <sxyazi@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@eslint/js": "^8.39.0",
+		"@typescript-eslint/eslint-plugin": "^5.59.1",
+		"@typescript-eslint/parser": "^5.59.1",
+		"eslint-plugin-markdown": "^3.0.0",
+		"eslint-plugin-react": "^7.32.2",
+		"globals": "^13.20.0"
+	}
+}
