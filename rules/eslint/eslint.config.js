@@ -1,4 +1,2 @@
-import all from "./index.js"
-
-export default all
+export {default} from "./index.js"
 

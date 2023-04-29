@@ -1,7 +1,5 @@
-import globals from "globals"
 import eslint from "@eslint/js"
-
-import formatting from "./formatting.js"
+import globals from "globals"
 
 export default [
 	{
@@ -15,7 +13,6 @@ export default [
 		},
 		rules: {
 			...eslint.configs.recommended.rules,
-			...formatting,
 		},
 	},
 	{
@@ -33,7 +30,6 @@ export default [
 		},
 		rules: {
 			...eslint.configs.recommended.rules,
-			...formatting,
 		},
 	},
 ]

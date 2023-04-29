@@ -1,5 +1,5 @@
-import mdPlugin from "eslint-plugin-markdown"
 import tsPlugin from "@typescript-eslint/eslint-plugin"
+import mdPlugin from "eslint-plugin-markdown"
 
 export default [
 	{
