@@ -1,18 +1,7 @@
-import extended from "./plugins/extended.js"
-import formatting from "./plugins/formatting.js"
-import javascript from "./plugins/javascript.js"
-import markdown from "./plugins/markdown.js"
-import react from "./plugins/react.js"
-import typescript from "./plugins/typescript.js"
-
-export default [
-	...javascript,
-	...typescript,
-	...markdown,
-	...react,
-
-	...extended,
-
-	...formatting,
-]
+export * from "./plugins/extended.js"
+export * from "./plugins/formatting.js"
+export * from "./plugins/javascript.js"
+export * from "./plugins/markdown.js"
+export * from "./plugins/react.js"
+export * from "./plugins/typescript.js"
 

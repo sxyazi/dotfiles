@@ -1,7 +1,7 @@
 import eslint from "@eslint/js"
 import globals from "globals"
 
-export default [
+export const javascript = [
 	{
 		files          : ["**/*.{js,cjs,mjs}"],
 		languageOptions: {

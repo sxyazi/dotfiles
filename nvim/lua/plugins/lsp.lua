@@ -127,7 +127,7 @@ function M.go_setup()
 	}
 end
 
-function M.ts_setup()
+function M.fe_setup()
 	require("lspconfig").tsserver.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 	}
@@ -145,6 +145,9 @@ function M.ts_setup()
 			client.server_capabilities.documentRangeFormattingProvider = true
 			M.lsp_attached(client, bufnr)
 		end,
+	}
+	require("lspconfig").tailwindcss.setup {
+		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 	}
 end
 
@@ -242,7 +245,7 @@ return {
 			-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 			M.lua_setup()
 			M.go_setup()
-			M.ts_setup()
+			M.fe_setup()
 			M.rust_setup()
 			M.python_setup()
 			M.json_setup()

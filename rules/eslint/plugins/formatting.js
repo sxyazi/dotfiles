@@ -1,4 +1,5 @@
-export const basic = {
+// https://eslint.org/docs/latest/rules/#layout--formatting
+const basic = {
 	"array-bracket-newline"         : ["warn", "consistent"],
 	"array-bracket-spacing"         : "warn",
 	"array-element-newline"         : ["warn", "consistent"],
@@ -10,13 +11,13 @@ export const basic = {
 	"comma-spacing"                 : "warn",
 	"comma-style"                   : "warn",
 	"computed-property-spacing"     : "warn",
-	"dot-location"                  : "warn",
+	"dot-location"                  : ["warn", "property"],
 	"eol-last"                      : "warn",
 	"func-call-spacing"             : "warn",
 	"function-call-argument-newline": ["warn", "consistent"],
 	"function-paren-newline"        : "off",
 	"generator-star-spacing"        : ["warn", {before: false, after: true}],
-	"implicit-arrow-linebreak"      : "warn",
+	"implicit-arrow-linebreak"      : "off",
 	"indent"                        : ["warn", "tab", {
 		VariableDeclarator      : "first",
 		FunctionDeclaration     : {parameters: "first"},
@@ -50,7 +51,7 @@ export const basic = {
 	"no-tabs"                         : ["warn", {allowIndentationTabs: true}],
 	"no-trailing-spaces"              : "warn",
 	"no-whitespace-before-property"   : "warn",
-	"nonblock-statement-body-position": "warn",
+	"nonblock-statement-body-position": ["warn", "any"],
 	"object-curly-newline"            : "warn",
 	"object-curly-spacing"            : "warn",
 	"object-property-newline"         : ["warn", {allowAllPropertiesOnSameLine: true}],
@@ -80,19 +81,20 @@ export const basic = {
 	"template-curly-spacing": "warn",
 	"template-tag-spacing"  : "warn",
 	"unicode-bom"           : "warn",
-	"wrap-iife"             : ["warn", "inside", {functionPrototypeMethods: true}],
+	"wrap-iife"             : ["warn", "outside", {functionPrototypeMethods: true}],
 	"wrap-regex"            : "off",
 	"yield-star-spacing"    : "warn",
 }
 
-export const extended = {
+// https://eslint.org/docs/latest/rules/#suggestions
+const suggestions = {
 	"arrow-body-style"              : "off",
-	"capitalized-comments"          : ["warn", "always", {ignoreInlineComments: true}],
+	"capitalized-comments"          : "off",
 	"curly"                         : "off",
 	"dot-notation"                  : "warn",
 	"eqeqeq"                        : "warn",
 	"logical-assignment-operators"  : ["warn", "always", {enforceForIfStatements: true}],
-	"multiline-comment-style"       : "warn",
+	"multiline-comment-style"       : ["warn", "separate-lines", {checkJSDoc: true}],
 	"no-confusing-arrow"            : ["warn", {onlyOneSimpleParam: true}],
 	"no-div-regex"                  : "off",
 	"no-else-return"                : "off",
@@ -134,12 +136,31 @@ export const extended = {
 	"yoda"  : "warn",
 }
 
-export default [
+export const formatting = [
 	{
 		files: ["**/*.{ts,tsx,js,jsx,cjs,mjs,cts,mts}"],
 		rules: {
 			...basic,
-			...extended,
+			...suggestions,
+		},
+	},
+	{
+		files: ["**/*.{ts,tsx,cts,mts}"],
+		rules: {
+			"indent"                   : "off",
+			"@typescript-eslint/indent": ["warn", "tab", {
+				VariableDeclarator      : "first",
+				FunctionDeclaration     : {parameters: "first"},
+				FunctionExpression      : {parameters: "first"},
+				CallExpression          : {arguments: "first"},
+				ArrayExpression         : "first",
+				ObjectExpression        : "first",
+				ImportDeclaration       : "first",
+				flatTernaryExpressions  : true,
+				offsetTernaryExpressions: true,
+			}],
+			"no-extra-parens"                   : "off",
+			"@typescript-eslint/no-extra-parens": ["warn", "functions"],
 		},
 	},
 ]

@@ -1,7 +1,7 @@
 import tsPlugin from "@typescript-eslint/eslint-plugin"
 import mdPlugin from "eslint-plugin-markdown"
 
-export default [
+export const markdown = [
 	{
 		files    : ["**/*.md"],
 		processor: "markdown/markdown",

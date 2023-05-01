@@ -1,7 +1,7 @@
 import importPlugin from "eslint-plugin-import"
 import unicornPlugin from "eslint-plugin-unicorn"
 
-export const unicorn = {
+const unicorn = {
 	...unicornPlugin.configs.recommended.rules,
 
 	"unicorn/better-regex"                           : "warn",
@@ -10,7 +10,7 @@ export const unicorn = {
 	"unicorn/custom-error-definition"                : "warn",
 	"unicorn/empty-brace-spaces"                     : "warn",
 	"unicorn/escape-case"                            : "warn",
-	"unicorn/explicit-length-check"                  : "warn",
+	"unicorn/explicit-length-check"                  : "off",
 	"unicorn/new-for-builtins"                       : "warn",
 	"unicorn/no-array-for-each"                      : "warn",
 	"unicorn/no-array-method-this-argument"          : "warn",
@@ -62,7 +62,7 @@ export const unicorn = {
 	"unicorn/prefer-native-coercion-functions"       : "warn",
 	"unicorn/prefer-negative-index"                  : "warn",
 	"unicorn/prefer-node-protocol"                   : "warn",
-	"unicorn/prefer-number-properties"               : "warn",
+	"unicorn/prefer-number-properties"               : "off",
 	"unicorn/prefer-object-from-entries"             : "warn",
 	"unicorn/prefer-optional-catch-binding"          : "warn",
 	"unicorn/prefer-prototype-methods"               : "warn",
@@ -79,7 +79,7 @@ export const unicorn = {
 	"unicorn/prefer-switch"                          : ["warn", {emptyDefaultCase: "no-default-case"}],
 	"unicorn/prefer-ternary"                         : "warn",
 	"unicorn/prefer-type-error"                      : "warn",
-	"unicorn/prevent-abbreviations"                  : "warn",
+	"unicorn/prevent-abbreviations"                  : "off",
 	"unicorn/relative-url-style"                     : "warn",
 	"unicorn/require-array-join-separator"           : "warn",
 	"unicorn/require-number-to-fixed-digits-argument": "warn",
@@ -90,7 +90,7 @@ export const unicorn = {
 	"unicorn/throw-new-error"                        : "warn",
 }
 
-export const imports = {
+const imports = {
 	...importPlugin.configs.recommended.rules,
 
 	"import/no-empty-named-blocks"          : "warn",
@@ -110,7 +110,7 @@ export const imports = {
 	}],
 }
 
-export default [
+export const extended = [
 	// eslint-plugin-unicorn
 	{
 		files  : ["**/*.{ts,tsx,js,jsx,cjs,mjs,cts,mts}"],
@@ -148,6 +148,12 @@ export default [
 		rules: {
 			// TypeScript compilation already ensures that named imports exist in the referenced module
 			"import/named": "off",
+		},
+	},
+	{
+		files: ["eslint.config.js"],
+		rules: {
+			"import/no-useless-path-segments": ["warn", {noUselessIndex: false}],
 		},
 	},
 ]
