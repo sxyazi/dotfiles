@@ -8,6 +8,11 @@ export const react = [
 			"react"      : reactPlugin,
 			"react-hooks": reactHooksPlugin,
 		},
+		settings: {
+			react: {
+				version: "detect",
+			},
+		},
 		rules: {
 			...reactPlugin.configs.recommended.rules,
 			...reactHooksPlugin.configs.recommended.rules,
@@ -21,6 +26,11 @@ export const preact = [
 		plugins: {
 			"react"      : reactPlugin,
 			"react-hooks": reactHooksPlugin,
+		},
+		settings: {
+			react: {
+				version: "16.0",
+			},
 		},
 		rules: {
 			...reactPlugin.configs.recommended.rules,

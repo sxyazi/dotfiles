@@ -1,6 +1,10 @@
 import eslint from "@eslint/js"
 import globals from "globals"
 
+export const eslintOverride = {
+	"no-case-declarations": "off",
+}
+
 export const javascript = [
 	{
 		files          : ["**/*.{js,cjs,mjs}"],
@@ -13,6 +17,7 @@ export const javascript = [
 		},
 		rules: {
 			...eslint.configs.recommended.rules,
+			...eslintOverride,
 		},
 	},
 	{
@@ -30,6 +35,7 @@ export const javascript = [
 		},
 		rules: {
 			...eslint.configs.recommended.rules,
+			...eslintOverride,
 		},
 	},
 ]

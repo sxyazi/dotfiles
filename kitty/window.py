@@ -50,32 +50,32 @@ def handle_result(args, answer, target_window_id, boss):
 
         if direction == "top":
             if top and bottom:
-                boss.active_tab.resize_window("shorter", 5)
+                boss.active_tab.resize_window("shorter", 10)
             elif top:
-                boss.active_tab.resize_window("taller", 5)
+                boss.active_tab.resize_window("taller", 10)
             elif bottom:
-                boss.active_tab.resize_window("shorter", 5)
+                boss.active_tab.resize_window("shorter", 10)
         elif direction == "bottom":
             if top and bottom:
-                boss.active_tab.resize_window("taller", 5)
+                boss.active_tab.resize_window("taller", 10)
             elif top:
-                boss.active_tab.resize_window("shorter", 5)
+                boss.active_tab.resize_window("shorter", 10)
             elif bottom:
-                boss.active_tab.resize_window("taller", 5)
+                boss.active_tab.resize_window("taller", 10)
         elif direction == "left":
             if left and right:
-                boss.active_tab.resize_window("narrower", 5)
+                boss.active_tab.resize_window("narrower", 10)
             elif left:
-                boss.active_tab.resize_window("wider", 5)
+                boss.active_tab.resize_window("wider", 10)
             elif right:
-                boss.active_tab.resize_window("narrower", 5)
+                boss.active_tab.resize_window("narrower", 10)
         elif direction == "right":
             if left and right:
-                boss.active_tab.resize_window("wider", 5)
+                boss.active_tab.resize_window("wider", 10)
             elif left:
-                boss.active_tab.resize_window("narrower", 5)
+                boss.active_tab.resize_window("narrower", 10)
             elif right:
-                boss.active_tab.resize_window("wider", 5)
+                boss.active_tab.resize_window("wider", 10)
 
     def move(direction):
         boss.active_tab.move_window(direction)

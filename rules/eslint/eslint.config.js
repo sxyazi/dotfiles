@@ -1,4 +1,4 @@
-import {extended, formatting, javascript} from "./index.js"
+import { extended, formatting, javascript } from "./index.js"
 
 export default [
 	...javascript,

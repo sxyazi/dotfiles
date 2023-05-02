@@ -78,9 +78,9 @@ local function resize(direction)
 	if modifier == nil then
 		vim.fn.system("kitty @ kitten window.py +resize " .. mappings[direction])
 	elseif direction == "k" or direction == "j" then
-		vim.cmd("resize " .. modifier .. "5")
+		vim.cmd("resize " .. modifier .. "10")
 	else
-		vim.cmd("vertical resize " .. modifier .. "5")
+		vim.cmd("vertical resize " .. modifier .. "10")
 	end
 end
 

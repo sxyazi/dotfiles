@@ -361,6 +361,8 @@ return {
 				"-g",
 				"!node_modules/",
 				"-g",
+				"!pnpm-lock.yaml",
+				"-g",
 				"!package-lock.json",
 				"-g",
 				"!go.sum",
