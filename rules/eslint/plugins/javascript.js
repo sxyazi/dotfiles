@@ -1,13 +1,14 @@
 import eslint from "@eslint/js"
 import globals from "globals"
 
-export const eslintOverride = {
+export const jsRules = {
 	"no-case-declarations": "off",
 }
 
+/** @type { import('eslint').Linter.FlatConfig[] } */
 export const javascript = [
 	{
-		files          : ["**/*.{js,cjs,mjs}"],
+		files          : ["**/*.{js,jsx,cjs,mjs}"],
 		languageOptions: {
 			globals: {
 				...globals.browser,
@@ -15,9 +16,12 @@ export const javascript = [
 				...globals.node,
 			},
 		},
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
+		},
 		rules: {
 			...eslint.configs.recommended.rules,
-			...eslintOverride,
+			...jsRules,
 		},
 	},
 	{
@@ -28,14 +32,8 @@ export const javascript = [
 				...globals.es2021,
 			},
 			parserOptions: {
-				ecmaFeatures: {
-					jsx: true,
-				},
+				ecmaFeatures: { jsx: true },
 			},
-		},
-		rules: {
-			...eslint.configs.recommended.rules,
-			...eslintOverride,
 		},
 	},
 ]

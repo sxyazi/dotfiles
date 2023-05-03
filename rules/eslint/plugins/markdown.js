@@ -1,11 +1,15 @@
 import tsPlugin from "@typescript-eslint/eslint-plugin"
 import mdPlugin from "eslint-plugin-markdown"
 
+/** @type { import('eslint').Linter.FlatConfig[] } */
 export const markdown = [
 	{
-		files    : ["**/*.md"],
-		processor: "markdown/markdown",
-		plugins  : {
+		files        : ["**/*.md"],
+		processor    : "markdown/markdown",
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
+		},
+		plugins: {
 			markdown: mdPlugin,
 		},
 		rules: {
@@ -16,9 +20,7 @@ export const markdown = [
 		files          : ["**/*.md/*.{js,jsx}"],
 		languageOptions: {
 			parserOptions: {
-				ecmaFeatures: {
-					impliedStrict: true,
-				},
+				ecmaFeatures: { impliedStrict: true },
 			},
 		},
 	},

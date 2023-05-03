@@ -132,6 +132,15 @@ function M.fe_setup()
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 	}
 	require("lspconfig").eslint.setup {
+		filetypes = {
+			"json",
+			"jsonc",
+			"json5",
+			"yaml",
+			"yaml.docker-compose",
+			"toml",
+			unpack(require("lspconfig.server_configurations.eslint").default_config.filetypes),
+		},
 		settings = {
 			-- https://github.com/Microsoft/vscode-eslint#settings-options
 			packageManager = "pnpm",
@@ -193,7 +202,6 @@ end
 function M.json_setup()
 	require("lspconfig").jsonls.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
-		on_attach = M.lsp_attached,
 		settings = {
 			json = {
 				schemas = require("schemastore").json.schemas(),
@@ -206,7 +214,6 @@ end
 function M.yaml_setup()
 	require("lspconfig").yamlls.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
-		on_attach = M.lsp_attached,
 		settings = {
 			yaml = {
 				schemas = require("schemastore").yaml.schemas(),
@@ -218,7 +225,6 @@ end
 function M.toml_setup()
 	require("lspconfig").taplo.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
-		on_attach = M.lsp_attached,
 	}
 end
 

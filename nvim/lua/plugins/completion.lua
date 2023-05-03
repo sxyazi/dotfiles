@@ -152,6 +152,11 @@ return {
 		opts = {
 			disable_filetype = { "TelescopePrompt", "vim" },
 			check_ts = true,
+			enable_check_bracket_line = true,
+			fast_wrap = {
+				map = "<Nop>",
+				chars = { "{", "[", "(", '"', "'", "`" },
+			},
 		},
 	},
 	{

@@ -114,6 +114,7 @@ const imports = {
 	}],
 }
 
+/** @type { import('eslint').Linter.FlatConfig[] } */
 export const extended = [
 	// eslint-plugin-unicorn
 	{
