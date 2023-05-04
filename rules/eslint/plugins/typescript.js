@@ -1,6 +1,3 @@
-import { dirname } from "node:path"
-import { fileURLToPath } from "node:url"
-
 import eslint from "@eslint/js"
 import tsPlugin from "@typescript-eslint/eslint-plugin"
 import tsParser from "@typescript-eslint/parser"
@@ -13,10 +10,7 @@ export const typescript = [
 		files          : ["**/*.{ts,tsx,cts,mts}"],
 		languageOptions: {
 			parser       : tsParser,
-			parserOptions: {
-				project        : true,
-				tsconfigRootDir: dirname(fileURLToPath(import.meta.url)),
-			},
+			parserOptions: { project: true },
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: true,

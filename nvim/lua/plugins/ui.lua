@@ -361,6 +361,8 @@ return {
 				"-g",
 				"!node_modules/",
 				"-g",
+				"!.idea/",
+				"-g",
 				"!pnpm-lock.yaml",
 				"-g",
 				"!package-lock.json",
