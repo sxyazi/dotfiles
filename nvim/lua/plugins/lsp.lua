@@ -295,6 +295,8 @@ return {
 						},
 					},
 					nls.builtins.formatting.goimports,
+					nls.builtins.code_actions.gomodifytags,
+					nls.builtins.code_actions.impl,
 
 					-- Lua
 					nls.builtins.formatting.stylua.with {
@@ -322,6 +324,10 @@ return {
 					-- 		return vim.fn.expand("$HOME/.config/rules")
 					-- 	end,
 					-- },
+
+					-- Misc
+					nls.builtins.code_actions.gitrebase,
+					nls.builtins.code_actions.gitsigns,
 				},
 			}
 		end,

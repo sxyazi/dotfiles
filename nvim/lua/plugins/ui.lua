@@ -73,6 +73,7 @@ return {
 							-- Neo-tree
 							{ find = "Toggling hidden files: true" },
 							{ find = "Toggling hidden files: false" },
+							{ find = "Operation canceled" },
 
 							-- Telescope
 							{ find = "Nothing currently selected" },
@@ -126,6 +127,7 @@ return {
 							{ find = "Diagnosing" },
 							{ find = "Diagnostics" },
 							{ find = "diagnostics" },
+							{ find = "code_action" },
 							{ find = "Processing full semantic tokens" },
 						},
 					},
@@ -185,63 +187,97 @@ return {
 			{ "nvim-lua/plenary.nvim", lazy = true },
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
 			{ "MunifTanjim/nui.nvim", lazy = true },
+			{ "nvim-telescope/telescope.nvim", lazy = true },
 		},
 		keys = {
 			{ "<leader>1", ":Neotree toggle<CR>", silent = true },
 			{ "<leader>v", ":Neotree reveal<CR>", silent = true },
 		},
-		init = function() vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]]) end,
-		opts = {
-			popup_border_style = "rounded",
-			sort_case_insensitive = true,
-			sort_function = function(a, b)
-				if a.type == b.type then
-					return a.path < b.path
-				else
-					return a.type < b.type
+		config = function()
+			vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
+			local function fold(state)
+				local node = state.tree:get_node()
+				local foldable = require("neo-tree.utils").is_expandable(node) and node:is_expanded()
+
+				if foldable then
+					state.commands.toggle_node(state)
+				elseif node:get_parent_id() then
+					require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
 				end
-			end,
-			use_popups_for_input = false,
-			use_default_mappings = false,
-			-- event_handlers = {
-			-- 	{
-			-- 		event = "after_render",
-			-- 		handler = function()
-			-- 			local state = require("neo-tree.sources.manager").get_state_for_window()
-			-- 			if state == nil then
-			-- 				return
-			-- 			end
-			-- 			if not require("neo-tree.sources.common.preview").is_active() then
-			-- 				state.config = { use_float = false }
-			-- 				state.commands.toggle_preview(state)
-			-- 			end
-			-- 		end,
-			-- 	},
-			-- 	{
-			-- 		event = "neo_tree_window_before_close",
-			-- 		handler = function() require("neo-tree.sources.common.preview").hide() end,
-			-- 	},
-			-- },
-			window = {
-				mappings = {
-					["n"] = function(state)
-						local node = state.tree:get_node()
-						local foldable = require("neo-tree.utils").is_expandable(node) and node:is_expanded()
+			end
 
-						if foldable then
-							state.commands.toggle_node(state)
-						elseif node:get_parent_id() then
-							require("neo-tree.sources.filesystem").navigate(state, state.path, node:get_parent_id())
-						end
+			local function expand(on_open)
+				return function(state)
+					local node = state.tree:get_node()
+					local expandable = require("neo-tree.utils").is_expandable(node)
+
+					-- if it's a file, open it
+					if not expandable then
+						state.commands.open(state)
+						return on_open and on_open(state)
+					end
+
+					-- if it's a directory, expand or jump into it
+					if not node:is_expanded() then
+						state.commands.toggle_node(state)
+					elseif node:has_children() then
+						require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+					end
+				end
+			end
+
+			local function telescopeOpts(state, path)
+				return {
+					cwd = path,
+					search_dirs = { path },
+					attach_mappings = function(prompt_bufnr)
+						local actions = require("telescope.actions")
+						actions.select_default:replace(function()
+							actions.close(prompt_bufnr)
+							local selected = require("telescope.actions.state").get_selected_entry()
+							local filename = selected.filename and selected.filename or selected[1]
+							require("neo-tree.sources.filesystem").navigate(state, state.path, filename)
+						end)
+						return true
 					end,
-					["i"] = function(state)
-						local node = state.tree:get_node()
-						local expandable = require("neo-tree.utils").is_expandable(node)
+				}
+			end
 
-						-- if it's a file, open it
-						if not expandable then
-							state.commands.open(state)
+			require("neo-tree").setup {
+				popup_border_style = "rounded",
+				sort_case_insensitive = true,
+				sort_function = function(a, b)
+					if a.type == b.type then
+						return a.path < b.path
+					else
+						return a.type < b.type
+					end
+				end,
+				use_popups_for_input = false,
+				use_default_mappings = false,
+				window = {
+					mappings = {
+						["a"] = "add",
+						["A"] = "add_directory",
+						["d"] = "delete",
+						["r"] = "rename",
+						["R"] = "refresh",
+						["y"] = "copy_to_clipboard",
+						["x"] = "cut_to_clipboard",
+						["p"] = "paste_from_clipboard",
+						["s"] = "prev_source",
+						["S"] = "next_source",
+						["z"] = "close_all_subnodes",
+						["Z"] = "close_all_nodes",
+						-- TODO
+						-- ["s"] = "open_vsplit",
+						-- ["S"] = "open_split",
+						-- ["t"] = "open_tabnew",
+						-- ["w"] = "open_with_window_picker",
 
+						["n"] = fold,
+						["i"] = expand(function(state)
 							if state.commands.clear_filter and state.search_pattern then
 								local fs = require("neo-tree.sources.filesystem")
 								local node = state.tree:get_node()
@@ -250,85 +286,113 @@ return {
 							else
 								require("neo-tree").close_all()
 							end
-							return
-						end
+						end),
+						["<CR>"] = expand(nil),
+						["<Tab>"] = expand(function() vim.cmd("Neotree reveal") end),
 
-						-- if it's a directory, expand or jump into it
-						if not node:is_expanded() then
-							state.commands.toggle_node(state)
-						elseif node:has_children() then
-							local child = state.tree:get_nodes(node:get_id())[1]
-							require("neo-tree.sources.filesystem").navigate(state, state.path, child:get_id())
-						end
-					end,
-					["<Tab>"] = function(state)
-						local node = state.tree:get_node()
-						if not require("neo-tree.utils").is_expandable(node) then
-							state.commands.open(state)
-						elseif not node:is_expanded() then
-							state.commands.toggle_node(state)
-						elseif node:has_children() then
-							local child = state.tree:get_nodes(node:get_id())[1]
-							require("neo-tree.sources.filesystem").navigate(state, state.path, child:get_id())
-						end
-					end,
-					["a"] = "add",
-					["A"] = "add_directory",
-					["d"] = "delete",
-					["r"] = "rename",
-					["R"] = "refresh",
-					["y"] = "copy_to_clipboard",
-					["x"] = "cut_to_clipboard",
-					["p"] = "paste_from_clipboard",
-					["s"] = "prev_source",
-					["S"] = "next_source",
-					["z"] = "close_all_subnodes",
-					["Z"] = "close_all_nodes",
-					-- TODO
-					-- ["s"] = "open_vsplit",
-					-- ["S"] = "open_split",
-					-- ["t"] = "open_tabnew",
-					-- ["w"] = "open_with_window_picker",
-				},
-			},
-			filesystem = {
-				group_empty_dirs = true,
-				use_libuv_file_watcher = true,
-				window = {
-					mappings = {
-						["."] = "set_root",
-						["<BS>"] = "navigate_up",
-						["/"] = "filter_on_submit",
-						["<Esc>"] = "clear_filter",
-						["h"] = "toggle_hidden",
-						["m"] = "next_git_modified",
-						["M"] = "prev_git_modified",
+						["c"] = function(state)
+							local path = state.tree:get_node().path
+							if string.find(path, state.path, 1, true) == 1 then
+								path = string.sub(path, #state.path + 2)
+							end
+							vim.fn.system("echo -n " .. string.format("%q", path) .. " | pbcopy")
+						end,
+						["C"] = function(state)
+							local path = state.tree:get_node().path
+							vim.fn.system("echo -n " .. string.format("%q", path) .. " | pbcopy")
+						end,
+
+						["f"] = function(state)
+							local node = state.tree:get_node()
+							require("telescope.builtin").live_grep(telescopeOpts(state, node.path))
+						end,
+						["F"] = function(state)
+							local node = state.tree:get_node()
+							require("telescope.builtin").find_files(telescopeOpts(state, node.path))
+						end,
+
+						["o"] = function(state)
+							local path = state.tree:get_node().path
+							vim.fn.system("open -R " .. string.format("%q", path))
+						end,
 					},
 				},
-			},
-			buffers = {
-				window = {
-					mappings = {
-						["."] = "set_root",
-						["<BS>"] = "navigate_up",
-						["d"] = "buffer_delete",
+				filesystem = {
+					commands = {
+						delete = function(state)
+							local node = state.tree:get_node()
+							require("neo-tree").config.filesystem.commands.delete_visual(state, { node })
+						end,
+						delete_visual = function(state, selected_nodes)
+							local path = {}
+							for _, node in ipairs(selected_nodes) do
+								if node.type ~= "message" then
+									path[#path + 1] = "the POSIX file " .. string.format("%q", node.path)
+								end
+							end
+
+							local term
+							if #path < 1 then
+								return
+							elseif #path == 1 then
+								term = "this file"
+							else
+								term = #path .. " files"
+							end
+
+							local inputs = require("neo-tree.ui.inputs")
+							inputs.confirm("Are you sure trash " .. term .. "?", function(confirmed)
+								if not confirmed then
+									return
+								end
+
+								vim.fn.system {
+									"osascript",
+									"-e",
+									'tell app "Finder" to move {' .. table.concat(path, ",") .. "} to trash",
+								}
+								require("neo-tree.sources.manager").refresh(state.name)
+							end)
+						end,
+					},
+					group_empty_dirs = true,
+					use_libuv_file_watcher = true,
+					window = {
+						mappings = {
+							["."] = "set_root",
+							["<BS>"] = "navigate_up",
+							["/"] = "filter_on_submit",
+							["<Esc>"] = "clear_filter",
+							["h"] = "toggle_hidden",
+							["m"] = "next_git_modified",
+							["M"] = "prev_git_modified",
+						},
 					},
 				},
-			},
-			git_status = {
-				window = {
-					mappings = {
-						["a"] = "git_add_file",
-						["A"] = "git_add_all",
-						["l"] = "git_unstage_file",
-						["r"] = "git_revert_file",
-						["c"] = "git_commit",
-						["C"] = "git_commit_and_push",
-						["p"] = "git_push",
+				buffers = {
+					window = {
+						mappings = {
+							["."] = "set_root",
+							["<BS>"] = "navigate_up",
+							["d"] = "buffer_delete",
+						},
 					},
 				},
-			},
-		},
+				git_status = {
+					window = {
+						mappings = {
+							["a"] = "git_add_file",
+							["A"] = "git_add_all",
+							["l"] = "git_unstage_file",
+							["r"] = "git_revert_file",
+							["c"] = "git_commit",
+							["C"] = "git_commit_and_push",
+							["p"] = "git_push",
+						},
+					},
+				},
+			}
+		end,
 	},
 
 	-- Fuzz finder
@@ -340,19 +404,7 @@ return {
 			-- Install a native sorter, for better performance
 			{ "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
 		},
-		keys = {
-			{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
-			{ "<leader>/", function() require("telescope.builtin").live_grep() end },
-			{ "<leader>;", function() require("telescope.builtin").command_history() end },
-			{
-				"<leader>e",
-				function() require("telescope.builtin").find_files() end,
-			},
-			{ ",a", function() require("telescope.builtin").buffers() end },
-		},
-		config = function()
-			local actions = require("telescope.actions")
-			local trouble = require("trouble.providers.telescope")
+		keys = function()
 			local extr_args = {
 				"--hidden", -- Search hidden files that are prefixed with `.`
 				"--no-ignore", -- Don’t respect .gitignore
@@ -374,10 +426,30 @@ return {
 				"!.zsh_history",
 			}
 
-			local vimgrep_arguments = { unpack(require("telescope.config").values.vimgrep_arguments) }
-			for i = 1, #extr_args do
-				vimgrep_arguments[#vimgrep_arguments + 1] = extr_args[i]
-			end
+			return {
+				{ ",a", function() require("telescope.builtin").buffers() end },
+				{ "<leader>;", function() require("telescope.builtin").command_history() end },
+				{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
+
+				{ "<leader>/", function() require("telescope.builtin").live_grep() end },
+				{ "<leader>?", function() require("telescope.builtin").live_grep { additional_args = extr_args } end },
+
+				{ "<leader>u", function() require("telescope.builtin").find_files() end },
+				{
+					"<leader>U",
+					function()
+						require("telescope.builtin").find_files {
+							find_command = { "rg", "--color=never", "--smart-case", "--files", unpack(extr_args) },
+						}
+					end,
+				},
+
+				{ "<leader>e", function() require("telescope.builtin").lsp_document_symbols() end },
+			}
+		end,
+		config = function()
+			local actions = require("telescope.actions")
+			local trouble = require("trouble.providers.telescope")
 
 			require("telescope").setup {
 				defaults = {
@@ -393,9 +465,11 @@ return {
 							["<C-s>"] = actions.select_vertical,
 							["<C-S-s>"] = actions.select_horizontal,
 							["<C-t>"] = actions.select_tab,
-							["<C-S-t>"] = trouble.open_with_trouble,
+							["<C-q>"] = trouble.smart_open_with_trouble,
 						},
 						n = {
+							["k"] = false, -- disable default keybinding
+							["<Esc>"] = false, -- disable default keybinding
 							["u"] = actions.move_selection_previous,
 							["e"] = actions.move_selection_next,
 							["U"] = function(prompt_bufnr) require("telescope.actions.set").shift_selection(prompt_bufnr, -5) end,
@@ -407,12 +481,9 @@ return {
 							["s"] = actions.select_vertical,
 							["S"] = actions.select_horizontal,
 							["t"] = actions.select_tab,
-							["T"] = trouble.open_with_trouble,
-							["k"] = false, -- disable default keybinding
-							["<Esc>"] = false, -- disable default keybinding
+							["<C-q>"] = trouble.smart_open_with_trouble,
 						},
 					},
-					vimgrep_arguments = vimgrep_arguments,
 					buffer_previewer_maker = function(filepath, bufnr, opts)
 						filepath = vim.fn.expand(filepath)
 						vim.loop.fs_stat(filepath, function(_, stat)
@@ -420,26 +491,11 @@ return {
 								return
 							end
 							if stat.size > 51200 then
-								return
-							end -- less than 50KiB
-
+								return -- greater than 50KiB
+							end
 							require("telescope.previewers").buffer_previewer_maker(filepath, bufnr, opts)
 						end)
 					end,
-				},
-				pickers = {
-					find_files = {
-						find_command = {
-							"rg",
-							"--color=never",
-							"--smart-case",
-							"--files",
-							unpack(extr_args),
-						},
-					},
-					live_grep = {
-						only_sort_text = true,
-					},
 				},
 				extensions = {
 					fzf = {
@@ -630,7 +686,7 @@ return {
 		keys = {
 			{ ",e", ":TroubleToggle workspace_diagnostics<CR>", silent = true },
 			{ ",E", ":TroubleToggle document_diagnostics<CR>", silent = true },
-			{ ",f", ":TroubleToggle quickfix<CR>", silent = true },
+			{ ",q", ":TroubleToggle quickfix<CR>", silent = true },
 			{
 				"[q",
 				function()
@@ -670,6 +726,58 @@ return {
 				close_folds = "zc",
 			},
 		},
+		config = function(opts)
+			vim.api.nvim_create_autocmd({ "FileType" }, {
+				pattern = "Trouble",
+				callback = function(event)
+					if require("trouble.config").options.mode ~= "telescope" then
+						return
+					end
+
+					local function delete()
+						local folds = require("trouble.folds")
+						local telescope = require("trouble.providers.telescope")
+
+						local ord = { "" } -- { filename, ... }
+						local files = { [""] = { 1, 1, 0 } } -- { [filename] = { start, end, start_index } }
+						for i, result in ipairs(telescope.results) do
+							if files[result.filename] == nil then
+								local next = files[ord[#ord]][2] + 1
+								files[result.filename] = { next, next, i }
+								table.insert(ord, result.filename)
+							end
+							if not folds.is_folded(result.filename) then
+								files[result.filename][2] = files[result.filename][2] + 1
+							end
+						end
+
+						local line = unpack(vim.api.nvim_win_get_cursor(0))
+						for i, id in ipairs(ord) do
+							if line == files[id][1] then -- Group
+								local next = ord[i + 1]
+								for _ = files[id][3], next and files[next][3] - 1 or #telescope.results do
+									table.remove(telescope.results, files[id][3])
+								end
+								break
+							elseif line <= files[id][2] then -- Item
+								table.remove(telescope.results, files[id][3] + (line - files[id][1]) - 1)
+								break
+							end
+						end
+
+						if #telescope.results == 0 then
+							require("trouble").close()
+						else
+							require("trouble").refresh { provider = "telescope", auto = false }
+						end
+					end
+
+					vim.keymap.set("n", "x", delete, { buffer = event.buf })
+				end,
+			})
+
+			require("trouble").setup(opts)
+		end,
 	},
 
 	-- Git integration for buffers
@@ -732,6 +840,7 @@ return {
 			delay = 200,
 			filetypes_denylist = {
 				"TelescopePrompt",
+				"Trouble",
 				"neo-tree",
 				"neo-tree-popup",
 				"DressingInput",

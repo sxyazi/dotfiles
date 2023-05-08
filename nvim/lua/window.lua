@@ -9,10 +9,6 @@ local function jump(direction)
 	local prev = vim.fn.winnr()
 	vim.cmd("wincmd " .. direction)
 
-	if vim.bo.buftype == "terminal" then
-		vim.cmd("startinsert")
-	end
-
 	if vim.fn.winnr() == prev then
 		-- the `--to=$KITTY_LISTEN_ON` env is passed automatically
 		vim.fn.system("kitty @ kitten window.py +jump " .. mappings[direction])
@@ -93,6 +89,14 @@ local function move(direction)
 	end
 end
 
+local function restore_cursor(opts)
+	if opts.args == "force" or vim.bo.buftype == "terminal" then
+		vim.cmd("startinsert")
+		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+		vim.api.nvim_win_set_cursor(0, { line, col + 1 })
+	end
+end
+
 vim.api.nvim_create_user_command("WindowJumpTop", function() jump("k") end, {})
 vim.api.nvim_create_user_command("WindowJumpBottom", function() jump("j") end, {})
 vim.api.nvim_create_user_command("WindowJumpLeft", function() jump("h") end, {})
@@ -108,9 +112,11 @@ vim.api.nvim_create_user_command("WindowMoveBottom", function() move("j") end, {
 vim.api.nvim_create_user_command("WindowMoveLeft", function() move("h") end, {})
 vim.api.nvim_create_user_command("WindowMoveRight", function() move("l") end, {})
 
+vim.api.nvim_create_user_command("RestoreCursor", restore_cursor, { nargs = "?" })
+
 local function map_set(key, cmd, term)
-	vim.keymap.set("", "<C-S-M-w>" .. key, string.format(":%s<CR>", cmd), { silent = true })
-	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>a", cmd), { silent = true })
+	vim.keymap.set("", "<C-S-M-w>" .. key, string.format(":%s<CR>:RestoreCursor<CR>", cmd), { silent = true })
+	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>:RestoreCursor force<CR>", cmd), { silent = true })
 
 	if term == 1 then
 		vim.keymap.set("t", "<C-S-M-w>" .. key, string.format("<C-\\><C-n>:%s<CR>", cmd), { silent = true })

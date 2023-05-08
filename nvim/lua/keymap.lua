@@ -58,7 +58,8 @@ vim.keymap.set("n", "dw", 'vb"_d')
 vim.keymap.set("n", "cw", 'vb"_c')
 
 -- search keys
-vim.keymap.set({ "n", "v" }, "-", "n")
+vim.keymap.set("n", "-", "n")
+vim.keymap.set("v", "-", [[y/\V<C-R>"<CR>]])
 vim.keymap.set({ "n", "v" }, "=", "N")
 
 -- tab management

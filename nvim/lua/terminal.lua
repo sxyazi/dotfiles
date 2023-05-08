@@ -51,7 +51,8 @@ end
 vim.api.nvim_create_user_command("TerminalOpen", function() M.open(nil) end, {})
 
 -- Toggle
-vim.keymap.set("n", "<C-\\>", ":TerminalOpen<CR>:startinsert<CR>", { silent = true })
+vim.keymap.set("", "<C-\\>", ":TerminalOpen<CR>:startinsert<CR>", { silent = true })
+vim.keymap.set("i", "<C-\\>", "<Esc>:TerminalOpen<CR>:startinsert<CR>", { silent = true })
 vim.keymap.set("t", "<C-\\>", "<C-\\><C-n>:hide<CR>", { silent = true })
 
 -- Close
