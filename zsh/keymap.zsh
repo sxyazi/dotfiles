@@ -5,7 +5,7 @@ function vi-yank-wrapped {
 
   zle vi-yank
   if [[ "$last_key" = "Y" ]] then
-    echo "$CUTBUFFER" | pbcopy -i
+    echo -n "$CUTBUFFER" | pbcopy -i
     CUTBUFFER="$ori_buffer"
   fi
 }

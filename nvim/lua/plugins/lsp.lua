@@ -131,6 +131,14 @@ function M.fe_setup()
 	require("lspconfig").tsserver.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 	}
+
+	local eslint_default = require("lspconfig.server_configurations.eslint").default_config
+	local eslint_settings = { packageManager = "pnpm", useESLintClass = true }
+
+	if not eslint_default.root_dir(vim.fn.getcwd()) then
+		eslint_settings.experimental = { useFlatConfig = true }
+		eslint_settings.options = { overrideConfigFile = vim.fn.expand("$HOME/.config/rules/eslint/eslint.config.cjs") }
+	end
 	require("lspconfig").eslint.setup {
 		filetypes = {
 			"json",
@@ -139,22 +147,24 @@ function M.fe_setup()
 			"yaml",
 			"yaml.docker-compose",
 			"toml",
-			unpack(require("lspconfig.server_configurations.eslint").default_config.filetypes),
+			unpack(eslint_default.filetypes),
 		},
-		settings = {
-			-- https://github.com/Microsoft/vscode-eslint#settings-options
-			packageManager = "pnpm",
-			useESLintClass = true,
-			experimental = {
-				useFlatConfig = true,
-			},
-		},
+		root_dir = function(fname) return eslint_default.root_dir(fname) or vim.fs.dirname(fname) end,
+		-- https://github.com/Microsoft/vscode-eslint#settings-options
+		settings = eslint_settings,
 		on_attach = function(client, bufnr)
 			client.server_capabilities.documentFormattingProvider = true
 			client.server_capabilities.documentRangeFormattingProvider = true
 			M.lsp_attached(client, bufnr)
 		end,
+		on_new_config = function(config, new_root_dir)
+			eslint_default.on_new_config(config, new_root_dir)
+			if #vim.fs.find("eslint.config.js", { path = new_root_dir, type = "file" }) == 1 then
+				config.settings.experimental.useFlatConfig = true
+			end
+		end,
 	}
+
 	require("lspconfig").tailwindcss.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 	}
@@ -316,13 +326,7 @@ return {
 
 					-- Markdown
 					-- nls.builtins.formatting.prettier.with {
-					-- 	cwd = function(params)
-					-- 		local cwd = require("null-ls.builtins.formatting.prettier")._opts.cwd(params)
-					-- 		if cwd then
-					-- 			return cwd
-					-- 		end
-					-- 		return vim.fn.expand("$HOME/.config/rules")
-					-- 	end,
+					-- 	cwd = function(params) return require("null-ls.builtins.formatting.prettier")._opts.cwd(params) end,
 					-- },
 
 					-- Misc

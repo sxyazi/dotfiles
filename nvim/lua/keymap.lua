@@ -51,7 +51,6 @@ vim.keymap.set("n", "L", "<C-r>")
 vim.keymap.set("x", "p", '"_dp')
 vim.keymap.set("x", "P", '"_dP')
 
-vim.keymap.set("", "Y", '"+y')
 vim.keymap.set({ "n", "v" }, "x", '"_x')
 
 vim.keymap.set("n", "dw", 'vb"_d')

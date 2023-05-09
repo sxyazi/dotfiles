@@ -12,6 +12,7 @@ export const ymlRules = {
 	"yml/block-sequence-hyphen-indicator-newline" : "warn",
 	"yml/block-sequence"                          : ["warn", { singleline: "never", multiline: "always" }],
 	"yml/indent"                                  : "warn",
+	"yml/no-trailing-zeros"                       : "warn",
 	"yml/plain-scalar"                            : "warn",
 	"yml/quotes"                                  : "warn",
 

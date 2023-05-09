@@ -2,6 +2,8 @@
 vim.opt.number = true
 vim.opt.cursorline = true
 
+vim.opt.clipboard = "unnamedplus"
+
 vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.showbreak = "↳"
@@ -9,7 +11,6 @@ vim.opt.whichwrap = "h,l,<,>"
 
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 5
-
 vim.opt.virtualedit = "block"
 
 -- Searching
@@ -42,12 +43,13 @@ vim.opt.ruler = false
 vim.opt.signcolumn = "yes"
 vim.opt.shortmess = "fimnxsTAIcF"
 
--- Cache file
+-- Cache/Log file
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand("$HOME/.cache/nvim/undo")
 vim.opt.backupdir = vim.fn.expand("$HOME/.cache/nvim/backup")
 vim.opt.viewdir = vim.fn.expand("$HOME/.cache/nvim/view")
+vim.lsp.set_log_level("off")
 
 -- Rendering
 vim.opt.termguicolors = true
@@ -103,7 +105,7 @@ vim.api.nvim_create_autocmd("BufRead", {
 					and last_known_line > 1
 					and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
 				then
-					vim.api.nvim_feedkeys('g`"', "x", false)
+					vim.api.nvim_feedkeys('g`"', "nx", false)
 				end
 			end,
 		})

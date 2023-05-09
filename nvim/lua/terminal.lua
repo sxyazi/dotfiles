@@ -1,4 +1,5 @@
 local M = {
+	height = 15,
 	window = nil,
 	buffer = nil,
 	job_id = nil,
@@ -12,6 +13,7 @@ function M.open(cwd)
 		vim.cmd("setlocal nobuflisted")
 		M.window = vim.fn.win_getid()
 	end
+	vim.api.nvim_win_set_height(M.window, M.height)
 
 	if vim.fn.bufexists(M.buffer) == 0 then
 		local job_id = nil
@@ -31,7 +33,13 @@ function M.open(cwd)
 	end
 end
 
+function M.hide()
+	M.height = vim.api.nvim_win_get_height(M.window)
+	vim.api.nvim_win_hide(M.window)
+end
+
 function M.destroy()
+	M.height = vim.api.nvim_win_get_height(M.window)
 	if vim.fn.bufexists(M.buffer) == 1 then
 		vim.api.nvim_buf_delete(M.buffer, { force = true })
 	end
@@ -49,14 +57,16 @@ function M.exec(cwd, cmd)
 end
 
 vim.api.nvim_create_user_command("TerminalOpen", function() M.open(nil) end, {})
+vim.api.nvim_create_user_command("TerminalHide", M.hide, {})
+vim.api.nvim_create_user_command("TerminalDestroy", M.destroy, {})
 
 -- Toggle
 vim.keymap.set("", "<C-\\>", ":TerminalOpen<CR>:startinsert<CR>", { silent = true })
 vim.keymap.set("i", "<C-\\>", "<Esc>:TerminalOpen<CR>:startinsert<CR>", { silent = true })
-vim.keymap.set("t", "<C-\\>", "<C-\\><C-n>:hide<CR>", { silent = true })
+vim.keymap.set("t", "<C-\\>", "<C-\\><C-n>:TerminalHide<CR>", { silent = true })
 
 -- Close
-vim.keymap.set("t", "<C-S-M-w>c", "<C-\\><C-n>:bwipeout!<CR>", { silent = true })
+vim.keymap.set("t", "<C-S-M-w>c", "<C-\\><C-n>:TerminalDestroy<CR>", { silent = true })
 
 -- Move cursor to the end of line, specific to zsh
 vim.keymap.set("t", "<Tab>", "<Tab>")

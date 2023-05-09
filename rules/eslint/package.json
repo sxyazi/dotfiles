@@ -1,11 +1,12 @@
 {
 	"name": "@sxyazi/eslint-config",
 	"type": "module",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "esbuild eslint.config.js --bundle --minify --platform=node --packages=external --footer:js='module.exports=module.exports.default' --outfile=eslint.config.cjs",
+		"release": "pnpm build && pnpm publish"
 	},
-	"main": "index.js",
+	"module": "index.js",
 	"author": "sxyazi <sxyazi@gmail.com>",
 	"license": "MIT",
 	"description": "",
@@ -14,24 +15,25 @@
 	},
 	"dependencies": {
 		"@eslint/js": "^8.40.0",
-		"@typescript-eslint/eslint-plugin": "^5.59.2",
-		"@typescript-eslint/parser": "^5.59.2",
+		"@typescript-eslint/eslint-plugin": "^5.59.5",
+		"@typescript-eslint/parser": "^5.59.5",
 		"eslint-plugin-import": "^2.27.5",
 		"eslint-plugin-json-schema-validator": "^4.4.0",
 		"eslint-plugin-jsonc": "^2.7.0",
 		"eslint-plugin-markdown": "^3.0.0",
 		"eslint-plugin-react": "^7.32.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
-		"eslint-plugin-toml": "^0.4.1",
+		"eslint-plugin-toml": "^0.5.0",
 		"eslint-plugin-unicorn": "^47.0.0",
-		"eslint-plugin-yml": "^1.6.0",
+		"eslint-plugin-yml": "^1.7.0",
 		"espree": "^9.5.2",
 		"globals": "^13.20.0",
-		"jsonc-eslint-parser": "^2.2.0",
-		"toml-eslint-parser": "^0.5.0",
-		"yaml-eslint-parser": "^1.2.1"
+		"jsonc-eslint-parser": "^2.3.0",
+		"toml-eslint-parser": "^0.6.0",
+		"yaml-eslint-parser": "^1.2.2"
 	},
 	"devDependencies": {
+		"esbuild": "^0.17.18",
 		"eslint": "^8.40.0"
 	}
 }
