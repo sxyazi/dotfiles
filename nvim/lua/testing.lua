@@ -3,8 +3,6 @@ local M = {
 	last_cwd = nil,
 }
 
-local escape = vim.fn.shellescape
-
 function M.current_function_name()
 	local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
 	while node and node:type() ~= "function_declaration" do

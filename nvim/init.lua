@@ -1,7 +1,9 @@
 require("core")
 require("keymap")
-require("terminal")
 require("window")
+require("filetype")
+require("terminal")
+require("testing")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -23,7 +25,6 @@ require("lazy").setup("plugins", {
 	performance = {
 		rtp = {
 			disabled_plugins = {
-				"editorconfig",
 				"gzip",
 				"health",
 				"man",
@@ -50,5 +51,3 @@ commands.clean = nil
 commands.check = nil
 commands.restore.button = false
 commands.help = nil
-
-require("testing")

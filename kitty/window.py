@@ -18,11 +18,15 @@ def handle_result(args, answer, target_window_id, boss):
     if window is None:
         return
 
-    exec = window.child.foreground_cmdline[0]
+    cmd = window.child.foreground_cmdline
     act = args[1]  # e.g. -jump
-    if act[0] == "-" and exec[-4:] == "nvim":
+    if act[0] == "-" and cmd[0][-4:] == "nvim":
         secound = mappings[args[2]] if len(args) > 2 else ""
         window.write_to_child(f"\x1b[119;8u{act[1]}{secound}")
+        return
+
+    if act == "-close" and len(cmd) > 1 and cmd[1][-6:] == "ranger":
+        window.write_to_child("\x1bq")
         return
 
     def split(direction):

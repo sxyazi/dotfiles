@@ -1,0 +1,16 @@
+{
+	"name": "@sxyazi/stylelint-config",
+	"version": "1.0.0",
+	"scripts": {},
+	"main": "index.js",
+	"author": "sxyazi <sxyazi@gmail.com>",
+	"license": "MIT",
+	"description": "",
+	"keywords": [],
+	"dependencies": {
+		"stylelint-config-standard": "^33.0.0"
+	},
+	"devDependencies": {
+		"stylelint": "^15.6.1"
+	}
+}

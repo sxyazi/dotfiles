@@ -48,13 +48,13 @@ return {
 		"hrsh7th/nvim-cmp",
 		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-path",
+			{ "hrsh7th/cmp-nvim-lsp", lazy = true },
+			{ "hrsh7th/cmp-buffer", lazy = true },
+			{ "hrsh7th/cmp-cmdline", lazy = true },
+			{ "hrsh7th/cmp-path", lazy = true },
 
 			-- For luasnip users
-			"saadparwaiz1/cmp_luasnip",
+			{ "saadparwaiz1/cmp_luasnip", lazy = true },
 
 			-- Vscode-like completion popup
 			"onsails/lspkind.nvim",
@@ -82,13 +82,12 @@ return {
 					completion = cmp.config.window.bordered(),
 					documentation = cmp.config.window.bordered(),
 				},
-				sources = cmp.config.sources({
+				sources = {
 					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-					{ name = "path" },
-				}, {
+					{ name = "path", keyword_length = 2 },
 					{ name = "buffer" },
-				}),
+					{ name = "luasnip" },
+				},
 				formatting = {
 					format = require("lspkind").cmp_format {
 						mode = "symbol",
@@ -133,9 +132,9 @@ return {
 					completeopt = "menu,menuone,noselect",
 				},
 				sources = cmp.config.sources({
-					{ name = "cmdline", keyword_length = 2 },
+					{ name = "path", keyword_length = 2 },
 				}, {
-					{ name = "path", keyword_length = 3 },
+					{ name = "cmdline", keyword_length = 2 },
 				}),
 			})
 		end,
@@ -185,8 +184,6 @@ return {
 		keys = {
 			{ "<C-k>", nil, mode = { "n", "v" } },
 			{ "<C-S-k>", nil, mode = { "n", "v" } },
-			{ "<C-u>", nil, mode = { "n", "v" } },
-			{ "<C-e>", nil, mode = { "n", "v" } },
 		},
 		init = function()
 			vim.g.VM_default_mappings = 0
@@ -200,8 +197,8 @@ return {
 				["Find Under"] = "<C-k>",
 				["Find Subword Under"] = "<C-k>",
 				["Select All"] = "<C-S-k>",
-				["Add Cursor Up"] = "<C-u>",
-				["Add Cursor Down"] = "<C-e>",
+				["Add Cursor Up"] = "",
+				["Add Cursor Down"] = "",
 				-- Undo and Redo
 				["Undo"] = "l",
 				["Redo"] = "L",
