@@ -1,3 +1,5 @@
+local formatter = require("formatter")
+
 local M = {
 	mason_lsp = {
 		-- https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers
@@ -58,13 +60,13 @@ local M = {
 		prettier = {
 			files = {
 				".prettierrc",
-				"prettier.config.js",
-				".prettierrc.js",
 				".prettierrc.json",
+				".prettierrc.js",
 				".prettierrc.yaml",
 				".prettierrc.yml",
+				"prettier.config.js",
 			},
-			default = vim.fn.expand("$HOME/.config/rules/prettier.config.js"),
+			default = vim.fn.expand("$HOME/.config/rules/.prettierrc.json"),
 		},
 		stylelint = {
 			files = {
@@ -82,97 +84,7 @@ local M = {
 			default = vim.fn.expand("$HOME/.config/rules/revive.toml"),
 		},
 	},
-	fmt = {},
 }
-
-function M.format(params, bufnr, req_inc)
-	local fmt = M.fmt[bufnr]
-	local task = fmt.queue[1]
-	table.remove(fmt.queue, 1)
-
-	local client = vim.lsp.get_client_by_id(task)
-	if not client then
-		return
-	end
-
-	local function next(success)
-		fmt.request_id = nil
-		if not success then
-			vim.b[bufnr].format_processing = nil
-		elseif not vim.tbl_isempty(fmt.queue) then
-			M.format(params, bufnr, req_inc)
-		elseif vim.api.nvim_get_current_buf() == bufnr then
-			vim.cmd("update")
-		end
-	end
-
-	local function on_formatted(err, result, ctx)
-		if req_inc ~= fmt.req_inc then
-			return
-		end
-		if not vim.api.nvim_buf_is_loaded(ctx.bufnr) then
-			return
-		end
-		if vim.b[bufnr].format_processing ~= vim.api.nvim_buf_get_var(ctx.bufnr, "changedtick") then
-			return
-		end
-
-		if err then
-			require("vim.lsp.log").error(string.format("[%s] %d: %s", client.name, err.code, err.message))
-			return next(false)
-		end
-		if result then
-			vim.lsp.util.apply_text_edits(result, ctx.bufnr, client.offset_encoding)
-		end
-		next(true)
-	end
-
-	local ok, req_id = client.request("textDocument/formatting", params, on_formatted, bufnr)
-	if ok then
-		fmt.request_id = req_id
-	end
-end
-
-function M.lsp_attached(client, bufnr)
-	if not client.supports_method("textDocument/formatting") then
-		return
-	end
-
-	if M.fmt[bufnr] == nil then
-		M.fmt[bufnr] = { clients = {}, queue = {}, req_id = nil, req_inc = 0 }
-	end
-
-	local fmt = M.fmt[bufnr]
-	fmt.clients[client.id] = true
-
-	local params = vim.lsp.util.make_formatting_params()
-	local group = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
-	vim.api.nvim_clear_autocmds { group = group, buffer = bufnr }
-	vim.api.nvim_create_autocmd("BufWritePost", {
-		group = group,
-		buffer = bufnr,
-		callback = function()
-			local tick = vim.api.nvim_buf_get_var(bufnr, "changedtick")
-			if vim.b.format_processing == tick then
-				return
-			else
-				vim.b.format_processing = tick
-			end
-
-			fmt.queue = {}
-			fmt.req_inc = fmt.req_inc + 1
-			if fmt.req_id ~= nil then
-				client.cancel_request(fmt.req_id)
-				fmt.req_id = nil
-			end
-
-			for client_id in pairs(fmt.clients) do
-				table.insert(fmt.queue, client_id)
-			end
-			M.format(params, bufnr, fmt.req_inc)
-		end,
-	})
-end
 
 function M.resolve_config(type)
 	local config = M.configs[type]
@@ -274,7 +186,7 @@ function M.fe_setup()
 		on_attach = function(client, bufnr)
 			client.server_capabilities.documentFormattingProvider = true
 			client.server_capabilities.documentRangeFormattingProvider = true
-			M.lsp_attached(client, bufnr)
+			formatter.attach(client, bufnr)
 		end,
 	}
 
@@ -289,7 +201,7 @@ function M.rust_setup()
 		server = {
 			capabilities = require("cmp_nvim_lsp").default_capabilities(),
 			on_attach = function(client, bufnr)
-				M.lsp_attached(client, bufnr)
+				formatter.attach(client, bufnr)
 				vim.keymap.set("n", "<C-CR>", rt.hover_actions.hover_actions, { buffer = bufnr })
 			end,
 		},
@@ -404,7 +316,7 @@ return {
 			local prettier_config = M.resolve_config("prettier")
 			local revive_config = M.resolve_config("revive")
 			nls.setup {
-				on_attach = M.lsp_attached,
+				on_attach = formatter.attach,
 				sources = {
 					-- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
 					-- Bash

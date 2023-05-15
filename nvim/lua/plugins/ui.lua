@@ -598,7 +598,7 @@ return {
 					exec = "<CR>",
 				},
 			},
-			lightbulb = { sign = false },
+			lightbulb = { enable = false },
 			hover = { open_link = "o" },
 			diagnostic = {
 				keys = {

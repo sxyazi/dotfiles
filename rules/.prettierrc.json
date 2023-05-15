@@ -1,0 +1,7 @@
+{
+	"printWidth" : 999,
+	"useTabs"    : true,
+	"semi"       : false,
+	"quoteProps" : "consistent",
+	"arrowParens": "avoid"
+}
