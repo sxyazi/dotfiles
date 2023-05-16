@@ -1,7 +1,6 @@
 require("core")
 require("keymap")
 require("window")
-require("filetype")
 require("terminal")
 require("testing")
 
@@ -51,3 +50,5 @@ commands.clean = nil
 commands.check = nil
 commands.restore.button = false
 commands.help = nil
+
+require("editconfig")

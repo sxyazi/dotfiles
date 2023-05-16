@@ -1,5 +1,8 @@
 local M = {
 	fmt = {},
+	order = {
+		["eslint"] = 1,
+	},
 }
 
 function M.list_equal(a1, a2)
@@ -28,7 +31,7 @@ end
 function M.full_lines(bufnr)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
 	if vim.api.nvim_buf_get_option(bufnr, "eol") then
-		table.insert(lines, "")
+		lines[#lines + 1] = ""
 	end
 	return lines
 end
@@ -178,10 +181,7 @@ end
 
 function M.format(fmt, lines, req_inc)
 	local bufnr = fmt.bufnr
-	local task = fmt.queue[1]
-	table.remove(fmt.queue, 1)
-
-	local client = vim.lsp.get_client_by_id(task)
+	local client = vim.lsp.get_client_by_id(table.remove(fmt.queue, 1))
 	if not client then
 		return
 	end
@@ -275,23 +275,21 @@ function M.attach(client, bufnr)
 			end
 
 			fmt.applies = {}
-			fmt.queue = {}
 			fmt.req_inc = fmt.req_inc + 1
 			if fmt.req_id ~= nil then
 				client.rpc.notify("$/cancelRequest", { id = fmt.req_id })
 				fmt.req_id = nil
 			end
 
+			fmt.queue = {}
 			for client_id in pairs(fmt.clients) do
-				if vim.lsp.get_client_by_id(client_id).name == "null-ls" then
-					table.insert(fmt.queue, client_id)
-				end
+				fmt.queue[#fmt.queue + 1] = client_id
 			end
-			for client_id in pairs(fmt.clients) do
-				if vim.lsp.get_client_by_id(client_id).name == "eslint" then
-					table.insert(fmt.queue, client_id)
-				end
-			end
+			table.sort(fmt.queue, function(a, b)
+				a = vim.lsp.get_client_by_id(a).name
+				b = vim.lsp.get_client_by_id(b).name
+				return (M.order[a] or 0) < (M.order[b] or 0)
+			end)
 
 			M.format(fmt, M.full_lines(bufnr), fmt.req_inc)
 		end,
@@ -305,13 +303,10 @@ local ignored = {
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ctx, config)
-	result.diagnostics = vim.tbl_filter(function(diagnostic)
-		if diagnostic.source ~= "eslint" then
-			return true
-		end
-		return not ignored[diagnostic.source .. ":" .. diagnostic.code]
-	end, result.diagnostics)
-
+	result.diagnostics = vim.tbl_filter(
+		function(diagnostic) return not ignored[diagnostic.source .. ":" .. (diagnostic.code or "")] end,
+		result.diagnostics
+	)
 	return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
 end, {})
 
