@@ -5,37 +5,6 @@ local M = {
 	},
 }
 
-function M.list_equal(a1, a2)
-	if #a1 ~= #a2 then
-		return false
-	end
-	for k, v in ipairs(a1) do
-		if v ~= a2[k] then
-			return false
-		end
-	end
-	return true
-end
-
-function M.line_ending(bufnr)
-	local format = vim.api.nvim_buf_get_option(bufnr, "fileformat")
-	if format == "dos" then
-		return "\r\n"
-	elseif format == "mac" then
-		return "\r"
-	else
-		return "\n"
-	end
-end
-
-function M.full_lines(bufnr)
-	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
-	if vim.api.nvim_buf_get_option(bufnr, "eol") then
-		lines[#lines + 1] = ""
-	end
-	return lines
-end
-
 -- https://github.com/neovim/neovim/blob/189e21ae50efe14d8446db11aee6b50f8022d99f/runtime/lua/vim/lsp/util.lua#L336
 function M.line_byte_from_position(lines, position, offset_encoding)
 	-- LSP's line and characters are 0-indexed
@@ -164,7 +133,7 @@ function M.send_changes(bufnr, client, edits, lines)
 		)
 	elseif kind == kinds.Full then
 		changes = {
-			{ text = table.concat(lines, M.line_ending(bufnr)) },
+			{ text = table.concat(lines, require("utils").line_ending(bufnr)) },
 		}
 	else
 		return
@@ -194,7 +163,8 @@ function M.format(fmt, lines, req_inc)
 		elseif not vim.tbl_isempty(fmt.queue) then
 			M.format(fmt, lines, req_inc)
 		else
-			if M.list_equal(lines, M.full_lines(bufnr)) then
+			local utils = require("utils")
+			if utils.list_equal(lines, utils.full_lines(bufnr)) then
 				return
 			end
 			for _, edits in ipairs(fmt.applies) do
@@ -216,7 +186,7 @@ function M.format(fmt, lines, req_inc)
 		if vim.b[bufnr].format_tick ~= vim.b[bufnr].changedtick then
 			return
 		end
-		M.send_changes(bufnr, client, nil, M.full_lines(bufnr))
+		M.send_changes(bufnr, client, nil, require("utils").full_lines(bufnr))
 
 		if err then
 			require("vim.lsp.log").error(string.format("[%s] %d: %s", client.name, err.code, err.message))
@@ -291,7 +261,7 @@ function M.attach(client, bufnr)
 				return (M.order[a] or 0) < (M.order[b] or 0)
 			end)
 
-			M.format(fmt, M.full_lines(bufnr), fmt.req_inc)
+			M.format(fmt, require("utils").full_lines(bufnr), fmt.req_inc)
 		end,
 	})
 end

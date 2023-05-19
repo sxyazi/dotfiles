@@ -33,8 +33,8 @@ vim.keymap.set("n", "W", "5w")
 vim.keymap.set("n", "B", "5b")
 
 -- insert mode keys
-vim.keymap.set("", "k", "i")
-vim.keymap.set("", "K", "I")
+vim.keymap.set("n", "k", function() return #vim.fn.getline(".") == 0 and '"_cc' or "i" end, { expr = true })
+vim.keymap.set("v", "k", "i")
 vim.keymap.set("", "m", "o")
 vim.keymap.set("", "M", "O")
 
@@ -57,9 +57,15 @@ vim.keymap.set("n", "dw", 'vb"_d')
 vim.keymap.set("n", "cw", 'vb"_c')
 
 -- search keys
-vim.keymap.set("n", "-", "n")
-vim.keymap.set("v", "-", [[y/\V<C-R>"<CR>]])
-vim.keymap.set({ "n", "v" }, "=", "N")
+vim.keymap.set("n", "-", "'Nn'[v:searchforward]", { expr = true })
+vim.keymap.set("x", "-", "'Nn'[v:searchforward]", { expr = true })
+vim.keymap.set("o", "-", "'Nn'[v:searchforward]", { expr = true })
+vim.keymap.set("n", "=", "'nN'[v:searchforward]", { expr = true })
+vim.keymap.set("x", "=", "'nN'[v:searchforward]", { expr = true })
+vim.keymap.set("o", "=", "'nN'[v:searchforward]", { expr = true })
+
+vim.keymap.set("v", "-", function() vim.api.nvim_feedkeys(require("utils").search_partten(false), "n", false) end)
+vim.keymap.set("v", "=", function() vim.api.nvim_feedkeys(require("utils").search_partten(true), "n", false) end)
 
 -- tab management
 vim.keymap.set({ "n", "v" }, "tt", ":tabe<CR>", { silent = true })

@@ -458,6 +458,8 @@ return {
 					mappings = {
 						-- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua#L133
 						i = {
+							["<C-n>"] = false, -- disable default keybinding
+
 							["<C-u>"] = actions.cycle_history_prev,
 							["<C-e>"] = actions.cycle_history_next,
 							["<M-u>"] = actions.preview_scrolling_up,
@@ -470,6 +472,10 @@ return {
 						n = {
 							["k"] = false, -- disable default keybinding
 							["<Esc>"] = false, -- disable default keybinding
+							["<S-Tab>"] = false, -- disable default keybinding
+
+							["<Tab>"] = actions.toggle_selection,
+							-- ["<BS>"] = actions.delete_buffer, TODO
 							["u"] = actions.move_selection_previous,
 							["e"] = actions.move_selection_next,
 							["U"] = function(prompt_bufnr) require("telescope.actions.set").shift_selection(prompt_bufnr, -5) end,
@@ -485,17 +491,25 @@ return {
 						},
 					},
 					buffer_previewer_maker = function(filepath, bufnr, opts)
-						filepath = vim.fn.expand(filepath)
-						vim.loop.fs_stat(filepath, function(_, stat)
-							if not stat then
-								return
-							end
-							if stat.size > 51200 then
-								return -- greater than 50KiB
-							end
-							require("telescope.previewers").buffer_previewer_maker(filepath, bufnr, opts)
-						end)
+						require("plenary.job")
+							:new({
+								command = "file",
+								args = { "-b", "--mime", filepath },
+								on_exit = function(j)
+									if j:result()[1]:find("charset=binary", 1, true) then
+										vim.schedule(function() vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "BINARY" }) end)
+									else
+										require("telescope.previewers").buffer_previewer_maker(filepath, bufnr, opts)
+									end
+								end,
+							})
+							:sync()
 					end,
+				},
+				pickers = {
+					live_grep = {
+						theme = "ivy",
+					},
 				},
 				extensions = {
 					fzf = {
@@ -625,7 +639,8 @@ return {
 			{ "nvim-lua/plenary.nvim", lazy = true },
 		},
 		keys = {
-			{ "<leader>f", function() require("spectre").open() end },
+			{ "<leader>f", ":lua require('spectre').open()<CR>", mode = "n", silent = true },
+			{ "<leader>f", ":lua require('spectre').open_visual()<CR>", mode = "v", silent = true },
 		},
 		opts = {
 			highlight = {
@@ -711,19 +726,18 @@ return {
 		opts = {
 			action_keys = {
 				previous = "u",
-				next = "k",
+				next = "e",
+
 				jump = "<Tab>",
 				jump_close = "<CR>",
-				-- TODO
-				-- open_split = { "<c-x>" },
-				-- open_vsplit = { "<c-v>" },
-				-- open_tab = { "<c-t>" },
-				hover = "K",
-				toggle_mode = "s",
-				toggle_preview = "p",
-				toggle_fold = "zz",
+
+				open_split = "s",
+				open_vsplit = "S",
+				open_tab = "t",
+
+				toggle_fold = "za",
 				open_folds = "zr",
-				close_folds = "zc",
+				close_folds = "zm",
 			},
 		},
 		config = function(opts)

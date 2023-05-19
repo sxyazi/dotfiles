@@ -1,0 +1,62 @@
+#command
+\r forw-line
+\n forw-line
+
+e forw-line
+E forw-scroll
+u back-line
+U back-scroll
+
+n left-scroll
+i right-scroll
+
+g goto-line
+G goto-end
+
+/ forw-search
+? back-search
+- repeat-search
+= reverse-search
+f filter
+
+o examine
+[ prev-file
+] next-file
+x remove-file
+
+p status
+r repaint-flush
+F forw-forever
+v visual
+; shell
+q quit
+
+0 digit
+1 digit
+2 digit
+3 digit
+4 digit
+5 digit
+6 digit
+7 digit
+8 digit
+9 digit
+#stop
+
+#line-edit
+\ku up
+\kd down
+^N left
+^I right
+
+^B word-left
+^H word-right
+^W word-backspace
+
+\e0 home
+\e$ end
+#stop
+
+#env
+LESS = -i
+LESSCHARSET = utf-8

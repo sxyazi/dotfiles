@@ -11,6 +11,10 @@ zsh/.zsh_history
 zsh/.zcompdump
 zsh/.zcompcache
 
+!less/
+!less/**
+less/.lesshst
+
 !tmux/
 !tmux/**
 tmux/plugins/

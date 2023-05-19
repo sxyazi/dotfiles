@@ -188,15 +188,18 @@ return {
 		init = function()
 			vim.g.VM_default_mappings = 0
 			vim.g.VM_maps = {
+				["A"] = "<C-i>",
 				["i"] = "k",
-				["I"] = "K",
+				["I"] = "<C-n>",
+				["o"] = "m",
+				["O"] = "M",
 				["I BS"] = "",
-				["Find Prev"] = "[",
-				["Find Next"] = "]",
+				["Find Next"] = "-",
+				["Find Prev"] = "=",
 				-- Add selection
 				["Find Under"] = "<C-k>",
 				["Find Subword Under"] = "<C-k>",
-				["Select All"] = "<C-S-k>",
+				["Select All"] = "<C-a>",
 				["Add Cursor Up"] = "",
 				["Add Cursor Down"] = "",
 				-- Undo and Redo
