@@ -1,7 +1,8 @@
 local M = {
 	fmt = {},
 	order = {
-		["eslint"] = 1,
+		["eslint"] = 1, -- Prettier run first
+		["gopls"] = -1, -- gopls run first
 	},
 }
 
@@ -104,24 +105,19 @@ function M.apply_text_edits(edits, lines, encoding, eol)
 end
 
 function M.send_changes(bufnr, client, edits, lines)
-	local kinds = require("vim.lsp.protocol").TextDocumentSyncKind
+	-- 0=None, 1=Full, 2=Incremental
 	local kind = (function()
-		if edits == nil then
-			return kinds.Full
-		end
-
 		local inc_sync = vim.F.if_nil(client.config.flags.allow_incremental_sync, true)
 		local capability = vim.tbl_get(client.server_capabilities or {}, "textDocumentSync", "change")
 
-		if not inc_sync and capability == kinds.Incremental then
-			return kinds.Full
+		if not inc_sync and capability == 2 then
+			return 1
 		end
-		return capability or kinds.None
+		return capability or 0
 	end)()
 
-	local changes
-	if kind == kinds.Incremental then
-		changes = vim.tbl_map(
+	if kind == 2 then
+		edits = vim.tbl_map(
 			function(edit)
 				return {
 					text = edit.newText,
@@ -131,21 +127,22 @@ function M.send_changes(bufnr, client, edits, lines)
 			end,
 			edits
 		)
-	elseif kind == kinds.Full then
-		changes = {
+	elseif kind == 1 then
+		edits = {
 			{ text = table.concat(lines, require("utils").line_ending(bufnr)) },
 		}
 	else
-		return
+		return kind
 	end
 
-	client.notify("textDocument/didChange", {
+	client.rpc.notify("textDocument/didChange", {
 		textDocument = {
 			uri = vim.uri_from_bufnr(bufnr),
 			version = vim.lsp.util.buf_versions[bufnr],
 		},
-		contentChanges = changes,
+		contentChanges = edits,
 	})
+	return kind
 end
 
 function M.format(fmt, lines, req_inc)
@@ -171,7 +168,7 @@ function M.format(fmt, lines, req_inc)
 				vim.lsp.util.apply_text_edits(edits, bufnr, client.offset_encoding)
 			end
 			if vim.api.nvim_get_current_buf() == bufnr then
-				vim.cmd("update")
+				vim.cmd("noautocmd :update")
 			end
 		end
 	end
@@ -186,7 +183,6 @@ function M.format(fmt, lines, req_inc)
 		if vim.b[bufnr].format_tick ~= vim.b[bufnr].changedtick then
 			return
 		end
-		M.send_changes(bufnr, client, nil, require("utils").full_lines(bufnr))
 
 		if err then
 			require("vim.lsp.log").error(string.format("[%s] %d: %s", client.name, err.code, err.message))
@@ -203,7 +199,9 @@ function M.format(fmt, lines, req_inc)
 	end
 
 	for _, edits in ipairs(fmt.applies) do
-		M.send_changes(bufnr, client, edits, lines)
+		if M.send_changes(bufnr, client, edits, lines) ~= 2 then
+			break -- If not needed for incremental sync
+		end
 	end
 	local ok, req_id = client.rpc.request("textDocument/formatting", fmt.params, on_formatted)
 	if ok then

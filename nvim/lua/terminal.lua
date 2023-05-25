@@ -39,8 +39,10 @@ function M.hide()
 end
 
 function M.destroy()
-	if vim.fn.bufexists(M.buffer) == 1 then
+	if vim.fn.win_gotoid(M.window) ~= 0 then
 		M.height = vim.api.nvim_win_get_height(M.window)
+	end
+	if vim.fn.bufexists(M.buffer) == 1 then
 		vim.api.nvim_buf_delete(M.buffer, { force = true })
 	end
 

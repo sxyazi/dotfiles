@@ -146,6 +146,7 @@ end
 function M.go_setup()
 	require("lspconfig").gopls.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		-- on_attach = formatter.attach, TODO
 	}
 end
 
@@ -340,7 +341,7 @@ return {
 					nls.builtins.code_actions.gomodifytags,
 					nls.builtins.code_actions.impl,
 					nls.builtins.diagnostics.revive.with {
-						extra_args = function() return { "-config", revive_config() } end,
+						args = function() return { "-config", revive_config(), "-formatter", "json", "./..." } end,
 					},
 					nls.builtins.formatting.goimports,
 

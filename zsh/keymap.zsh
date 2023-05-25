@@ -13,12 +13,12 @@ zle -N vi-yank-wrapped
 
 # Menu
 bindkey -rpM menuselect ""
-bindkey -M menuselect "^I" complete-word
-bindkey -M menuselect "^[" send-break
-bindkey -M menuselect "u"  up-line-or-history
-bindkey -M menuselect "e"  down-line-or-history
-bindkey -M menuselect "n"  backward-char
-bindkey -M menuselect "i"  forward-char
+bindkey -M menuselect "^I"        complete-word
+bindkey -M menuselect "^["        send-break
+bindkey -M menuselect "^U"        up-line-or-history
+bindkey -M menuselect "^E"        down-line-or-history
+bindkey -M menuselect "^N"        backward-char
+bindkey -M menuselect "^[[105;5u" forward-char  # Ctrl+i in CSI u, configured in kitty.conf and tmux.conf both
 
 # Command
 bindkey -rpM command ""

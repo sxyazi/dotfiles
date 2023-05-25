@@ -1,7 +1,11 @@
 setopt AUTO_CD
 setopt CORRECT
 setopt INTERACTIVE_COMMENTS
+setopt HIST_FCNTL_LOCK
 setopt HIST_IGNORE_ALL_DUPS
+setopt SHARE_HISTORY
+unsetopt HIST_EXPIRE_DUPS_FIRST
+unsetopt EXTENDED_HISTORY
 
 # PATH
 export PATH=$HOME/.local/bin:$PATH

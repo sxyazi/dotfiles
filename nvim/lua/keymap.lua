@@ -3,7 +3,7 @@ vim.g.mapleader = " "
 vim.keymap.set("", "<Space>", "<Nop>")
 
 -- special keys
-vim.keymap.set("n", ";", ":")
+vim.keymap.set({ "n", "v" }, ";", ":")
 vim.keymap.set("", "<Tab>", "<Nop>") -- Will be handled in `plugins/completion.lua`
 
 -- reserved keys
@@ -22,19 +22,21 @@ vim.keymap.set("", "N", "^")
 vim.keymap.set("", "i", "l")
 vim.keymap.set("", "I", "$")
 
+vim.keymap.set("n", "<C-u>", 'line(".")>1 ? ":m .-2<CR>==" : ""', { expr = true, silent = true })
+vim.keymap.set("n", "<C-e>", 'line(".")<line("$") ? ":m .+1<CR>==" : ""', { expr = true, silent = true })
+vim.keymap.set("v", "<C-u>", 'line(".")>1 ? ":m \'<-2<CR>gv=gv" : ""', { expr = true, silent = true })
+vim.keymap.set("v", "<C-e>", 'line(".")<line("$") ? ":m \'>+1<CR>gv=gv" : ""', { expr = true, silent = true })
+
 vim.keymap.set("c", "<C-u>", "<Up>")
-vim.keymap.set("v", "<C-u>", ":m '<-2<CR>gv=gv", { silent = true })
 vim.keymap.set("c", "<C-e>", "<Down>")
-vim.keymap.set("v", "<C-e>", ":m '>+1<CR>gv=gv", { silent = true })
 
 -- word navigation keys
 vim.keymap.set("", "h", "e")
-vim.keymap.set("n", "W", "5w")
-vim.keymap.set("n", "B", "5b")
 
 -- insert mode keys
 vim.keymap.set("n", "k", function() return #vim.fn.getline(".") == 0 and '"_cc' or "i" end, { expr = true })
 vim.keymap.set("v", "k", "i")
+vim.keymap.set("v", "K", "I")
 vim.keymap.set("", "m", "o")
 vim.keymap.set("", "M", "O")
 
@@ -76,8 +78,9 @@ vim.keymap.set({ "n", "v" }, "tN", ":-tabmove<CR>", { silent = true })
 vim.keymap.set({ "n", "v" }, "tI", ":+tabmove<CR>", { silent = true })
 
 -- other keys
-vim.keymap.set("", "<C-S-M-s>", ":w<CR>", { silent = true })
-vim.keymap.set("i", "<C-S-M-s>", "<Esc>:w<CR>a", { silent = true })
+vim.keymap.set("n", "<C-S-M-s>", ":up<CR>", { silent = true })
+vim.keymap.set("i", "<C-S-M-s>", "<Esc>:up<CR>a", { silent = true })
+vim.keymap.set("v", "<C-S-M-s>", "<Esc>:up<CR>", { silent = true })
 
 vim.keymap.set("", "<C-a>", "ggVG$")
 vim.keymap.set({ "i", "v" }, "<C-a>", "<Esc>ggVG$")
