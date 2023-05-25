@@ -1,6 +1,10 @@
 *
 !README.md
 
+!nix/
+!nix/**
+nix/result
+
 !kitty/
 !kitty/**
 
@@ -15,12 +19,12 @@ zsh/.zcompcache
 !less/**
 less/.lesshst
 
+!nvim/
+!nvim/**
+
 !tmux/
 !tmux/**
 tmux/plugins/
-
-!nvim/
-!nvim/**
 
 !rules/
 !rules/**

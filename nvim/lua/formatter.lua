@@ -272,7 +272,7 @@ local ignored = {
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(function(_, result, ctx, config)
 	result.diagnostics = vim.tbl_filter(
-		function(diagnostic) return not ignored[diagnostic.source .. ":" .. (diagnostic.code or "")] end,
+		function(diagnostic) return not ignored[(diagnostic.source or "") .. ":" .. (diagnostic.code or "")] end,
 		result.diagnostics
 	)
 	return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)

@@ -1,5 +1,6 @@
 # Zsh root
 ZDOTDIR=$HOME/.config/zsh
+ZSHAREDIR=$HOME/.local/share/zsh
 
 # Zsh related
 HISTFILE=$ZDOTDIR/.history

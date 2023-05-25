@@ -21,13 +21,13 @@ zmodload zsh/complist
 autoload -Uz edit-command-line; zle -N edit-command-line
 
 # Plugins
-source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $ZDOTDIR/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+source $ZSHAREDIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZSHAREDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZSHAREDIR/zsh-history-substring-search/zsh-history-substring-search.zsh
+fpath=($ZSHAREDIR/zsh-completions/src $fpath)
 
-[[ $- == *i* ]] && source "/opt/homebrew/opt/fzf/shell/completion.zsh" 2> /dev/null
-source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
+[[ $- == *i* ]] && source $ZSHAREDIR/fzf/completion.zsh 2> /dev/null
+source $ZSHAREDIR/fzf/key-bindings.zsh
 
 # Auto completion
 zstyle ":completion:*:*:*:*:*" menu select

@@ -120,6 +120,20 @@ function M.resolve_config(type)
 	end
 end
 
+function M.nix_setup()
+	require("lspconfig").nil_ls.setup {
+		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		on_attach = formatter.attach,
+		settings = {
+			["nil"] = {
+				formatting = {
+					command = { "nixpkgs-fmt" },
+				},
+			},
+		},
+	}
+end
+
 function M.lua_setup()
 	require("lspconfig").lua_ls.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
@@ -285,6 +299,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+			M.nix_setup()
 			M.lua_setup()
 			M.go_setup()
 			M.fe_setup()
