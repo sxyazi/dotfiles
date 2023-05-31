@@ -408,9 +408,11 @@ return {
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", lazy = true },
-
-			-- Install a native sorter, for better performance
-			{ "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				lazy = true,
+				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+			},
 		},
 		keys = function()
 			local extr_args = {

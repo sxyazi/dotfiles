@@ -43,6 +43,7 @@ local M = {
 		"goimports", -- formatter
 
 		-- Lua
+		"luacheck", -- linter
 		"stylua", -- formatter
 
 		-- Python
