@@ -6,7 +6,7 @@ import { fmRules } from "./formatting.js"
 
 export const tomlRules = {
 	// https://ota-meshi.github.io/eslint-plugin-toml/rules/#toml-rules
-	"toml/indent"                     : ["warn", "tab", { subTables: 1, keyValuePairs: 1 }],
+	"toml/indent"                     : ["warn", "tab", { subTables: 1 }],
 	"toml/keys-order"                 : "warn",
 	"toml/no-non-decimal-integer"     : "warn",
 	"toml/no-space-dots"              : "warn",
@@ -21,8 +21,8 @@ export const tomlRules = {
 	"toml/array-element-newline"     : fmRules["array-element-newline"],
 	"toml/comma-style"               : fmRules["comma-style"],
 	"toml/inline-table-curly-spacing": fmRules["object-curly-spacing"],
-	"toml/key-spacing"               : fmRules["key-spacing"],
-	"toml/spaced-comment"            : fmRules["spaced-comment"],
+	"toml/key-spacing"               : ["warn", { align: "equal" }],
+	"toml/spaced-comment"            : ["warn", "always", { markers: ["#"] }],
 	"toml/table-bracket-spacing"     : fmRules["array-bracket-spacing"],
 }
 
@@ -45,4 +45,3 @@ export const toml = [
 		},
 	},
 ]
-

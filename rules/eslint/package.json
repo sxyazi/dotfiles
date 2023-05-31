@@ -1,7 +1,7 @@
 {
 	"name": "@sxyazi/eslint-config",
 	"type": "module",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"scripts": {
 		"build": "esbuild eslint.config.js --bundle --minify --platform=node --packages=external --footer:js='module.exports=module.exports.default' --outfile=eslint.config.cjs",
 		"release": "pnpm build && pnpm publish"
@@ -14,12 +14,12 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@eslint/js": "^8.40.0",
-		"@typescript-eslint/eslint-plugin": "^5.59.5",
-		"@typescript-eslint/parser": "^5.59.5",
+		"@eslint/js": "^8.41.0",
+		"@typescript-eslint/eslint-plugin": "^5.59.8",
+		"@typescript-eslint/parser": "^5.59.8",
 		"eslint-plugin-import": "^2.27.5",
-		"eslint-plugin-json-schema-validator": "^4.4.0",
-		"eslint-plugin-jsonc": "^2.7.0",
+		"eslint-plugin-json-schema-validator": "^4.5.0",
+		"eslint-plugin-jsonc": "^2.8.0",
 		"eslint-plugin-markdown": "^3.0.0",
 		"eslint-plugin-react": "^7.32.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
@@ -33,7 +33,7 @@
 		"yaml-eslint-parser": "^1.2.2"
 	},
 	"devDependencies": {
-		"esbuild": "^0.17.18",
-		"eslint": "^8.40.0"
+		"esbuild": "^0.17.19",
+		"eslint": "^8.41.0"
 	}
 }
