@@ -30,6 +30,15 @@ return {
 					dismiss = false,
 				},
 			},
+			filetypes = {
+				yaml = true,
+				markdown = true,
+				gitcommit = true,
+				gitrebase = true,
+				hgcommit = true,
+				svn = true,
+				["."] = true,
+			},
 		},
 		config = function(_, opts)
 			require("copilot").setup(opts)

@@ -41,12 +41,11 @@ FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lowe
 HIGHLIGHT_SIZE_MAX=262143  # 256KiB
 
 handle_image() {
-	local mimetype="${1}"
-	case "${mimetype}" in
+	case "${1}" in
 		## SVG
 		image/svg+xml|image/svg)
 			convert -- "${FILE_PATH}" "${IMAGE_CACHE_PATH}" && exit 6
-			exit 1;;
+			exit 1 ;;
 
 		## Image
 		image/*)
@@ -58,13 +57,12 @@ handle_image() {
 				## ...auto-rotate the image according to the EXIF data.
 				convert -- "${FILE_PATH}" -auto-orient "${IMAGE_CACHE_PATH}" && exit 6
 			fi
-			exit 7;;
+			exit 7 ;;
 
 		## Video
 		video/*)
-			# Thumbnail
 			ffmpeg -ss 00:00:30 -i "${FILE_PATH}" -vf 'scale=960:960:force_original_aspect_ratio=decrease' -vframes 1 "${IMAGE_CACHE_PATH}" && exit 6
-			exit 1;;
+			exit 1 ;;
 
 		## PDF
 		# application/pdf)
@@ -74,14 +72,14 @@ handle_image() {
 		#              -singlefile \
 		#              -jpeg -tiffcompression jpeg \
 		#              -- "${FILE_PATH}" "${IMAGE_CACHE_PATH%.*}" \
-		#         && exit 6 || exit 1;;
+		#         && exit 6 || exit 1 ;;
 
 
 		## ePub, MOBI, FB2 (using Calibre)
 		application/epub+zip|application/x-mobipocket-ebook|\
 		application/x-fictionbook+xml)
 			ebook-meta --get-cover="${IMAGE_CACHE_PATH}" -- "${FILE_PATH}" > /dev/null && exit 6
-			exit 1;;
+			exit 1 ;;
 
 		## Font
 		application/font*|application/*opentype)
@@ -111,32 +109,35 @@ handle_extension() {
 		a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
 		rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
 			bsdtar --list --file "${FILE_PATH}" && exit 5
-			exit 1;;
-
+			exit 1 ;;
 		rar)
 			## Avoid password prompt by providing empty password
 			unrar lt -p- -- "${FILE_PATH}" && exit 5
-			exit 1;;
-
+			exit 1 ;;
 		7z)
 			## Avoid password prompt by providing empty password
 			7zz l -p -- "${FILE_PATH}" && exit 5
-			exit 1;;
+			exit 1 ;;
+
+		## JSON
+		json|ipynb)
+			jq --color-output . "${FILE_PATH}" && exit 5
+			exit 1 ;;
+
+		## PDF
+		pdf)
+			exiftool "${FILE_PATH}" && exit 5
+			exit 1 ;;
 
 		## BitTorrent
 		torrent)
 			transmission-show -- "${FILE_PATH}" && exit 5
-			exit 1;;
-
-		## JSON
-		json)
-			jq --color-output . "${FILE_PATH}" && exit 5;;
+			exit 1 ;;
 	esac
 }
 
 handle_mime() {
-	local mimetype="${1}"
-	case "${mimetype}" in
+	case "${1}" in
 		## Text
 		text/* | */xml)
 			## Syntax highlight
@@ -144,21 +145,22 @@ handle_mime() {
 				exit 1
 			fi
 			env COLORTERM=8bit bat --color=always --style="plain"	-- "${FILE_PATH}" && exit 5
-			exit 2;;
+			exit 2 ;;
 
 		## JSON
 		*/json)
-			jq --color-output . "${FILE_PATH}" && exit 5;;
+			jq --color-output . "${FILE_PATH}" && exit 5
+			exit 1 ;;
 
 		## Image
 		image/*)
 			exiftool "${FILE_PATH}" && exit 5
-			exit 1;;
+			exit 1 ;;
 
 		## Video and audio
 		video/* | audio/*)
 			exiftool "${FILE_PATH}" && exit 5
-			exit 1;;
+			exit 1 ;;
 	esac
 }
 

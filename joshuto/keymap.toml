@@ -1,0 +1,129 @@
+[default_view]
+
+keymap = [
+  { keys = ["escape"], command = "escape" },
+	{ keys = ["h"], command = "toggle_hidden" },
+	{ keys = ["r"], command = "reload_dirlist" },
+	{ keys = ["\n"], command = "open_with" },
+
+  { keys = [";"], command = ":" },
+  { keys = [":"], command = ":shell " },
+	{ keys = [","], command = "set_mode" },
+	{ keys = ["w"], command = "show_tasks --exit-key=w" },
+
+	# Remapped in kitty.conf
+	{ keys = ["ctrl+c"], command = "close_tab" },
+	{ keys = ["ctrl+q"], command = "quit --output-current-directory" },
+
+	# Tabs
+	{ keys = ["t"], command = "new_tab --current" },
+	{ keys = ["T"], command = "new_tab --cursor" },
+
+  { keys = ["ctrl+n"], command = "tab_switch 1" },
+  { keys = ["ctrl+i"], command = "tab_switch -1" },
+
+  { keys = ["1"], command = "tab_switch_index 1" },
+  { keys = ["2"], command = "tab_switch_index 2" },
+  { keys = ["3"], command = "tab_switch_index 3" },
+  { keys = ["4"], command = "tab_switch_index 4" },
+  { keys = ["5"], command = "tab_switch_index 5" },
+
+  # Navigation
+  { keys = ["u"], command = "cursor_move_up" },
+  { keys = ["e"], command = "cursor_move_down" },
+  { keys = ["n"], command = "cd .." },
+	{ keys = ["i"], command = "open" },
+
+	{ keys = ["U"], command = "cursor_move_up 5" },
+	{ keys = ["E"], command = "cursor_move_down 5" },
+
+  { keys = ["g", "g"], command = "cursor_move_home" },
+  { keys = ["G"], command = "cursor_move_end" },
+
+  { keys = ["["], command = "parent_cursor_move_up" },
+  { keys = ["]"], command = "parent_cursor_move_down" },
+
+	# Copy/Paste
+  { keys = ["d"], command = "cut_files" },
+	{ keys = ["D"], command = "delete_files" },
+	{ keys = ["y"], command = "copy_files" },
+
+	{ keys = ["p"], command = "paste_files" },
+	{ keys = ["P"], command = "paste_files --overwrite=true" },
+
+  { keys = ["v", "v"], command = "copy_filepath" },
+	{ keys = ["v", "n"], command = "copy_filename" },
+	{ keys = ["v", "N"], command = "copy_filename_without_extension" },
+  { keys = ["v", "d"], command = "copy_dirpath" },
+
+	{ keys = ["l"], command = "symlink_files --relative=false" },
+	{ keys = ["L"], command = "symlink_files --relative=true" },
+
+	# Rename
+	{ keys = ["k"], command = ":rename " },
+	{ keys = ["K"], command = "bulk_rename" },
+	{ keys = ["a"], command = "rename_prepend" },
+  { keys = ["A"], command = "rename_append" },
+
+	# Creating
+  { keys = ["c", "c"], command = ":touch " },
+	{ keys = ["c", "d"], command = ":mkdir " },
+
+	# Selection
+  { keys = [" "], command = "select --toggle=true" },
+	{ keys = ["V"], command = "toggle_visual" },
+
+  { keys = ["ctrl+a"], command = "select --all=true --toggle=false" },
+  { keys = ["ctrl+r"], command = "select --all=true --toggle=true" },
+
+	# Search
+  { keys = ["/"], command = "subdir_fzf" },
+	{ keys = ["?"], command = ":search_glob " },
+  { keys = ["-"], command = "search_next" },
+  { keys = ["="], command = "search_prev" },
+
+	# Sort
+	{ keys = ["s", "s"], command = "sort size" },
+	{ keys = ["s", "n"], command = "sort lexical" },
+  { keys = ["s", "m"], command = "sort mtime" },
+  { keys = ["s", "e"], command = "sort ext" },
+	{ keys = ["s", "r"], command = "sort reverse" },
+
+	# Goto
+	{ keys = ["g", "h"], command = "cd ~/" },
+	{ keys = ["g", "c"], command = "cd ~/.config" },
+	{ keys = ["g", "d"], command = "cd ~/Downloads" },
+
+	# Line mode
+  { keys = ["m", "s"], command = "linemode size" },
+  { keys = ["m", "m"], command = "linemode mtime" },
+  { keys = ["m", "M"], command = "linemode sizemtime" },
+]
+
+[task_view]
+
+keymap = [
+	{ keys = ["w"], command = "show_tasks" },
+
+	# Navigation
+  { keys = ["u"], command = "cursor_move_up" },
+	{ keys = ["U"], command = "cursor_move_up 5" },
+  { keys = ["e"], command = "cursor_move_down" },
+	{ keys = ["E"], command = "cursor_move_down 5" },
+  { keys = ["g", "g"], command = "cursor_move_home" },
+  { keys = ["G"], command = "cursor_move_end" },
+]
+
+[help_view]
+
+keymap = [
+	{ keys = ["w"], command = "show_tasks" },
+
+  # Navigation
+  { keys = ["u"], command = "cursor_move_up" },
+	{ keys = ["U"], command = "cursor_move_up 5" },
+  { keys = ["e"], command = "cursor_move_down" },
+	{ keys = ["E"], command = "cursor_move_down 5" },
+  { keys = ["g", "g"], command = "cursor_move_home" },
+  { keys = ["G"], command = "cursor_move_end" },
+]

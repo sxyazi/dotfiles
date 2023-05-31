@@ -1,6 +1,9 @@
 *
 !README.md
 
+!os/
+!os/**
+
 !nix/
 !nix/**
 nix/result
@@ -10,8 +13,8 @@ nix/result
 
 !zsh/
 !zsh/**
-zsh/plugins
 zsh/.zsh_history
+zsh/.zsh_sessions
 zsh/.zcompdump
 zsh/.zcompcache
 
@@ -29,6 +32,9 @@ tmux/plugins/
 !rules/
 !rules/**
 rules/**/node_modules
+
+!joshuto
+!joshuto/**
 
 !ranger
 !ranger/**

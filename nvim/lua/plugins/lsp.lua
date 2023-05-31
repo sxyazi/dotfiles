@@ -18,6 +18,7 @@ local M = {
 		"texlab", -- LaTeX
 		"lua_ls",
 		"marksman", -- Markdown
+		"nil_ls", -- Nix
 		"rust_analyzer",
 		"sqlls",
 		"taplo", -- TOML

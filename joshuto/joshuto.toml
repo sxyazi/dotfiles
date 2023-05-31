@@ -1,0 +1,26 @@
+#numbered_command = false
+
+#xdg_open = false
+#xdg_open_fork = false
+
+[display]
+column_ratio = [1, 3, 4]
+
+scroll_offset = 8
+
+show_hidden = true
+
+[display.sort]
+method = "mtime"
+
+#case_sensitive = false
+
+[preview]
+max_preview_size = 999999999
+preview_script = "~/.config/joshuto/scpipts/preview.sh"
+preview_shown_hook_script = "~/.config/joshuto/scpipts/show_image.sh"
+preview_removed_hook_script = "~/.config/joshuto/scpipts/remove_image.sh"
+
+[tab]
+#home_page = "home"
+
