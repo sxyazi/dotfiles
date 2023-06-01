@@ -58,52 +58,51 @@ while [ "$#" -gt 0 ]; do
 done
 
 handle_extension() {
-	case "${FILE_EXTENSION_LOWER}" in
+	case "$FILE_EXTENSION_LOWER" in
 		## Archive
 		a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
 		rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
-			bsdtar --list --file "${FILE_PATH}" && exit 0
+			bsdtar --list --file "$FILE_PATH" && exit 0
 			exit 1 ;;
 		rar)
 			## Avoid password prompt by providing empty password
-			unrar lt -p- -- "${FILE_PATH}" && exit 0
+			unrar lt -p- -- "$FILE_PATH" && exit 0
 			exit 1 ;;
 		7z)
 			## Avoid password prompt by providing empty password
-			7zz l -p -- "${FILE_PATH}" && exit 0
+			7zz l -p -- "$FILE_PATH" && exit 0
 			exit 1 ;;
 
 		## JSON
 		json|ipynb)
-			jq --color-output . "${FILE_PATH}" && exit 0
+			jq --color-output . "$FILE_PATH" && exit 0
 			exit 1 ;;
 
 		## PDF
 		pdf)
-			exiftool "${FILE_PATH}" && exit 0
+			exiftool "$FILE_PATH" && exit 0
 			exit 1 ;;
 
 		## BitTorrent
 		torrent)
-			transmission-show -- "${FILE_PATH}" && exit 0
+			transmission-show -- "$FILE_PATH" && exit 0
 			exit 1 ;;
 	esac
 }
 
 handle_mime() {
-	case "${1}" in
+	case "$1" in
 		## Text
 		text/* | */xml)
-			## Syntax highlight
-			if [[ "$( stat -f '%z' -- "$FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
+			if [[ "$(stat -f '%z' -- "$FILE_PATH}")" -gt "$HIGHLIGHT_SIZE_MAX" ]]; then
 				exit 1
 			fi
-			bat --color=always --style="plain" -- "${FILE_PATH}" && exit 0
+			bat --color=always --paging=never --style=plain --terminal-width="$PREVIEW_WIDTH" "$FILE_PATH" && exit 0
 			exit 1 ;;
 
 		## JSON
 		*/json)
-			jq --color-output . "${FILE_PATH}" && exit 0
+			jq --color-output . "$FILE_PATH" && exit 0
 			exit 1 ;;
 
 		## SVG
@@ -114,10 +113,10 @@ handle_mime() {
 			mime_type=`echo "$exif" | grep '^MIME Type' | awk '{print $4}'`
 			echo -e "File Size  : $file_size\nImage Size : $image_size\nMIME Type  : $mime_type"
 
-			if [ ! -f "$cache_file" ]; then
 			cache_file="/tmp/joshuto-cache/$(echo -n "$FILE_PATH" | md5sum | awk '{print $1}').jpg"
+			if [ ! -f "$cache_file" ]; then
 				mkdir /tmp/joshuto-cache > /dev/null 2>&1
-				convert -- "${FILE_PATH}" "$cache_file"
+				convert -- "$FILE_PATH" "$cache_file"
 			fi
 			exit 0 ;;
 
@@ -141,20 +140,20 @@ handle_mime() {
 			cache_file="/tmp/joshuto-cache/$(echo -n "$FILE_PATH" | md5sum | awk '{print $1}').jpg"
 			if [ ! -f "$cache_file" ]; then
 				mkdir /tmp/joshuto-cache > /dev/null 2>&1
-				ffmpeg -ss 00:00:30 -i "${FILE_PATH}" -vf 'scale=960:960:force_original_aspect_ratio=decrease' -vframes 1 "$cache_file"
+				ffmpeg -ss 00:00:30 -i "$FILE_PATH" -vf 'scale=960:960:force_original_aspect_ratio=decrease' -vframes 1 "$cache_file"
 			fi
 			exit 0 ;;
 
 		## Audio
 		audio/*)
-			exiftool "${FILE_PATH}" && exit 0
+			exiftool "$FILE_PATH" && exit 0
 			exit 1 ;;
 	esac
 }
 
 FILE_EXTENSION="${FILE_PATH##*.}"
-FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
+FILE_EXTENSION_LOWER="$(printf "%s" "$FILE_EXTENSION" | tr '[:upper:]' '[:lower:]')"
 handle_extension
-handle_mime "$( file --dereference --brief --mime-type -- "${FILE_PATH}" )"
+handle_mime "$(file -bL --mime-type -- "$FILE_PATH")"
 
 exit 1

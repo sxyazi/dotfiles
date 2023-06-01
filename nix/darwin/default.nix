@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 
-let softwares = import ./softwares.nix { inherit pkgs; };
+let software = import ./software.nix { inherit pkgs; };
 in
 {
   nix.configureBuildUsers = true;
@@ -188,7 +188,7 @@ in
     ~/.config/os/darwin/power.sh
   '';
 
-  environment.systemPackages = softwares.nix;
+  environment.systemPackages = software.nix;
 
   homebrew = {
     enable = true;
@@ -202,8 +202,8 @@ in
       "homebrew/cask-fonts"
       "homebrew/cask-versions"
     ];
-    brews = softwares.brew;
-    casks = softwares.cask;
-    #masApps = softwares.mas;
+    brews = software.brew;
+    casks = software.cask;
+    #masApps = software.mas;
   };
 }

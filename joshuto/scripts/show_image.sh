@@ -8,15 +8,13 @@ PREVIEW_HEIGHT="$5"  # Height of the preview pane (number of fitting characters)
 
 function show_image {
 	kitty +kitten icat \
-		--transfer-mode=file \
-		--clear 2>/dev/null
-	kitty +kitten icat \
-		--transfer-mode=file \
+		--clear \
+		--transfer-mode=memory \
 		--place "${PREVIEW_WIDTH}x$(($PREVIEW_HEIGHT - $2))@${PREVIEW_X_COORD}x$(($PREVIEW_Y_COORD + $2))" \
 		"$1" 2>/dev/null
 }
 
-case "$(file --mime-type -Lb "$FILE_PATH")" in
+case "$(file -bL --mime-type "$FILE_PATH")" in
 	image/*)
 		show_image "$FILE_PATH" 4
 		;;
@@ -27,9 +25,7 @@ case "$(file --mime-type -Lb "$FILE_PATH")" in
 	;;
 
 	*)
-		kitty +kitten icat \
-			--transfer-mode=file \
-			--clear 2>/dev/null
+		kitty +kitten icat --clear 2>/dev/null
 		;;
 esac
 

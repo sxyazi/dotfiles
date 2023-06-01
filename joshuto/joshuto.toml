@@ -1,26 +1,16 @@
-#numbered_command = false
-
-#xdg_open = false
-#xdg_open_fork = false
-
 [display]
-column_ratio = [1, 3, 4]
+collapse_preview = false
+scroll_offset    = 8
+show_hidden      = true
+show_icons       = true
+column_ratio     = [ 1, 3, 4 ]
 
-scroll_offset = 8
-
-show_hidden = true
-
-[display.sort]
-method = "mtime"
-
-#case_sensitive = false
+	[display.sort]
+	method = "mtime"
 
 [preview]
-max_preview_size = 999999999
-preview_script = "~/.config/joshuto/scripts/preview.sh"
-preview_shown_hook_script = "~/.config/joshuto/scripts/show_image.sh"
+max_preview_size            = 999999999  # I prefer to limit it in the scripts for various file types
+preview_script              = "~/.config/joshuto/scripts/preview.sh"
+preview_shown_hook_script   = "~/.config/joshuto/scripts/show_image.sh"
 preview_removed_hook_script = "~/.config/joshuto/scripts/remove_image.sh"
-
-[tab]
-#home_page = "home"
 

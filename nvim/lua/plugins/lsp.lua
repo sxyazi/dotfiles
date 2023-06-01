@@ -18,7 +18,6 @@ local M = {
 		"texlab", -- LaTeX
 		"lua_ls",
 		"marksman", -- Markdown
-		"nil_ls", -- Nix
 		"rust_analyzer",
 		"sqlls",
 		"taplo", -- TOML
@@ -123,7 +122,10 @@ function M.resolve_config(type)
 end
 
 function M.nix_setup()
-	require("lspconfig").nil_ls.setup {
+	if vim.fn.executable("nil_ls") == 0 then
+		return
+	end
+	require("lspconfig").setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 		on_attach = formatter.attach,
 		settings = {
