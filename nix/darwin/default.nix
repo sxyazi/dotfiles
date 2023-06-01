@@ -7,6 +7,28 @@ in
 
   security.pam.enableSudoTouchIdAuth = true;
 
+  environment = {
+		loginShell = pkgs.zsh;
+		systemPackages = software.nix;
+	};
+
+  homebrew = {
+    enable = true;
+    caskArgs.no_quarantine = true;
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "zap";
+      upgrade = true;
+    };
+    taps = [
+      "homebrew/cask-fonts"
+      "homebrew/cask-versions"
+    ];
+    brews = software.brew;
+    casks = software.cask;
+    #masApps = software.mas;
+  };
+
   system.defaults = {
     NSGlobalDomain = {
       # Auto hide the menubar
@@ -187,23 +209,4 @@ in
 
     ~/.config/os/darwin/power.sh
   '';
-
-  environment.systemPackages = software.nix;
-
-  homebrew = {
-    enable = true;
-    caskArgs.no_quarantine = true;
-    onActivation = {
-      autoUpdate = true;
-      cleanup = "zap";
-      upgrade = true;
-    };
-    taps = [
-      "homebrew/cask-fonts"
-      "homebrew/cask-versions"
-    ];
-    brews = software.brew;
-    casks = software.cask;
-    #masApps = software.mas;
-  };
 }

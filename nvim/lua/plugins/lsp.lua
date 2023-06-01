@@ -122,10 +122,10 @@ function M.resolve_config(type)
 end
 
 function M.nix_setup()
-	if vim.fn.executable("nil_ls") == 0 then
+	if not vim.fn.isdirectory("/nix") then
 		return
 	end
-	require("lspconfig").setup {
+	require("lspconfig").nil_ls.setup {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 		on_attach = formatter.attach,
 		settings = {

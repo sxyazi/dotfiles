@@ -3,6 +3,7 @@
 let
   base = {
     cmake = "nix";
+    zsh = "nix";
     less = "nix";
     gnused = "nix";
     wget = "nix";

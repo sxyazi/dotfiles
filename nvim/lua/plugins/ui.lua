@@ -113,6 +113,10 @@ return {
 							-- Yank
 							{ find = " lines yanked" },
 
+							-- Move lines
+							{ find = " lines moved" },
+							{ find = " lines indented" },
+
 							-- Bulk edit
 							{ find = " fewer lines" },
 							{ find = " more lines" },
