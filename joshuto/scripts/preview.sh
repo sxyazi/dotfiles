@@ -105,21 +105,6 @@ handle_mime() {
 			jq --color-output . "$FILE_PATH" && exit 0
 			exit 1 ;;
 
-		## SVG
-		image/svg+xml|image/svg)
-			exif=`exiftool "$FILE_PATH"`
-			file_size=`echo "$exif" | grep '^File Size' | awk '{print $4 " " $5}'`
-			duration=`echo "$exif" | grep '^Duration' | awk '{print $4}'`
-			mime_type=`echo "$exif" | grep '^MIME Type' | awk '{print $4}'`
-			echo -e "File Size  : $file_size\nImage Size : $image_size\nMIME Type  : $mime_type"
-
-			cache_file="/tmp/joshuto-cache/$(echo -n "$FILE_PATH" | md5sum | awk '{print $1}').jpg"
-			if [ ! -f "$cache_file" ]; then
-				mkdir /tmp/joshuto-cache > /dev/null 2>&1
-				convert -- "$FILE_PATH" "$cache_file"
-			fi
-			exit 0 ;;
-
 		## Image
 		image/*)
 			exif=`exiftool "$FILE_PATH"`
@@ -136,12 +121,6 @@ handle_mime() {
 			duration=`echo "$exif" | grep '^Duration' | awk '{print $3}'`
 			mime_type=`echo "$exif" | grep '^MIME Type' | awk '{print $4}'`
 			echo -e "File Size : $file_size\nDuration  : $duration\nMIME Type : $mime_type"
-
-			cache_file="/tmp/joshuto-cache/$(echo -n "$FILE_PATH" | md5sum | awk '{print $1}').jpg"
-			if [ ! -f "$cache_file" ]; then
-				mkdir /tmp/joshuto-cache > /dev/null 2>&1
-				ffmpeg -ss 00:00:30 -i "$FILE_PATH" -vf 'scale=960:960:force_original_aspect_ratio=decrease' -vframes 1 "$cache_file"
-			fi
 			exit 0 ;;
 
 		## Audio
@@ -151,9 +130,16 @@ handle_mime() {
 	esac
 }
 
+handle_fallback() {
+	echo '----- File Type Classification -----' && file -bL -- "$FILE_PATH" && exit 0
+	exit 1
+}
+
+
 FILE_EXTENSION="${FILE_PATH##*.}"
 FILE_EXTENSION_LOWER="$(printf "%s" "$FILE_EXTENSION" | tr '[:upper:]' '[:lower:]')"
 handle_extension
 handle_mime "$(file -bL --mime-type -- "$FILE_PATH")"
+handle_fallback
 
 exit 1

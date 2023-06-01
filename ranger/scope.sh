@@ -44,7 +44,7 @@ handle_image() {
 	case "$1" in
 		## SVG
 		image/svg+xml|image/svg)
-			convert -- "$FILE_PATH" "$IMAGE_CACHE_PATH" && exit 6
+			convert -- "$FILE_PATH" "$IMAGE_CACHE_PATH" 2>/dev/null && exit 6
 			exit 1 ;;
 
 		## Image
@@ -55,13 +55,13 @@ handle_image() {
 			## needs rotating ("1" means no rotation)...
 			if [[ -n "$orientation" && "$orientation" != 1 ]]; then
 				## ...auto-rotate the image according to the EXIF data.
-				convert -- "$FILE_PATH" -auto-orient "$IMAGE_CACHE_PATH" && exit 6
+				convert -- "$FILE_PATH" -auto-orient "$IMAGE_CACHE_PATH" 2>/dev/null && exit 6
 			fi
 			exit 7 ;;
 
 		## Video
 		video/*)
-			ffmpeg -ss 00:00:30 -i "$FILE_PATH" -vf 'scale=960:960:force_original_aspect_ratio=decrease' -vframes 1 "$IMAGE_CACHE_PATH" && exit 6
+			ffmpeg -ss 00:00:30 -i "$FILE_PATH" -vf 'scale=960:960:force_original_aspect_ratio=decrease' -vframes 1 "$IMAGE_CACHE_PATH" 2>/dev/null && exit 6
 			exit 1 ;;
 
 		## PDF
@@ -78,7 +78,7 @@ handle_image() {
 		## ePub, MOBI, FB2 (using Calibre)
 		application/epub+zip|application/x-mobipocket-ebook|\
 		application/x-fictionbook+xml)
-			ebook-meta --get-cover="$IMAGE_CACHE_PATH" -- "$FILE_PATH" > /dev/null && exit 6
+			ebook-meta --get-cover="$IMAGE_CACHE_PATH" -- "$FILE_PATH" 2>/dev/null && exit 6
 			exit 1 ;;
 
 		## Font

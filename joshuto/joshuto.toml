@@ -3,7 +3,7 @@ collapse_preview = false
 scroll_offset    = 8
 show_hidden      = true
 show_icons       = true
-column_ratio     = [ 1, 3, 4 ]
+column_ratio     = [ 1, 4, 3 ]
 
 	[display.sort]
 	method = "mtime"
