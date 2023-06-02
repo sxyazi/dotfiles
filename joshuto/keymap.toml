@@ -2,13 +2,10 @@
 
 keymap = [
 	{ keys = [ "escape" ], command = "escape" },
-	{ keys = [ "h" ], command = "toggle_hidden" },
-	{ keys = [ "r" ], command = "reload_dirlist" },
-	{ keys = [ "\n" ], command = "open_with" },
-
 	{ keys = [ ";" ], command = ":" },
 	{ keys = [ ":" ], command = ":shell " },
 	{ keys = [ "," ], command = "set_mode" },
+	{ keys = [ "h" ], command = "toggle_hidden" },
 	{ keys = [ "w" ], command = "show_tasks --exit-key=w" },
 
 	# Remapped in kitty.conf
@@ -28,7 +25,7 @@ keymap = [
 	{ keys = [ "4" ], command = "tab_switch_index 4" },
 	{ keys = [ "5" ], command = "tab_switch_index 5" },
 
-	# Navigation
+	# Move around
 	{ keys = [ "u" ], command = "cursor_move_up" },
 	{ keys = [ "e" ], command = "cursor_move_down" },
 	{ keys = [ "n" ], command = "cd .." },
@@ -36,12 +33,14 @@ keymap = [
 
 	{ keys = [ "U" ], command = "cursor_move_up 5" },
 	{ keys = [ "E" ], command = "cursor_move_down 5" },
+	{ keys = [ "N" ], command = "cd -" },
+	{ keys = [ "I" ], command = "open_with" },
+
+	{ keys = [ "ctrl+u" ], command = "parent_cursor_move_up" },
+	{ keys = [ "ctrl+e" ], command = "parent_cursor_move_down" },
 
 	{ keys = [ "g", "g" ], command = "cursor_move_home" },
 	{ keys = [ "G" ], command = "cursor_move_end" },
-
-	{ keys = [ "[" ], command = "parent_cursor_move_up" },
-	{ keys = [ "]" ], command = "parent_cursor_move_down" },
 
 	# Copy/Paste
 	{ keys = [ "d" ], command = "cut_files" },
@@ -51,27 +50,27 @@ keymap = [
 	{ keys = [ "p" ], command = "paste_files" },
 	{ keys = [ "P" ], command = "paste_files --overwrite=true" },
 
-	{ keys = [ "v", "v" ], command = "copy_filepath" },
-	{ keys = [ "v", "n" ], command = "copy_filename" },
-	{ keys = [ "v", "N" ], command = "copy_filename_without_extension" },
-	{ keys = [ "v", "d" ], command = "copy_dirpath" },
+	{ keys = [ "c", "c" ], command = "copy_filepath" },
+	{ keys = [ "c", "n" ], command = "copy_filename" },
+	{ keys = [ "c", "N" ], command = "copy_filename_without_extension" },
+	{ keys = [ "c", "d" ], command = "copy_dirpath" },
 
 	{ keys = [ "l" ], command = "symlink_files --relative=false" },
 	{ keys = [ "L" ], command = "symlink_files --relative=true" },
 
 	# Rename
-	{ keys = [ "k" ], command = ":rename " },
-	{ keys = [ "K" ], command = "bulk_rename" },
+	{ keys = [ "r" ], command = ":rename " },
+	{ keys = [ "R" ], command = "bulk_rename" },
 	{ keys = [ "a" ], command = "rename_prepend" },
 	{ keys = [ "A" ], command = "rename_append" },
 
 	# Creating
-	{ keys = [ "c", "c" ], command = ":touch " },
-	{ keys = [ "c", "d" ], command = ":mkdir " },
+	{ keys = [ "k" ], command = ":touch " },
+	{ keys = [ "K" ], command = ":mkdir " },
 
 	# Selection
 	{ keys = [ " " ], command = "select --toggle=true" },
-	{ keys = [ "V" ], command = "toggle_visual" },
+	{ keys = [ "v" ], command = "toggle_visual" },
 
 	{ keys = [ "ctrl+a" ], command = "select --all=true --toggle=false" },
 	{ keys = [ "ctrl+r" ], command = "select --all=true --toggle=true" },
@@ -90,14 +89,15 @@ keymap = [
 	{ keys = [ "s", "r" ], command = "sort reverse" },
 
 	# Goto
+	{ keys = [ "z" ], command = "zi" },
 	{ keys = [ "g", "h" ], command = "cd ~/" },
 	{ keys = [ "g", "c" ], command = "cd ~/.config" },
 	{ keys = [ "g", "d" ], command = "cd ~/Downloads" },
 
 	# Line mode
-	{ keys = [ "m", "s" ], command = "linemode size" },
 	{ keys = [ "m", "m" ], command = "linemode mtime" },
 	{ keys = [ "m", "M" ], command = "linemode sizemtime" },
+	{ keys = [ "m", "s" ], command = "linemode size" },
 ]
 
 [task_view]

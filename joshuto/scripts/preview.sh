@@ -94,10 +94,9 @@ handle_mime() {
 	case "$1" in
 		## Text
 		text/* | */xml)
-			if [[ "$(stat -f '%z' -- "$FILE_PATH}")" -gt "$HIGHLIGHT_SIZE_MAX" ]]; then
-				exit 1
+			if [[ "$(stat -f '%z' -- "$FILE_PATH}")" -le "$HIGHLIGHT_SIZE_MAX" ]]; then
+				bat --color=always --paging=never --style=plain --terminal-width="$PREVIEW_WIDTH" "$FILE_PATH" && exit 0
 			fi
-			bat --color=always --paging=never --style=plain --terminal-width="$PREVIEW_WIDTH" "$FILE_PATH" && exit 0
 			exit 1 ;;
 
 		## JSON

@@ -122,7 +122,7 @@ function M.resolve_config(type)
 end
 
 function M.nix_setup()
-	if not vim.fn.isdirectory("/nix") then
+	if vim.fn.isdirectory("/nix") == 0 then
 		return
 	end
 	require("lspconfig").nil_ls.setup {

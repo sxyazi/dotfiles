@@ -65,6 +65,7 @@ let
     adguard = "cask";
     alfred = "cask";
     "1password" = "cask";
+    squirrel = "cask";
     bettermouse = "cask";
     maczip = "cask";
     downie = "cask";
