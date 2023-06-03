@@ -9,8 +9,8 @@ keymap = [
 	{ keys = [ "w" ], command = "show_tasks --exit-key=w" },
 
 	# Remapped in kitty.conf
-	{ keys = [ "ctrl+c" ], command = "close_tab" },
-	{ keys = [ "ctrl+q" ], command = "quit --output-current-directory" },
+	{ keys = [ "alt+c" ], command = "close_tab" },
+	{ keys = [ "alt+q" ], command = "quit --output-current-directory" },
 
 	# Tabs
 	{ keys = [ "t" ], command = "new_tab --current" },
@@ -43,8 +43,8 @@ keymap = [
 	{ keys = [ "G" ], command = "cursor_move_end" },
 
 	# Copy/Paste
-	{ keys = [ "d" ], command = "cut_files" },
-	{ keys = [ "D" ], command = "delete_files" },
+	{ keys = [ "x" ], command = "cut_files" },
+	{ keys = [ "d" ], command = "delete_files" },
 	{ keys = [ "y" ], command = "copy_files" },
 
 	{ keys = [ "p" ], command = "paste_files" },

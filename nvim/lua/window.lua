@@ -155,6 +155,11 @@ vim.keymap.set("", "<C-S-M-w>c", on_close(""), { expr = true, silent = true })
 vim.keymap.set("i", "<C-S-M-w>c", on_close("i"), { expr = true, silent = true })
 vim.keymap.set("c", "<C-S-M-w>c", on_close("c"), { expr = true, silent = true })
 
+-- Quitting
+vim.keymap.set("", "<C-S-M-w>q", ":qa<CR>", { silent = true })
+vim.keymap.set("i", "<C-S-M-w>q", "<Esc>:qa<CR>", { silent = true })
+vim.keymap.set("c", "<C-S-M-w>q", "<Esc>:qa<CR>", { silent = true })
+
 -- Jumping
 map_set("ju", "WindowJumpTop", 1)
 map_set("je", "WindowJumpBottom", 1)

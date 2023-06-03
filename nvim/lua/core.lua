@@ -25,9 +25,15 @@ vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
 
 -- Folding
+vim.opt.foldlevel = 99
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldenable = false
+
+-- TODO: remove this once https://github.com/nvim-telescope/telescope.nvim/issues/699 is fixed
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	pattern = { "*" },
+	command = "normal zx",
+})
 
 -- UI
 vim.opt.winblend = 0

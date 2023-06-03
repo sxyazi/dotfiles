@@ -87,6 +87,13 @@ local M = {
 	},
 }
 
+function M.capabilities(override)
+	if not M._capabilities then
+		M._capabilities = require("cmp_nvim_lsp").default_capabilities()
+	end
+	return override and vim.tbl_deep_extend("keep", M._capabilities, override) or M._capabilities
+end
+
 function M.resolve_config(type)
 	local config = M.configs[type]
 	local cache = {}
@@ -126,7 +133,7 @@ function M.nix_setup()
 		return
 	end
 	require("lspconfig").nil_ls.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 		on_attach = formatter.attach,
 		settings = {
 			["nil"] = {
@@ -140,7 +147,7 @@ end
 
 function M.lua_setup()
 	require("lspconfig").lua_ls.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 		settings = {
 			Lua = {
 				completion = { postfix = "." },
@@ -163,20 +170,20 @@ end
 
 function M.go_setup()
 	require("lspconfig").gopls.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 		-- on_attach = formatter.attach, TODO
 	}
 end
 
 function M.fe_setup()
 	require("lspconfig").tsserver.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 	}
 	require("lspconfig").html.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 	}
 	require("lspconfig").cssls.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 		settings = {
 			css = { validate = false },
 		},
@@ -210,7 +217,7 @@ function M.fe_setup()
 	}
 
 	require("lspconfig").tailwindcss.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 	}
 end
 
@@ -218,7 +225,7 @@ function M.rust_setup()
 	local rt = require("rust-tools")
 	rt.setup {
 		server = {
-			capabilities = require("cmp_nvim_lsp").default_capabilities(),
+			capabilities = M.capabilities(),
 			on_attach = function(client, bufnr)
 				formatter.attach(client, bufnr)
 				vim.keymap.set("n", "<C-CR>", rt.hover_actions.hover_actions, { buffer = bufnr })
@@ -231,10 +238,15 @@ function M.rust_setup()
 end
 
 function M.python_setup()
-	-- disable hints, which are covered by `ruff`
+	-- Disable hints, which are covered by `ruff`
 	-- https://github.com/lkhphuc/dotfiles/blob/6de9bd6fd5526c337445dc40000ec1573d4e351e/nvim/lua/plugins/extras/python.lua#L9
-	local capabilities = vim.lsp.protocol.make_client_capabilities()
-	capabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
+	local capabilities = M.capabilities {
+		textDocument = {
+			publishDiagnostics = {
+				tagSupport = { valueSet = { 2 } },
+			},
+		},
+	}
 
 	require("lspconfig").pyright.setup {
 		capabilities = capabilities,
@@ -255,7 +267,7 @@ end
 
 function M.json_setup()
 	require("lspconfig").jsonls.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 		settings = {
 			json = {
 				schemas = require("schemastore").json.schemas(),
@@ -267,7 +279,7 @@ end
 
 function M.yaml_setup()
 	require("lspconfig").yamlls.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 		settings = {
 			yaml = {
 				schemas = require("schemastore").yaml.schemas(),
@@ -278,13 +290,13 @@ end
 
 function M.toml_setup()
 	require("lspconfig").taplo.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 	}
 end
 
 function M.markdown_setup()
 	require("lspconfig").marksman.setup {
-		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		capabilities = M.capabilities(),
 	}
 end
 
@@ -340,7 +352,7 @@ return {
 				sources = {
 					-- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
 					-- Bash
-					nls.builtins.formatting.shfmt,
+					-- nls.builtins.formatting.shfmt,
 
 					-- FE
 					nls.builtins.diagnostics.stylelint.with {

@@ -1,6 +1,6 @@
 from kittens.tui.handler import result_handler
 
-mappings = {
+directions = {
     "top": "u",
     "bottom": "e",
     "left": "n",
@@ -18,15 +18,15 @@ def handle_result(args, answer, target_window_id, boss):
     if window is None:
         return
 
-    cmd = window.child.foreground_cmdline
+    cmd = window.child.foreground_cmdline[0]
     act = args[1]  # e.g. -jump
-    if act[0] == "-" and cmd[0][-4:] == "nvim":
-        secound = mappings[args[2]] if len(args) > 2 else ""
+    if act[0] == "-" and cmd[-4:] == "nvim":
+        secound = directions[args[2]] if len(args) > 2 else ""
         window.write_to_child(f"\x1b[119;8u{act[1]}{secound}")
         return
 
-    if act == "-close" and len(cmd) > 1 and cmd[1][-6:] == "ranger":
-        window.write_to_child("\x1bq")
+    if (act == "-close" or act == "-quit") and cmd[-7:] == "joshuto":
+        window.write_to_child(f"\x1b{act[1]}")
         return
 
     def split(direction):
@@ -40,6 +40,9 @@ def handle_result(args, answer, target_window_id, boss):
 
     def close():
         boss.close_window()
+
+    def quit():
+        boss.quit()
 
     def jump(direction):
         boss.active_tab.neighboring_window(direction)
@@ -89,6 +92,8 @@ def handle_result(args, answer, target_window_id, boss):
         split(args[2])
     elif act == "close":
         close()
+    elif act == "quit":
+        quit()
     elif act == "jump":
         jump(args[2])
     elif act == "resize":

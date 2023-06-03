@@ -50,8 +50,8 @@ vim.keymap.set("n", "l", "u")
 vim.keymap.set("n", "L", "<C-r>")
 
 -- yank, paste
-vim.keymap.set("x", "p", '"_dp')
-vim.keymap.set("x", "P", '"_dP')
+vim.keymap.set("x", "p", '"_dP')
+vim.keymap.set("x", "P", '"_dp')
 
 vim.keymap.set({ "n", "v" }, "x", '"_x')
 
