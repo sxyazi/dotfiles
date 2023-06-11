@@ -93,6 +93,7 @@ keymap = [
 	{ keys = [ "g", "h" ], command = "cd ~/" },
 	{ keys = [ "g", "c" ], command = "cd ~/.config" },
 	{ keys = [ "g", "d" ], command = "cd ~/Downloads" },
+	{ keys = [ "g", "o" ], command = "cd ~/Library/CloudStorage/OneDrive-SQUAREENIX" },
 
 	# Line mode
 	{ keys = [ "m", "m" ], command = "linemode mtime" },

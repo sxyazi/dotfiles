@@ -1,3 +1,39 @@
+local icons = {
+	Keyword = "󰌋",
+	Operator = "󰆕",
+
+	Text = "",
+	Value = "󰎠",
+	Constant = "󰏿",
+
+	Method = "",
+	Function = "󰊕",
+	Constructor = "",
+
+	Class = "",
+	Interface = "",
+	Module = "",
+
+	Variable = "",
+	Property = "󰜢",
+	Field = "󰜢",
+
+	Struct = "󰙅",
+	Enum = "",
+	EnumMember = "",
+
+	Snippet = "",
+
+	File = "",
+	Folder = "",
+
+	Reference = "󰈇",
+	Event = "",
+	Color = "",
+	Unit = "󰑭",
+	TypeParameter = "",
+}
+
 return {
 	{
 		"L3MON4D3/LuaSnip",
@@ -64,9 +100,6 @@ return {
 
 			-- For luasnip users
 			{ "saadparwaiz1/cmp_luasnip", lazy = true },
-
-			-- Vscode-like completion popup
-			"onsails/lspkind.nvim",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -98,11 +131,18 @@ return {
 					{ name = "luasnip" },
 				},
 				formatting = {
-					format = require("lspkind").cmp_format {
-						mode = "symbol",
-						maxwidth = 50,
-						ellipsis_char = "...",
-					},
+					fields = { "kind", "abbr" },
+					format = function(entry, item)
+						item.kind = icons[item.kind] or item.kind
+						item.menu = nil
+
+						local truncated = vim.fn.strcharpart(item.abbr, 0, 30)
+						if truncated ~= item.abbr then
+							item.abbr = truncated .. "…"
+						end
+
+						return item
+					end,
 				},
 			}
 
@@ -162,9 +202,20 @@ return {
 			check_ts = true,
 			enable_check_bracket_line = true,
 			fast_wrap = {
-				chars = { "{", "[", "(", '"', "'", "`" },
+				chars = { "{", "(", "[", "<", '"', "'", "`" },
 			},
 		},
+		-- TODO: remove this block when https://github.com/windwp/nvim-autopairs/pull/363 is merged
+		config = function(opts)
+			local autopairs = require("nvim-autopairs")
+			local Rule = require("nvim-autopairs.rule")
+			local cond = require("nvim-autopairs.conds")
+			autopairs.setup(opts)
+			autopairs.add_rules {
+				Rule("<", ">"):with_pair(cond.before_regex("%a+")):with_move(function(o) return o.char == ">" end),
+			}
+		end,
+		-- END TODO
 	},
 	{
 		"echasnovski/mini.comment",

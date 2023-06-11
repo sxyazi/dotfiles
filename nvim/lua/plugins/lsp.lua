@@ -226,10 +226,7 @@ function M.rust_setup()
 	rt.setup {
 		server = {
 			capabilities = M.capabilities(),
-			on_attach = function(client, bufnr)
-				formatter.attach(client, bufnr)
-				vim.keymap.set("n", "<C-CR>", rt.hover_actions.hover_actions, { buffer = bufnr })
-			end,
+			on_attach = formatter.attach,
 		},
 		tools = {
 			hover_actions = { auto_focus = true },

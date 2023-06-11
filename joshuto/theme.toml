@@ -1,17 +1,13 @@
 [selection]
-fg = "light_yellow"
+fg   = "red"
 bold = true
+
+	[selection.prefix]
+	prefix = "  "
+	size   = 2
 
 [visual_mode_selection]
-fg = "light_red"
-bold = true
-
-[selection.prefix]
-prefix = "  "
-size = 2
-
-[executable]
-fg = "light_green"
+fg   = "red"
 bold = true
 
 [regular]
@@ -19,55 +15,82 @@ fg = "white"
 
 [directory]
 fg = "light_blue"
-bold = true
+
+[executable]
+fg = "green"
 
 [link]
 fg = "cyan"
-bold = true
 
 [link_invalid]
-fg = "red"
-bold = true
+fg = "yellow"
 
 [socket]
-fg = "light_magenta"
-bold = true
+fg = "magenta"
 
 [ext]
+bmp.fg = "light_cyan"
 
-bmp.fg = "yellow"
-gif.fg = "yellow"
-heic.fg = "yellow"
-jpg.fg = "yellow"
-jpeg.fg = "yellow"
-pgm.fg = "yellow"
-png.fg = "yellow"
-ppm.fg = "yellow"
-svg.fg = "yellow"
+gif.fg = "light_cyan"
 
-wav.fg = "magenta"
-flac.fg = "magenta"
-mp3.fg = "magenta"
-amr.fg = "magenta"
+heic.fg = "light_cyan"
 
-avi.fg = "magenta"
-flv.fg = "magenta"
-m3u.fg = "magenta"
-m4a.fg = "magenta"
-m4v.fg = "magenta"
-mkv.fg = "magenta"
-mov.fg = "magenta"
-mp4.fg = "magenta"
-mpg.fg = "magenta"
-rmvb.fg = "magenta"
-webm.fg = "magenta"
-wmv.fg = "magenta"
+jpg.fg = "light_cyan"
 
-7z.fg = "red"
-bz2.fg = "red"
-gz.fg = "red"
-rar.fg = "red"
-tar.fg = "red"
-tgz.fg = "red"
-xz.fg = "red"
-zip.fg = "red"
+jpeg.fg = "light_cyan"
+
+pgm.fg = "light_cyan"
+
+png.fg = "light_cyan"
+
+ppm.fg = "light_cyan"
+
+svg.fg = "light_cyan"
+
+wav.fg = "light_yellow"
+
+flac.fg = "light_yellow"
+
+mp3.fg = "light_yellow"
+
+amr.fg = "light_yellow"
+
+avi.fg = "light_yellow"
+
+flv.fg = "light_yellow"
+
+m3u.fg = "light_yellow"
+
+m4a.fg = "light_yellow"
+
+m4v.fg = "light_yellow"
+
+mkv.fg = "light_yellow"
+
+mov.fg = "light_yellow"
+
+mp4.fg = "light_yellow"
+
+mpg.fg = "light_yellow"
+
+rmvb.fg = "light_yellow"
+
+webm.fg = "light_yellow"
+
+wmv.fg = "light_yellow"
+
+7z.fg = "light_magenta"
+
+bz2.fg = "light_magenta"
+
+gz.fg = "light_magenta"
+
+rar.fg = "light_magenta"
+
+tar.fg = "light_magenta"
+
+tgz.fg = "light_magenta"
+
+xz.fg = "light_magenta"
+
+zip.fg = "light_magenta"

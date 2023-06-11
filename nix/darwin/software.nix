@@ -117,7 +117,7 @@ let
     spotify = "nix";
 
     # Screen recording
-    snipaste = "cask";
+    shottr = "cask";
     kap = "cask";
     screenflow = "cask";
     obs = "cask";

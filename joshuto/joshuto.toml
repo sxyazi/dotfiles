@@ -1,12 +1,12 @@
 [display]
 collapse_preview = false
 scroll_offset    = 8
-show_hidden      = true
 show_icons       = true
 column_ratio     = [ 1, 4, 3 ]
 
 	[display.sort]
-	method = "mtime"
+	method            = "mtime"
+	directories_first = false
 
 [preview]
 max_preview_size            = 999999999  # I prefer to limit it in the scripts for various file types

@@ -1,7 +1,7 @@
 local M = {
 	mason_dap = {
 		-- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua#L6
-		"delve",  -- Go
+		"delve", -- Go
 		"codelldb", -- C/C++/Rust
 		-- "js",
 		"node2",
@@ -54,7 +54,7 @@ function M.rust_setup()
 	local dap_root = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
 
 	dap.adapters.codelldb =
-			require("rust-tools.dap").get_codelldb_adapter(dap_root .. "adapter/codelldb", dap_root .. "lldb/lib/liblldb.dylib")
+		require("rust-tools.dap").get_codelldb_adapter(dap_root .. "adapter/codelldb", dap_root .. "lldb/lib/liblldb.dylib")
 
 	dap.configurations.rust = {
 		{
@@ -133,12 +133,12 @@ return {
 	{
 		"mfussenegger/nvim-dap",
 		dependencies = {
-			{ "jay-babu/mason-nvim-dap.nvim",    opts = { ensure_installed = M.mason_dap, automatic_installation = true } },
+			{ "jay-babu/mason-nvim-dap.nvim", opts = { ensure_installed = M.mason_dap, automatic_installation = true } },
 			{ "theHamsta/nvim-dap-virtual-text", opts = { all_references = true } },
 		},
 		keys = {
 			{ "<leader>d", function() require("dap").continue() end },
-			{ ",b",        function() require("dap").toggle_breakpoint() end },
+			{ ",b", function() require("dap").toggle_breakpoint() end },
 		},
 		config = function()
 			local listeners = require("dap").listeners
@@ -150,10 +150,10 @@ return {
 			vim.api.nvim_set_hl(0, "DapLogPoint", { ctermbg = 0, fg = "#61afef", bg = "#31353f" })
 			vim.api.nvim_set_hl(0, "DapStopped", { ctermbg = 0, fg = "#98c379", bg = "#31353f" })
 
-			vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapBreakpoint", numhl = "DapBreakpoint" })
+			vim.fn.sign_define("DapBreakpoint", { text = "󰝥", texthl = "DapBreakpoint", numhl = "DapBreakpoint" })
 			vim.fn.sign_define(
 				"DapBreakpointCondition",
-				{ text = "ﳁ", texthl = "DapBreakpointCondition", numhl = "DapBreakpointCondition" }
+				{ text = "󰟃", texthl = "DapBreakpointCondition", numhl = "DapBreakpointCondition" }
 			)
 			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DapBreakpoint", numhl = "DapBreakpoint" })
 			vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DapLogPoint", numhl = "DapLogPoint" })

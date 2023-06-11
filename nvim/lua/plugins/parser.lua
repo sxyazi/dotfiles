@@ -69,7 +69,10 @@ return {
 		config = function()
 			require("nvim-treesitter.configs").setup {
 				ensure_installed = M.ts_langs,
-				highlight = { enable = true },
+				highlight = {
+					enable = true,
+					disable = function(lang, bufnr) return vim.api.nvim_buf_line_count(bufnr) > 5000 end,
+				},
 				incremental_selection = {
 					enable = true,
 					keymaps = {
