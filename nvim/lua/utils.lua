@@ -1,9 +1,13 @@
 local M = {}
 
-function M.search_partten(forward)
+function M.search(forward)
 	vim.cmd('noau normal! "vy"')
-	local s = vim.fn.getreg("v"):gsub("/", "\\/"):gsub([[\]], [[\\]]):gsub("\n", "\\n"):gsub("\r", "\\r")
-	return string.format("%s\\V%s\n", forward and "?" or "/", s)
+	local s = vim.fn.getreg("v")
+
+	s = s:gsub("/", "\\/"):gsub([[\]], [[\\]]):gsub("\n", "\\n"):gsub("\r", "\\r")
+	s = string.format("%s\\V%s\ngn", forward and "?" or "/", s)
+
+	vim.api.nvim_feedkeys(s, "n", false)
 end
 
 function M.list_equal(a, b)

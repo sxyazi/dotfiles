@@ -222,16 +222,22 @@ function M.fe_setup()
 end
 
 function M.rust_setup()
-	local rt = require("rust-tools")
-	rt.setup {
-		server = {
-			capabilities = M.capabilities(),
-			on_attach = formatter.attach,
-		},
-		tools = {
-			hover_actions = { auto_focus = true },
-		},
+	require("lspconfig").rust_analyzer.setup {
+		capabilities = M.capabilities(),
+		on_attach = formatter.attach,
 	}
+
+	vim.api.nvim_create_autocmd("BufWritePost", {
+		pattern = "*/Cargo.toml",
+		callback = function()
+			for _, client in ipairs(vim.lsp.get_active_clients()) do
+				if client.name == "rust_analyzer" then
+					client.request("rust-analyzer/reloadWorkspace", nil, function() end, 0)
+				end
+			end
+		end,
+		group = vim.api.nvim_create_augroup("RustWorkspaceRefresh", { clear = true }),
+	})
 end
 
 function M.python_setup()
@@ -306,7 +312,6 @@ return {
 				"williamboman/mason-lspconfig.nvim",
 				opts = { ensure_installed = M.mason_lsp, automatic_installation = true },
 			},
-			{ "simrat39/rust-tools.nvim", lazy = true },
 			{ "b0o/SchemaStore.nvim", lazy = true },
 		},
 		event = { "BufReadPre", "BufNewFile" },
@@ -320,7 +325,7 @@ return {
 			M.python_setup()
 			M.json_setup()
 			M.yaml_setup()
-			M.toml_setup()
+			-- M.toml_setup()
 			M.markdown_setup()
 		end,
 	},

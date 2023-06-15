@@ -440,11 +440,13 @@ return {
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", lazy = true },
+			{ "kkharji/sqlite.lua", lazy = true },
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
 				lazy = true,
 				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
 			},
+			{ "nvim-telescope/telescope-frecency.nvim", lazy = true },
 		},
 		keys = function()
 			local extr_args = {
@@ -564,6 +566,7 @@ return {
 			}
 
 			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("frecency")
 			require("telescope").load_extension("noice")
 		end,
 	},

@@ -22,10 +22,10 @@ vim.keymap.set("", "N", "^")
 vim.keymap.set("", "i", "l")
 vim.keymap.set("", "I", "$")
 
-vim.keymap.set("n", "<C-u>", 'line(".")>1 ? ":m .-2<CR>==" : ""', { expr = true, silent = true })
-vim.keymap.set("n", "<C-e>", 'line(".")<line("$") ? ":m .+1<CR>==" : ""', { expr = true, silent = true })
-vim.keymap.set("v", "<C-u>", 'line(".")>1 ? ":m \'<-2<CR>gv=gv" : ""', { expr = true, silent = true })
-vim.keymap.set("v", "<C-e>", 'line(".")<line("$") ? ":m \'>+1<CR>gv=gv" : ""', { expr = true, silent = true })
+vim.keymap.set("n", "<C-u>", 'line(".")>1 ? ":m .-2<CR>" : ""', { expr = true, silent = true })
+vim.keymap.set("n", "<C-e>", 'line(".")<line("$") ? ":m .+1<CR>" : ""', { expr = true, silent = true })
+vim.keymap.set("v", "<C-u>", 'line(".")>1 ? ":m \'<-2<CR>gv" : ""', { expr = true, silent = true })
+vim.keymap.set("v", "<C-e>", 'line(".")<line("$") ? ":m \'>+1<CR>gv" : ""', { expr = true, silent = true })
 
 vim.keymap.set("c", "<C-u>", "<Up>")
 vim.keymap.set("c", "<C-e>", "<Down>")
@@ -66,8 +66,8 @@ vim.keymap.set("n", "=", "'nN'[v:searchforward]", { expr = true })
 vim.keymap.set("x", "=", "'nN'[v:searchforward]", { expr = true })
 vim.keymap.set("o", "=", "'nN'[v:searchforward]", { expr = true })
 
-vim.keymap.set("v", "-", function() vim.api.nvim_feedkeys(require("utils").search_partten(false), "n", false) end)
-vim.keymap.set("v", "=", function() vim.api.nvim_feedkeys(require("utils").search_partten(true), "n", false) end)
+vim.keymap.set("v", "-", function() require("utils").search(false) end)
+vim.keymap.set("v", "=", function() require("utils").search(true) end)
 
 -- tab management
 vim.keymap.set({ "n", "v" }, "tt", ":tabe<CR>", { silent = true })

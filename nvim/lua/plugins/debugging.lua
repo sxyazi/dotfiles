@@ -52,9 +52,15 @@ end
 function M.rust_setup()
 	local dap = require("dap")
 	local dap_root = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
-
-	dap.adapters.codelldb =
-		require("rust-tools.dap").get_codelldb_adapter(dap_root .. "adapter/codelldb", dap_root .. "lldb/lib/liblldb.dylib")
+	dap.adapters.codelldb = {
+		type = "server",
+		port = "${port}",
+		host = "127.0.0.1",
+		executable = {
+			command = dap_root .. "adapter/codelldb",
+			args = { "--liblldb", dap_root .. "lldb/lib/liblldb.dylib", "--port", "${port}" },
+		},
+	}
 
 	dap.configurations.rust = {
 		{
