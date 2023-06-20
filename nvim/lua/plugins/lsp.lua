@@ -48,6 +48,9 @@ local M = {
 		-- Python
 		"ruff", -- linter
 		"black", -- formatter
+
+		-- Rust
+		"rustfmt", -- formatter
 	},
 	configs = {
 		stylua = {
@@ -83,6 +86,10 @@ local M = {
 		revive = {
 			files = { "revive.toml" },
 			default = vim.fn.expand("$HOME/.config/rules/revive.toml"),
+		},
+		rustfmt = {
+			files = { "rustfmt.toml", ".rustfmt.toml" },
+			default = vim.fn.expand("$HOME/.config/rules/rustfmt.toml"),
 		},
 	},
 }
@@ -224,7 +231,6 @@ end
 function M.rust_setup()
 	require("lspconfig").rust_analyzer.setup {
 		capabilities = M.capabilities(),
-		on_attach = formatter.attach,
 	}
 
 	vim.api.nvim_create_autocmd("BufWritePost", {
@@ -349,6 +355,7 @@ return {
 			local stylelint_config = M.resolve_config("stylelint")
 			local prettier_config = M.resolve_config("prettier")
 			local revive_config = M.resolve_config("revive")
+			local rustfmt_config = M.resolve_config("rustfmt")
 			nls.setup {
 				on_attach = formatter.attach,
 				sources = {
@@ -390,6 +397,11 @@ return {
 					nls.builtins.diagnostics.ruff,
 					nls.builtins.formatting.ruff,
 					nls.builtins.formatting.black,
+
+					-- Rust
+					nls.builtins.formatting.rustfmt.with {
+						extra_args = function() return { "--config-path", rustfmt_config() } end,
+					},
 
 					-- Misc
 					nls.builtins.code_actions.gitrebase,
