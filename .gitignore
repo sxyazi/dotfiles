@@ -25,6 +25,9 @@ less/.lesshst
 !nvim/
 !nvim/**
 
+!bat/
+!bat/**
+
 !tmux/
 !tmux/**
 tmux/plugins/
@@ -32,6 +35,9 @@ tmux/plugins/
 !rules/
 !rules/**
 rules/**/node_modules
+
+!yazi
+!yazi/**
 
 !joshuto
 !joshuto/**

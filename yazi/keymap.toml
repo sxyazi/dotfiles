@@ -1,0 +1,88 @@
+[manager]
+
+keymap = [
+	{ on = [ "<Esc>" ], exec = "escape"  },
+	{ on = [ "q" ], exec = "quit" },
+
+	# Navigation
+	{ on = [ "u" ], exec = "arrow -1" },
+	{ on = [ "e" ], exec = "arrow 1" },
+
+	{ on = [ "U" ], exec = "arrow -5" },
+	{ on = [ "E" ], exec = "arrow 5" },
+
+	{ on = [ "n" ], exec = "leave" },
+	{ on = [ "i" ], exec = "enter" },
+
+	{ on = [ "N" ], exec = "back" },
+	{ on = [ "I" ], exec = "forward" },
+
+	# Selection
+	{ on = [ "<Space>" ], exec = "select --state=none" },
+	{ on = [ "v" ], exec = "visual_mode" },
+	{ on = [ "V" ], exec = "visual_mode --unselect" },
+	{ on = [ "<C-a>" ], exec = "select_all --state=true" },
+	{ on = [ "<C-r>" ], exec = "select_all --state=none" },
+
+	# Operation
+	{ on = [ "y" ], exec = "copy" },
+	{ on = [ "x" ], exec = "copy --cut" },
+	{ on = [ "p" ], exec = "paste" },
+	{ on = [ "P" ], exec = "paste --force" },
+	{ on = [ "d" ], exec = "remove" },
+	{ on = [ "D" ], exec = "remove --permanently" },
+	{ on = [ "r" ], exec = "rename" },
+
+	# Tabs
+	{ on = [ "t" ], exec = "tab_create --current" },
+	{ on = [ "<C-q>" ], exec = "tab_close" },
+
+	{ on = [ "<C-n>" ], exec = "tab_switch -1 --relative" },
+	{ on = [ "<C-i>" ], exec = "tab_switch 1 --relative" },
+
+	{ on = [ "1" ], exec = "tab_switch 0" },
+	{ on = [ "2" ], exec = "tab_switch 1" },
+	{ on = [ "3" ], exec = "tab_switch 2" },
+	{ on = [ "4" ], exec = "tab_switch 3" },
+	{ on = [ "5" ], exec = "tab_switch 4" },
+
+	{ on = [ "," ], exec = "tab_swap -1" },
+	{ on = [ "." ], exec = "tab_swap 1" },
+
+	# Tasks
+	{ on = [ "w" ], exec = "tasks_show" },
+]
+
+[tasks]
+
+keymap = [
+	{ on = [ "<Esc>" ], exec = "close" },
+	{ on = [ "w" ], exec = "close" },
+
+	{ on = [ "u" ], exec = "arrow -1" },
+	{ on = [ "e" ], exec = "arrow 1" },
+
+	{ on = [ "x" ], exec = "cancel" },
+]
+
+[input]
+
+keymap = [
+	{ on = [ "<C-q>" ], exec = "close" },
+	{ on = [ "<Esc>" ], exec = "escape" },
+	{ on = [ "<Backspace>" ], exec = "backspace" },
+
+	{ on = [ "n" ], exec = "move -1" },
+	{ on = [ "i" ], exec = "move 1" },
+
+	{ on = [ "N" ], exec = "move -999" },
+	{ on = [ "I" ], exec = "move 999" },
+
+	{ on = [ "b" ], exec = "backward" },
+	{ on = [ "w" ], exec = "forward" },
+	{ on = [ "h" ], exec = "forward --end-of-word" },
+
+	{ on = [ "d" ], exec = "delete" },
+	{ on = [ "c" ], exec = "delete --insert" },
+	{ on = [ "x" ], exec = [ "delete", "move 1" ] }
+]

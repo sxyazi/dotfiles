@@ -48,6 +48,7 @@ let
     ffmpeg = "nix";
     graphviz = "nix";
     exiftool = "nix";
+    ffmpegthumbnailer = "nix";
 
     # JSON
     jless = "nix";

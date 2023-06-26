@@ -85,7 +85,7 @@ return {
 				indent = { enable = true },
 				autotag = { enable = true },
 				context_commentstring = { enable = true, enable_autocmd = false },
-				rainbow = { enable = true, strategy = require("ts-rainbow").strategy.global },
+				rainbow = { enable = true, strategy = require("ts-rainbow").strategy["local"] },
 				textobjects = {
 					move = {
 						enable = true,

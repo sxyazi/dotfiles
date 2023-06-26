@@ -1,0 +1,18 @@
+[mode]
+normal   = { fg = "#1E2031", bg = "#80AEFA" }
+select   = { fg = "#23273B", bg = "#CD9EFC" }
+unselect = { fg = "#23273B", bg = "#FFA577" }
+
+[tab]
+active   = { fg = "", bg = "" }
+inactive = { fg = "", bg = "" }
+
+[selection]
+normal   = { fg = "", bg = "" }
+hover    = { fg = "", bg = "" }
+selected = { fg = "", bg = "" }
+
+[filetype]
+
+[syntect]
+theme = "~/.config/bat/themes/Catppuccin-macchiato.tmTheme"

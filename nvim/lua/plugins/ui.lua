@@ -133,6 +133,17 @@ return {
 				},
 				{
 					filter = {
+						event = "msg_show",
+						kind = "emsg",
+						any = {
+							-- TODO: A bug workaround of Lspsaga's lsp_finder
+							{ find = "E134: Cannot move a range of lines into itself" },
+						},
+					},
+					opts = { skip = true },
+				},
+				{
+					filter = {
 						event = "lsp",
 						any = {
 							{ find = "formatting" },
@@ -488,14 +499,15 @@ return {
 					end,
 				},
 
-				{ "<leader>e", function() require("telescope.builtin").lsp_document_symbols() end },
+				{ "<leader>e", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end },
 			}
 		end,
 		config = function()
+			local telescope = require("telescope")
 			local actions = require("telescope.actions")
 			local trouble = require("trouble.providers.telescope")
 
-			require("telescope").setup {
+			telescope.setup {
 				defaults = {
 					prompt_prefix = " ",
 					selection_caret = " ",
@@ -554,6 +566,9 @@ return {
 					live_grep = {
 						theme = "ivy",
 					},
+					lsp_dynamic_workspace_symbols = {
+						sorter = telescope.extensions.fzf.native_fzf_sorter(nil),
+					},
 				},
 				extensions = {
 					fzf = {
@@ -565,9 +580,9 @@ return {
 				},
 			}
 
-			require("telescope").load_extension("fzf")
-			require("telescope").load_extension("frecency")
-			require("telescope").load_extension("noice")
+			telescope.load_extension("fzf")
+			telescope.load_extension("frecency")
+			telescope.load_extension("noice")
 		end,
 	},
 
