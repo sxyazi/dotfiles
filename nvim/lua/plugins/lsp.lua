@@ -50,7 +50,8 @@ local M = {
 		"black", -- formatter
 
 		-- Rust
-		"rustfmt", -- formatter
+		-- We use rustup to manage those, for keeping up with nightly
+		-- "rustfmt", -- formatter
 	},
 	configs = {
 		stylua = {

@@ -9,7 +9,7 @@ vim.opt.linebreak = true
 vim.opt.showbreak = "↳"
 vim.opt.whichwrap = "h,l,<,>"
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 5
 vim.opt.sidescrolloff = 5
 vim.opt.virtualedit = "block"
 

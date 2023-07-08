@@ -1,5 +1,5 @@
 {
-	"printWidth" : 999,
+	"printWidth" : 120,
 	"useTabs"    : true,
 	"semi"       : false,
 	"quoteProps" : "consistent",

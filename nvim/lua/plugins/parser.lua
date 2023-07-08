@@ -61,7 +61,6 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		dependencies = {
 			"windwp/nvim-ts-autotag",
-			"HiPhish/nvim-ts-rainbow2",
 			"nvim-treesitter/nvim-treesitter-textobjects",
 		},
 		build = ":TSUpdate",
@@ -85,7 +84,6 @@ return {
 				indent = { enable = true },
 				autotag = { enable = true },
 				context_commentstring = { enable = true, enable_autocmd = false },
-				rainbow = { enable = true, strategy = require("ts-rainbow").strategy["local"] },
 				textobjects = {
 					move = {
 						enable = true,
@@ -132,5 +130,27 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		event = { "BufReadPost", "BufNewFile" },
 		config = true,
+	},
+
+	{
+		"HiPhish/rainbow-delimiters.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		event = { "BufReadPost", "BufNewFile" },
+		config = function()
+			local rainbow = require("rainbow-delimiters")
+
+			vim.g.rainbow_delimiters = {
+				query = {
+					[""] = "rainbow-delimiters",
+					lua = "rainbow-blocks",
+					html = "rainbow-tags",
+					javascript = "rainbow-delimiters-react",
+				},
+				strategy = {
+					[""] = rainbow.strategy["global"],
+					vim = rainbow.strategy["local"],
+				},
+			}
+		end,
 	},
 }

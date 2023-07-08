@@ -25,13 +25,17 @@ keymap = [
 	{ on = [ "<C-r>" ], exec = "select_all --state=none" },
 
 	# Operation
-	{ on = [ "y" ], exec = "copy" },
-	{ on = [ "x" ], exec = "copy --cut" },
+	{ on = [ "y" ], exec = "yank" },
+	{ on = [ "x" ], exec = "yank --cut" },
 	{ on = [ "p" ], exec = "paste" },
 	{ on = [ "P" ], exec = "paste --force" },
+	{ on = [ "l" ], exec = "paste --follow" },
+	{ on = [ "L" ], exec = "paste --follow --force" },
 	{ on = [ "d" ], exec = "remove" },
 	{ on = [ "D" ], exec = "remove --permanently" },
+	{ on = [ "c" ], exec = "create" },
 	{ on = [ "r" ], exec = "rename" },
+	{ on = [ "h" ], exec = "hidden toggle" },
 
 	# Tabs
 	{ on = [ "t" ], exec = "tab_create --current" },
@@ -69,8 +73,14 @@ keymap = [
 
 keymap = [
 	{ on = [ "<C-q>" ], exec = "close" },
+	{ on = [ "<Enter>" ], exec = "close --submit" },
 	{ on = [ "<Esc>" ], exec = "escape" },
 	{ on = [ "<Backspace>" ], exec = "backspace" },
+
+	# Mode
+	{ on = [ "k" ], exec = "insert" },
+	{ on = [ "a" ], exec = "insert --append" },
+	{ on = [ "v" ],exec = "visual" },
 
 	{ on = [ "n" ], exec = "move -1" },
 	{ on = [ "i" ], exec = "move 1" },
