@@ -36,6 +36,9 @@ keymap = [
 	{ on = [ "c" ], exec = "create" },
 	{ on = [ "r" ], exec = "rename" },
 	{ on = [ "h" ], exec = "hidden toggle" },
+	{ on = [ "s" ], exec = "search fd" },
+	{ on = [ "S" ], exec = "search rg" },
+	{ on = [ "<C-s>" ], exec = "search none" },
 
 	# Tabs
 	{ on = [ "t" ], exec = "tab_create --current" },

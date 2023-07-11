@@ -136,7 +136,7 @@ return {
 						event = "msg_show",
 						kind = "emsg",
 						any = {
-							-- TODO: A bug workaround of Lspsaga's lsp_finder
+							-- TODO: A bug workaround of Lspsaga's finder
 							{ find = "E134: Cannot move a range of lines into itself" },
 						},
 					},
@@ -613,15 +613,15 @@ return {
 
 	-- Beautiful UIs for various LSP-related features, like hover doc
 	{
-		"glepnir/lspsaga.nvim",
+		"nvimdev/lspsaga.nvim",
 		dependencies = {
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
 			"nvim-treesitter/nvim-treesitter",
 		},
 		keys = {
-			{ "K", ":Lspsaga hover_doc ++quiet ++keep<CR>", silent = true },
+			{ "K", ":Lspsaga hover_doc<CR>", silent = true },
 			{ "<C-CR>", ":Lspsaga code_action<CR>", mode = { "n", "v" }, silent = true },
-			{ "<leader>l", ":Lspsaga lsp_finder<CR>", silent = true },
+			{ "<leader>l", ":Lspsaga finder<CR>", silent = true },
 			{ "<leader>b", ":Lspsaga goto_definition<CR>", silent = true },
 			{ "<leader>B", ":Lspsaga peek_definition<CR>", silent = true },
 			{ "<leader>m", ":Lspsaga goto_type_definition<CR>", silent = true },
@@ -643,52 +643,58 @@ return {
 				border = "rounded",
 				kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
 			},
-			scroll_preview = {
-				scroll_down = "<C-u>",
-				scroll_up = "<C-e>",
-			},
-			request_timeout = 10000,
-			finder = {
+			hover = { open_link = "<CR>" },
+			diagnostic = {
 				keys = {
-					expand_or_jump = "<CR>",
-					vsplit = "s",
-					split = "S",
-					tabe = "t",
-					tabnew = "T",
-					quit = { "<ESC>" },
-					close_in_preview = "<ESC>",
+					exec_action = "<CR>",
+					quit = "<Esc>",
+					toggle_or_jump = "<Tab>",
+					quit_in_show = { "<Esc>" },
 				},
-			},
-			definition = {
-				edit = "<CR>",
-				vsplit = "s",
-				split = "S",
-				tabe = "t",
-				quit = "<ESC>",
 			},
 			code_action = {
 				keys = {
-					quit = "<ESC>",
+					quit = "<Esc>",
 					exec = "<CR>",
 				},
 			},
 			lightbulb = { enable = false },
-			hover = { open_link = "o" },
-			diagnostic = {
+			scroll_preview = {
+				scroll_down = "<C-u>",
+				scroll_up = "<C-e>",
+			},
+			request_timeout = 5000,
+			finder = {
+				layout = "normal",
+				silent = true,
 				keys = {
-					exec_action = "<CR>",
-					quit = "<ESC>",
-					expand_or_jump = "<Tab>",
-					quit_in_show = { "<ESC>" },
+					toggle_or_open = "<CR>",
+					vsplit = "s",
+					split = "S",
+					tabe = "t",
+					tabnew = "T",
+					quit = { "<Esc>" },
+					close = "<Esc>",
 				},
 			},
-			outline = {
+			definition = {
 				keys = {
-					expand_or_jump = "<CR>",
-					quit = "<ESC>",
+					edit = "<CR>",
+					vsplit = "s",
+					split = "S",
+					tabe = "t",
+					quit = "<Esc>",
+					close = "<Esc>",
 				},
 			},
 			symbol_in_winbar = { enable = false },
+			outline = {
+				keys = {
+					toggle_or_jump = "<Tab>",
+					quit = "<Esc>",
+					jump = "<CR>",
+				},
+			},
 		},
 	},
 
@@ -918,9 +924,8 @@ return {
 				"neo-tree",
 				"neo-tree-popup",
 				"DressingInput",
-				"sagarename",
 				"sagacodeaction",
-				"lspsagafinder",
+				"sagafinder",
 				"spectre_panel",
 				"Outline",
 				"checkhealth",
