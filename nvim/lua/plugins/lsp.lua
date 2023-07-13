@@ -334,6 +334,18 @@ return {
 			M.yaml_setup()
 			-- M.toml_setup()
 			M.markdown_setup()
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+				callback = function(event)
+					-- Enable completion triggered by <c-x><c-o>
+					vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = event.buf })
+					vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf })
+					vim.keymap.set({ "n", "v" }, "<C-CR>", vim.lsp.buf.code_action, { buffer = event.buf })
+				end,
+			})
 		end,
 	},
 

@@ -180,8 +180,8 @@ return {
 				win_options = { winblend = 0 },
 				mappings = {
 					n = {
-						["<CR>"] = "Confirm",
 						["<Esc>"] = "Close",
+						["<CR>"] = "Confirm",
 					},
 					i = {
 						["<CR>"] = "Confirm",
@@ -191,13 +191,16 @@ return {
 				},
 			},
 			select = {
-				builtin = {
-					win_options = { winblend = 0 },
-					mappings = {
-						["<CR>"] = "Confirm",
-						["<Esc>"] = "Close",
-					},
-				},
+				get_config = function(opts)
+					if opts.kind == "codeaction" then
+						return {
+							backend = "telescope",
+							telescope = require("telescope.themes").get_cursor(),
+						}
+					end
+
+					return { backend = "telescope", telescope = nil }
+				end,
 			},
 		},
 	},
@@ -486,20 +489,25 @@ return {
 				{ "<leader>;", function() require("telescope.builtin").command_history() end },
 				{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
 
-				{ "<leader>/", function() require("telescope.builtin").live_grep() end },
-				{ "<leader>?", function() require("telescope.builtin").live_grep { additional_args = extr_args } end },
-
-				{ "<leader>u", function() require("telescope.builtin").find_files() end },
+				-- Search
+				{ "<leader>e", function() require("telescope.builtin").find_files() end },
 				{
-					"<leader>U",
+					"<leader>E",
 					function()
 						require("telescope.builtin").find_files {
 							find_command = { "rg", "--color=never", "--smart-case", "--files", unpack(extr_args) },
 						}
 					end,
 				},
+				{ "<leader>/", function() require("telescope.builtin").live_grep() end },
+				{ "<leader>?", function() require("telescope.builtin").live_grep { additional_args = extr_args } end },
 
-				{ "<leader>e", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end },
+				-- LSP
+				{ "<leader>l", function() require("telescope.builtin").lsp_references { initial_mode = "normal" } end },
+				{ "<leader>b", function() require("telescope.builtin").lsp_definitions { initial_mode = "normal" } end },
+				{ "<leader>m", function() require("telescope.builtin").lsp_type_definitions { initial_mode = "normal" } end },
+				{ "<leader>i", function() require("telescope.builtin").lsp_implementations { initial_mode = "normal" } end },
+				{ "<leader>u", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end },
 			}
 		end,
 		config = function()
@@ -509,8 +517,10 @@ return {
 
 			telescope.setup {
 				defaults = {
+					scroll_strategy = "limit",
 					prompt_prefix = " ",
-					selection_caret = " ",
+					selection_caret = " ",
+					multi_icon = " ",
 					mappings = {
 						-- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua#L133
 						i = {
@@ -521,7 +531,7 @@ return {
 							["<M-u>"] = actions.preview_scrolling_up,
 							["<M-e>"] = actions.preview_scrolling_down,
 							["<C-s>"] = actions.select_vertical,
-							["<C-S-s>"] = actions.select_horizontal,
+							["<C-h>"] = actions.select_horizontal,
 							["<C-t>"] = actions.select_tab,
 							["<C-q>"] = trouble.smart_open_with_trouble,
 						},
@@ -531,7 +541,7 @@ return {
 							["<S-Tab>"] = false, -- disable default keybinding
 
 							["<Tab>"] = actions.toggle_selection,
-							-- ["<BS>"] = actions.delete_buffer, TODO
+							["<BS>"] = actions.delete_buffer,
 							["u"] = actions.move_selection_previous,
 							["e"] = actions.move_selection_next,
 							["U"] = function(prompt_bufnr) require("telescope.actions.set").shift_selection(prompt_bufnr, -5) end,
@@ -541,7 +551,7 @@ return {
 							["<M-u>"] = actions.preview_scrolling_up,
 							["<M-e>"] = actions.preview_scrolling_down,
 							["s"] = actions.select_vertical,
-							["S"] = actions.select_horizontal,
+							["h"] = actions.select_horizontal,
 							["t"] = actions.select_tab,
 							["<C-q>"] = trouble.smart_open_with_trouble,
 						},
@@ -563,9 +573,14 @@ return {
 					end,
 				},
 				pickers = {
-					live_grep = {
-						theme = "ivy",
-					},
+					oldfiles = { theme = "dropdown", previewer = false },
+					find_files = { previewer = false },
+					live_grep = { theme = "ivy" },
+
+					lsp_references = { theme = "ivy" },
+					lsp_definitions = { theme = "ivy" },
+					lsp_type_definitions = { theme = "ivy" },
+					lsp_implementations = { theme = "ivy" },
 					lsp_dynamic_workspace_symbols = {
 						sorter = telescope.extensions.fzf.native_fzf_sorter(nil),
 					},
@@ -606,93 +621,6 @@ return {
 					update_package = "<Nop>",
 					check_package_version = "<Nop>",
 					check_outdated_packages = "<Nop>",
-				},
-			},
-		},
-	},
-
-	-- Beautiful UIs for various LSP-related features, like hover doc
-	{
-		"nvimdev/lspsaga.nvim",
-		dependencies = {
-			{ "nvim-tree/nvim-web-devicons", lazy = true },
-			"nvim-treesitter/nvim-treesitter",
-		},
-		keys = {
-			{ "K", ":Lspsaga hover_doc<CR>", silent = true },
-			{ "<C-CR>", ":Lspsaga code_action<CR>", mode = { "n", "v" }, silent = true },
-			{ "<leader>l", ":Lspsaga finder<CR>", silent = true },
-			{ "<leader>b", ":Lspsaga goto_definition<CR>", silent = true },
-			{ "<leader>B", ":Lspsaga peek_definition<CR>", silent = true },
-			{ "<leader>m", ":Lspsaga goto_type_definition<CR>", silent = true },
-			{ "<leader>M", ":Lspsaga peek_type_definition<CR>", silent = true },
-
-			{
-				"[;",
-				function() require("lspsaga.diagnostic"):goto_prev { severity = vim.diagnostic.severity.ERROR } end,
-				silent = true,
-			},
-			{
-				"];",
-				function() require("lspsaga.diagnostic"):goto_next { severity = vim.diagnostic.severity.ERROR } end,
-				silent = true,
-			},
-		},
-		opts = {
-			ui = {
-				border = "rounded",
-				kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
-			},
-			hover = { open_link = "<CR>" },
-			diagnostic = {
-				keys = {
-					exec_action = "<CR>",
-					quit = "<Esc>",
-					toggle_or_jump = "<Tab>",
-					quit_in_show = { "<Esc>" },
-				},
-			},
-			code_action = {
-				keys = {
-					quit = "<Esc>",
-					exec = "<CR>",
-				},
-			},
-			lightbulb = { enable = false },
-			scroll_preview = {
-				scroll_down = "<C-u>",
-				scroll_up = "<C-e>",
-			},
-			request_timeout = 5000,
-			finder = {
-				layout = "normal",
-				silent = true,
-				keys = {
-					toggle_or_open = "<CR>",
-					vsplit = "s",
-					split = "S",
-					tabe = "t",
-					tabnew = "T",
-					quit = { "<Esc>" },
-					close = "<Esc>",
-				},
-			},
-			definition = {
-				keys = {
-					edit = "<CR>",
-					vsplit = "s",
-					split = "S",
-					tabe = "t",
-					quit = "<Esc>",
-					close = "<Esc>",
-				},
-			},
-			symbol_in_winbar = { enable = false },
-			outline = {
-				keys = {
-					toggle_or_jump = "<Tab>",
-					quit = "<Esc>",
-					jump = "<CR>",
 				},
 			},
 		},
