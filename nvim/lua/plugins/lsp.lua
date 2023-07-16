@@ -342,7 +342,6 @@ return {
 					vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
 					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = event.buf })
-					vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf })
 					vim.keymap.set({ "n", "v" }, "<C-CR>", vim.lsp.buf.code_action, { buffer = event.buf })
 				end,
 			})

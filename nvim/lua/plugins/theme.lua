@@ -37,7 +37,6 @@ return {
 				gitsigns = true,
 				illuminate = true,
 				indent_blankline = { enabled = true },
-				lsp_saga = true,
 				lsp_trouble = true,
 				markdown = true,
 				mason = true,

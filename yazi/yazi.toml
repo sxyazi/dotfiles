@@ -36,7 +36,6 @@ fallback = [
 ]
 
 [open]
-
 rules = [
 	{ name = "*.html", use = "fallback" },
 

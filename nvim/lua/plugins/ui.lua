@@ -137,7 +137,7 @@ return {
 						kind = "emsg",
 						any = {
 							-- TODO: A bug workaround of Lspsaga's finder
-							{ find = "E134: Cannot move a range of lines into itself" },
+							-- { find = "E134: Cannot move a range of lines into itself" },
 						},
 					},
 					opts = { skip = true },
@@ -195,7 +195,10 @@ return {
 					if opts.kind == "codeaction" then
 						return {
 							backend = "telescope",
-							telescope = require("telescope.themes").get_cursor(),
+							telescope = require("telescope.themes").get_cursor {
+								-- initial_mode = "normal",
+								layout_config = { height = 15 },
+							},
 						}
 					end
 
@@ -208,7 +211,7 @@ return {
 	-- File tree
 	{
 		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v2.x",
+		branch = "v3.x",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", lazy = true },
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
@@ -417,34 +420,6 @@ return {
 						},
 					},
 				},
-				-- TODO: remove this once Neotree v3.0 released.
-				-- https://github.com/nvim-neo-tree/neo-tree.nvim/pull/909
-				default_component_configs = {
-					icon = { folder_empty = "󰜌", folder_empty_open = "󰜌" },
-					git_status = {
-						symbols = { renamed = "󰁕", unstaged = "󰄱" },
-					},
-				},
-				document_symbols = {
-					kinds = {
-						File = { icon = "󰈙", hl = "Tag" },
-						Namespace = { icon = "󰌗", hl = "Include" },
-						Package = { icon = "󰏖", hl = "Label" },
-						Class = { icon = "󰌗", hl = "Include" },
-						Property = { icon = "󰆧", hl = "@property" },
-						Enum = { icon = "󰒻", hl = "@number" },
-						Function = { icon = "󰊕", hl = "Function" },
-						String = { icon = "󰀬", hl = "String" },
-						Number = { icon = "󰎠", hl = "Number" },
-						Array = { icon = "󰅪", hl = "Type" },
-						Object = { icon = "󰅩", hl = "Type" },
-						Key = { icon = "󰌋", hl = "" },
-						Struct = { icon = "󰌗", hl = "Type" },
-						Operator = { icon = "󰆕", hl = "Operator" },
-						TypeParameter = { icon = "󰊄", hl = "Type" },
-						StaticMethod = { icon = "󰠄 ", hl = "Function" },
-					},
-				},
 			}
 		end,
 	},
@@ -537,7 +512,6 @@ return {
 						},
 						n = {
 							["k"] = false, -- disable default keybinding
-							["<Esc>"] = false, -- disable default keybinding
 							["<S-Tab>"] = false, -- disable default keybinding
 
 							["<Tab>"] = actions.toggle_selection,
@@ -852,8 +826,6 @@ return {
 				"neo-tree",
 				"neo-tree-popup",
 				"DressingInput",
-				"sagacodeaction",
-				"sagafinder",
 				"spectre_panel",
 				"Outline",
 				"checkhealth",

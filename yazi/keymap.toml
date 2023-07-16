@@ -3,6 +3,7 @@
 keymap = [
 	{ on = [ "<Esc>" ], exec = "escape"  },
 	{ on = [ "q" ], exec = "quit" },
+	{ on = [ "<C-q>" ], exec = "close" },
 
 	# Navigation
 	{ on = [ "u" ], exec = "arrow -1" },
@@ -39,10 +40,11 @@ keymap = [
 	{ on = [ "s" ], exec = "search fd" },
 	{ on = [ "S" ], exec = "search rg" },
 	{ on = [ "<C-s>" ], exec = "search none" },
+	{ on = [ "z" ], exec = "jump zoxide" },
+	{ on = [ "Z" ], exec = "jump fzf" },
 
 	# Tabs
 	{ on = [ "t" ], exec = "tab_create --current" },
-	{ on = [ "<C-q>" ], exec = "tab_close" },
 
 	{ on = [ "<C-n>" ], exec = "tab_switch -1 --relative" },
 	{ on = [ "<C-i>" ], exec = "tab_switch 1 --relative" },
