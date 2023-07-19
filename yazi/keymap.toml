@@ -26,6 +26,8 @@ keymap = [
 	{ on = [ "<C-r>" ], exec = "select_all --state=none" },
 
 	# Operation
+	{ on = [ "o" ], exec = "open" },
+	{ on = [ "O" ], exec = "open --select" },
 	{ on = [ "y" ], exec = "yank" },
 	{ on = [ "x" ], exec = "yank --cut" },
 	{ on = [ "p" ], exec = "paste" },
@@ -65,6 +67,7 @@ keymap = [
 [tasks]
 
 keymap = [
+	{ on = [ "<C-q>" ], exec = "close" },
 	{ on = [ "<Esc>" ], exec = "close" },
 	{ on = [ "w" ], exec = "close" },
 
@@ -72,6 +75,20 @@ keymap = [
 	{ on = [ "e" ], exec = "arrow 1" },
 
 	{ on = [ "x" ], exec = "cancel" },
+]
+
+[select]
+
+keymap = [
+	{ on = [ "<C-q>" ], exec = "close" },
+	{ on = [ "<Esc>" ], exec = "close" },
+	{ on = [ "<Enter>" ], exec = "close --submit" },
+
+	{ on = [ "u" ], exec = "arrow -1" },
+	{ on = [ "e" ], exec = "arrow 1" },
+
+	{ on = [ "U" ], exec = "arrow -5" },
+	{ on = [ "E" ], exec = "arrow 5" },
 ]
 
 [input]
@@ -85,7 +102,7 @@ keymap = [
 	# Mode
 	{ on = [ "k" ], exec = "insert" },
 	{ on = [ "a" ], exec = "insert --append" },
-	{ on = [ "v" ],exec = "visual" },
+	{ on = [ "v" ], exec = "visual" },
 
 	{ on = [ "n" ], exec = "move -1" },
 	{ on = [ "i" ], exec = "move 1" },
