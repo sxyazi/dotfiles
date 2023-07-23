@@ -6,7 +6,7 @@ alias -- -="cd -"
 
 alias p="pwd"
 alias v="nvim"
-alias r="joshuto"
+alias r="yazi"
 alias l="exa -al --icons --group-directories-first"
 alias ll="exa -a --icons --group-directories-first"
 alias ssh="kitty +kitten ssh"

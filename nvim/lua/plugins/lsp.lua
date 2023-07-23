@@ -52,6 +52,9 @@ local M = {
 		-- Rust
 		-- We use rustup to manage those, for keeping up with nightly
 		-- "rustfmt", -- formatter
+
+		-- Misc
+		"cspell",
 	},
 	configs = {
 		stylua = {
@@ -357,10 +360,12 @@ return {
 				"jayp0521/mason-null-ls.nvim",
 				opts = { ensure_installed = M.mason_null, automatic_installation = true },
 			},
+			{ "davidmh/cspell.nvim", lazy = true },
 		},
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			local nls = require("null-ls")
+			local cspell = require("cspell")
 
 			local stylua_config = M.resolve_config("stylua")
 			local luacheck_config = M.resolve_config("luacheck")
@@ -416,6 +421,9 @@ return {
 					},
 
 					-- Misc
+					cspell.diagnostics,
+					cspell.code_actions,
+
 					nls.builtins.code_actions.gitrebase,
 					nls.builtins.code_actions.gitsigns,
 				},

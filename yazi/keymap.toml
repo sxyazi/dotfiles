@@ -21,13 +21,13 @@ keymap = [
 	# Selection
 	{ on = [ "<Space>" ], exec = "select --state=none" },
 	{ on = [ "v" ], exec = "visual_mode" },
-	{ on = [ "V" ], exec = "visual_mode --unselect" },
+	{ on = [ "V" ], exec = "visual_mode --unset" },
 	{ on = [ "<C-a>" ], exec = "select_all --state=true" },
 	{ on = [ "<C-r>" ], exec = "select_all --state=none" },
 
 	# Operation
-	{ on = [ "o" ], exec = "open" },
-	{ on = [ "O" ], exec = "open --select" },
+	{ on = [ "<Enter>" ], exec = "open" },
+	{ on = [ "<C-Enter>" ], exec = "open --select" },
 	{ on = [ "y" ], exec = "yank" },
 	{ on = [ "x" ], exec = "yank --cut" },
 	{ on = [ "p" ], exec = "paste" },
@@ -116,5 +116,12 @@ keymap = [
 
 	{ on = [ "d" ], exec = "delete" },
 	{ on = [ "c" ], exec = "delete --insert" },
-	{ on = [ "x" ], exec = [ "delete", "move 1" ] }
+	{ on = [ "x" ], exec = [ "delete", "move 1 --in-operating" ] },
+
+	{ on = [ "y" ], exec = [ "yank" ] },
+	{ on = [ "p" ], exec = [ "paste" ] },
+	{ on = [ "P" ], exec = [ "paste --before" ] },
+
+	{ on = [ "l" ], exec = [ "undo" ] },
+	{ on = [ "L" ], exec = [ "redo" ] },
 ]
