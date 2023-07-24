@@ -89,20 +89,24 @@ return {
 						enable = true,
 						set_jumps = true,
 						goto_next_end = {
+							["]a"] = "@parameter.outer",
 							["]f"] = "@function.outer",
 							["]c"] = "@class.outer",
 						},
 						goto_previous_end = {
-							["]F"] = "@function.outer",
-							["]C"] = "@class.outer",
+							["[A"] = "@parameter.outer",
+							["[F"] = "@function.outer",
+							["[C"] = "@class.outer",
 						},
 						goto_previous_start = {
+							["[a"] = "@parameter.outer",
 							["[f"] = "@function.outer",
 							["[c"] = "@class.outer",
 						},
 						goto_next_start = {
-							["[F"] = "@function.outer",
-							["[C"] = "@class.outer",
+							["]A"] = "@parameter.outer",
+							["]F"] = "@function.outer",
+							["]C"] = "@class.outer",
 						},
 					},
 					select = {

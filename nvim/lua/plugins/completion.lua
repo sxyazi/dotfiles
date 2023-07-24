@@ -243,28 +243,35 @@ return {
 		"mg979/vim-visual-multi",
 		keys = {
 			{ "<C-k>", nil, mode = { "n", "v" } },
-			{ "<C-S-k>", nil, mode = { "n", "v" } },
+			{ "<C-m>", nil, mode = { "n", "v" } },
 		},
 		init = function()
 			vim.g.VM_default_mappings = 0
 			vim.g.VM_maps = {
+				-- Select
+				["Find Under"] = "<C-k>",
+				["Find Subword Under"] = "<C-k>",
+				["Add Cursor Down"] = "<C-m>",
+				["Select All"] = "<leader>a",
+				["Goto Next"] = "-",
+				["Goto Prev"] = "=",
+				["Skip Region"] = "q",
+				["Remove Region"] = "Q",
+
+				-- Insert mode
 				["A"] = "<C-i>",
 				["i"] = "k",
 				["I"] = "<C-n>",
 				["o"] = "m",
 				["O"] = "M",
-				["I BS"] = "",
-				["Find Next"] = "-",
-				["Find Prev"] = "=",
-				-- Add selection
-				["Find Under"] = "<C-k>",
-				["Find Subword Under"] = "<C-k>",
-				["Select All"] = "<C-a>",
-				["Add Cursor Up"] = "",
-				["Add Cursor Down"] = "",
+
 				-- Undo and Redo
 				["Undo"] = "l",
 				["Redo"] = "L",
+
+				-- Keymap conflict
+				["Find Next"] = "",
+				["Find Prev"] = "",
 			}
 			vim.g.VM_custom_motions = {
 				["u"] = "k",

@@ -151,6 +151,7 @@ return {
 							{ find = "Diagnostics" },
 							{ find = "diagnostics" },
 							{ find = "code_action" },
+							{ find = "cargo check" },
 							{ find = "Processing full semantic tokens" },
 						},
 					},
