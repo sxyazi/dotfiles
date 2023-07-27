@@ -19,7 +19,7 @@ keymap = [
 	{ on = [ "I" ], exec = "forward" },
 
 	# Selection
-	{ on = [ "<Space>" ], exec = "select --state=none" },
+	{ on = [ "<Space>" ], exec = [ "select --state=none", "arrow 1" ] },
 	{ on = [ "v" ], exec = "visual_mode" },
 	{ on = [ "V" ], exec = "visual_mode --unset" },
 	{ on = [ "<C-a>" ], exec = "select_all --state=true" },
@@ -27,7 +27,7 @@ keymap = [
 
 	# Operation
 	{ on = [ "<Enter>" ], exec = "open" },
-	{ on = [ "<C-Enter>" ], exec = "open --select" },
+	{ on = [ "<C-Enter>" ], exec = "open --interactive" },
 	{ on = [ "y" ], exec = "yank" },
 	{ on = [ "x" ], exec = "yank --cut" },
 	{ on = [ "p" ], exec = "paste" },
@@ -44,6 +44,16 @@ keymap = [
 	{ on = [ "<C-s>" ], exec = "search none" },
 	{ on = [ "z" ], exec = "jump zoxide" },
 	{ on = [ "Z" ], exec = "jump fzf" },
+
+	# Sorting
+	{ on = [ ",", "a" ], exec = "sort alphabetical" },
+	{ on = [ ",", "A" ], exec = "sort alphabetical --reverse" },
+	{ on = [ ",", "c" ], exec = "sort created --reverse" },
+	{ on = [ ",", "C" ], exec = "sort created" },
+	{ on = [ ",", "m" ], exec = "sort modified --reverse" },
+	{ on = [ ",", "M" ], exec = "sort modified" },
+	{ on = [ ",", "s" ], exec = "sort size --reverse" },
+	{ on = [ ",", "S" ], exec = "sort size" },
 
 	# Tabs
 	{ on = [ "t" ], exec = "tab_create --current" },
@@ -111,6 +121,7 @@ keymap = [
 	{ on = [ "a" ], exec = "insert --append" },
 	{ on = [ "v" ], exec = "visual" },
 
+	# Navigation
 	{ on = [ "n" ], exec = "move -1" },
 	{ on = [ "i" ], exec = "move 1" },
 
@@ -121,14 +132,17 @@ keymap = [
 	{ on = [ "w" ], exec = "forward" },
 	{ on = [ "h" ], exec = "forward --end-of-word" },
 
-	{ on = [ "d" ], exec = "delete" },
-	{ on = [ "c" ], exec = "delete --insert" },
+	# Deletion
+	{ on = [ "d" ], exec = "delete --cut" },
+	{ on = [ "c" ], exec = "delete --cut --insert" },
 	{ on = [ "x" ], exec = [ "delete", "move 1 --in-operating" ] },
 
+	# Copy/Paste
 	{ on = [ "y" ], exec = [ "yank" ] },
 	{ on = [ "p" ], exec = [ "paste" ] },
 	{ on = [ "P" ], exec = [ "paste --before" ] },
 
+	# Undo/Redo
 	{ on = [ "l" ], exec = [ "undo" ] },
 	{ on = [ "L" ], exec = [ "redo" ] },
 ]
