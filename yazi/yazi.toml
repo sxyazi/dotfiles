@@ -1,7 +1,11 @@
 [opener]
+folder = [
+	{ cmd = "open", args = [ "-R", "$*" ] },
+	{ cmd = "code", args = [ "$*" ] },
+]
 archive = [
-	{ cmd = "unar", args = [ "$1" ] },
-	{ cmd = "/Applications/MacZip.app/Contents/MacOS/MacZip", args = [ "$1" ] },
+	{ cmd = "unar", args = [ "$0" ] },
+	{ cmd = "/Applications/MacZip.app/Contents/MacOS/MacZip", args = [ "$0" ] },
 ]
 text = [
 	{ cmd = "nvim", args = [ "$*" ], block = true },
@@ -10,10 +14,10 @@ text = [
 video = [
 	{ cmd = "mpv", args = [ "$*" ] },
 	{ cmd = "iina", args = [ "$*" ] },
-	{ cmd = "mediainfo", args = [ "$1" ], block = true },
+	{ cmd = "mediainfo", args = [ "$0" ], block = true },
 ]
 audio = [
 	{ cmd = "mpv", args = [ "$*" ] },
 	{ cmd = "iina", args = [ "$*" ] },
-	{ cmd = "mediainfo", args = [ "$1" ], block = true },
+	{ cmd = "mediainfo", args = [ "$0" ], block = true },
 ]

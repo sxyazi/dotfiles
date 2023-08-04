@@ -314,4 +314,13 @@ return {
 			preview_empty_name = true,
 		},
 	},
+
+	-- Sorting plugin that supports line-wise and delimiter sorting
+	{
+		"sQVe/sort.nvim",
+		keys = {
+			{ "go", ":Sort<CR>", mode = "n", silent = true },
+			{ "go", "<Esc>:Sort<CR>", mode = "v", silent = true },
+		},
+	},
 }

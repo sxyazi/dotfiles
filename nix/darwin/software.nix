@@ -78,7 +78,7 @@ let
 
     # Browser
     google-chrome = "cask";
-    google-chrome-canary = "cask";
+    # google-chrome-canary = "cask";
     firefox = "cask";
     microsoft-edge = "cask";
 

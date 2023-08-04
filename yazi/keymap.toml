@@ -36,7 +36,7 @@ keymap = [
 	{ on = [ "L" ], exec = "paste --follow --force" },
 	{ on = [ "d" ], exec = "remove" },
 	{ on = [ "D" ], exec = "remove --permanently" },
-	{ on = [ "c" ], exec = "create" },
+	{ on = [ "a" ], exec = "create" },
 	{ on = [ "r" ], exec = "rename" },
 	{ on = [ "h" ], exec = "hidden toggle" },
 	{ on = [ "s" ], exec = "search fd" },
@@ -91,6 +91,7 @@ keymap = [
 	{ on = [ "u" ], exec = "arrow -1" },
 	{ on = [ "e" ], exec = "arrow 1" },
 
+	{ on = [ "<Enter>" ], exec = "inspect" },
 	{ on = [ "x" ], exec = "cancel" },
 ]
 
