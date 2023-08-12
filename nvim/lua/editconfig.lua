@@ -37,7 +37,7 @@ local function apply(bufnr, config)
 end
 
 local group = vim.api.nvim_create_augroup("AutoEditorConfig", { clear = true })
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead", "BufFilePost" }, {
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufReadPost", "BufFilePost", "FileChangedShellPost" }, {
 	group = group,
 	callback = function(args)
 		local opts = vim.b[args.buf]

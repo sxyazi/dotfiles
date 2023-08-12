@@ -1,23 +1,27 @@
+[preview]
+max_width  = 2160
+max_height = 3840
+
 [opener]
 folder = [
-	{ cmd = "open", args = [ "-R", "$*" ] },
-	{ cmd = "code", args = [ "$*" ] },
+	{ exec = 'open -R "$@"', display_name = "Reveal in Finder" },
+	{ exec = 'code "$@"' },
 ]
 archive = [
-	{ cmd = "unar", args = [ "$0" ] },
-	{ cmd = "/Applications/MacZip.app/Contents/MacOS/MacZip", args = [ "$0" ] },
+	{ exec = 'unar "$1"', display_name = "Extract here" },
+	{ exec = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', display_name = "MacZip" },
 ]
 text = [
-	{ cmd = "nvim", args = [ "$*" ], block = true },
-	{ cmd = "code", args = [ "$*" ] },
+	{ exec = 'nvim "$1"', block = true },
+	{ exec = 'code "$@"' },
 ]
 video = [
-	{ cmd = "mpv", args = [ "$*" ] },
-	{ cmd = "iina", args = [ "$*" ] },
-	{ cmd = "mediainfo", args = [ "$0" ], block = true },
+	{ exec = 'mpv "$@"' },
+	{ exec = 'iina "$@"' },
+	{ exec = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, display_name = "Show media info" }
 ]
 audio = [
-	{ cmd = "mpv", args = [ "$*" ] },
-	{ cmd = "iina", args = [ "$*" ] },
-	{ cmd = "mediainfo", args = [ "$0" ], block = true },
+	{ exec = 'mpv "$@"' },
+	{ exec = 'iina "$@"' },
+	{ exec = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, display_name = "Show media info" },
 ]

@@ -430,13 +430,6 @@ return {
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", lazy = true },
-			{ "kkharji/sqlite.lua", lazy = true },
-			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				lazy = true,
-				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-			},
-			{ "nvim-telescope/telescope-frecency.nvim", lazy = true },
 		},
 		keys = function()
 			local extr_args = {
@@ -463,7 +456,6 @@ return {
 			return {
 				{ ",a", function() require("telescope.builtin").buffers() end },
 				{ "<leader>;", function() require("telescope.builtin").command_history() end },
-				{ "<leader><leader>", function() require("telescope.builtin").oldfiles { only_cwd = true } end },
 
 				-- Search
 				{ "<leader>e", function() require("telescope.builtin").find_files() end },
@@ -548,7 +540,6 @@ return {
 					end,
 				},
 				pickers = {
-					oldfiles = { theme = "dropdown", previewer = false },
 					find_files = { previewer = false },
 					live_grep = { theme = "ivy" },
 
@@ -571,9 +562,31 @@ return {
 			}
 
 			telescope.load_extension("fzf")
-			telescope.load_extension("frecency")
 			telescope.load_extension("noice")
 		end,
+	},
+	{
+		"danielfalk/smart-open.nvim",
+		dependencies = {
+			{ "kkharji/sqlite.lua", lazy = true },
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				lazy = true,
+				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+			},
+			{ "nvim-telescope/telescope-fzy-native.nvim", lazy = true },
+		},
+		keys = {
+			{
+				"<leader><leader>",
+				function()
+					require("telescope").extensions.smart_open.smart_open(
+						require("telescope.themes").get_dropdown { cwd_only = true, previewer = false }
+					)
+				end,
+			},
+		},
+		config = function() require("telescope").load_extension("smart_open") end,
 	},
 
 	-- Manage LSP/DAP servers

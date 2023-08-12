@@ -235,6 +235,13 @@ end
 function M.rust_setup()
 	require("lspconfig").rust_analyzer.setup {
 		capabilities = M.capabilities(),
+		settings = {
+			["rust-analyzer"] = {
+				cargo = { allFeatures = true },
+				procMacro = { enable = true },
+				checkOnSave = { command = "clippy" },
+			},
+		},
 	}
 
 	vim.api.nvim_create_autocmd("BufWritePost", {
