@@ -28,6 +28,19 @@ alias gb="git branch"
 alias gr="git rebase"
 alias gt='cd "$(git rev-parse --show-toplevel)"'
 
+alias r="export RUST_BACKTRACE=1; pkill yazi; cd ~/Desktop/yazi; cargo build && cd - && ~/Desktop/yazi/target/debug/yazi || cd -"
+alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/yazi.log"
+alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
+
+function ya() {
+	tmp="$(mktemp -t "yazi-cwd")"
+	~/Desktop/yazi/target/debug/yazi --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
 function gpr() {
 	local username=$(git config user.name)
 	if [ -z "$username" ]; then
@@ -71,4 +84,3 @@ function __fd18et_save_last_successed() {
 add-zsh-hook zshaddhistory __fd18et_prevent_write
 add-zsh-hook precmd __fd18et_save_last_successed
 add-zsh-hook zshexit __fd18et_save_last_successed
-

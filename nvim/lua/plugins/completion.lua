@@ -227,16 +227,19 @@ return {
 			{ "<leader>c", nil, mode = { "n", "o", "x" } },
 		},
 		opts = {
+			options = {
+				ignore_blank_line = true,
+			},
 			mappings = {
 				comment = "<leader>c",
 				comment_line = "<leader>c",
+				comment_visual = "<leader>c",
 				textobject = "<leader>c",
 			},
 			hooks = {
 				pre = function() require("ts_context_commentstring.internal").update_commentstring {} end,
 			},
 		},
-		config = function(_, opts) require("mini.comment").setup(opts) end,
 	},
 
 	{

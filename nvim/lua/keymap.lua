@@ -92,3 +92,5 @@ vim.keymap.set("", "<C-->", "<C-a>")
 vim.keymap.set({ "i", "v" }, "<C-->", "<Esc><C-a>a")
 vim.keymap.set("", "<C-=>", "<C-x>")
 vim.keymap.set({ "i", "v" }, "<C-=>", "<Esc><C-x>a")
+
+vim.keymap.set("n", "<leader>`", function() require("lazy").profile() end)

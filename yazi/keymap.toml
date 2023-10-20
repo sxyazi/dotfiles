@@ -4,6 +4,7 @@ keymap = [
 	{ on = [ "<Esc>" ], exec = "escape"  },
 	{ on = [ "q" ], exec = "quit" },
 	{ on = [ "<C-q>" ], exec = "close" },
+	{ on = [ "<C-z>" ], exec = "suspend" },
 
 	# Navigation
 	{ on = [ "u" ], exec = "arrow -1" },
@@ -12,11 +13,17 @@ keymap = [
 	{ on = [ "U" ], exec = "arrow -5" },
 	{ on = [ "E" ], exec = "arrow 5" },
 
-	{ on = [ "n" ], exec = "leave" },
-	{ on = [ "i" ], exec = "enter" },
+	{ on = [ "n" ], exec = [ "leave", "escape --visual --select" ] },
+	{ on = [ "i" ], exec = [ "enter", "escape --visual --select" ] },
 
 	{ on = [ "N" ], exec = "back" },
 	{ on = [ "I" ], exec = "forward" },
+
+	{ on = [ "<C-u>" ], exec = "peek -5" },
+	{ on = [ "<C-e>" ], exec = "peek 5" },
+
+	{ on = [ "g", "g" ], exec = "arrow -99999999" },
+	{ on = [ "G" ],      exec = "arrow 99999999" },
 
 	# Selection
 	{ on = [ "<Space>" ], exec = [ "select --state=none", "arrow 1" ] },
@@ -28,14 +35,14 @@ keymap = [
 	# Operation
 	{ on = [ "<Enter>" ], exec = "open" },
 	{ on = [ "<C-Enter>" ], exec = "open --interactive" },
-	{ on = [ "y" ], exec = "yank" },
-	{ on = [ "x" ], exec = "yank --cut" },
+	{ on = [ "y" ], exec = [ "yank", "escape --visual --select" ] },
+	{ on = [ "x" ], exec = [ "yank --cut", "escape --visual --select" ] },
 	{ on = [ "p" ], exec = "paste" },
 	{ on = [ "P" ], exec = "paste --force" },
-	{ on = [ "l" ], exec = "paste --follow" },
-	{ on = [ "L" ], exec = "paste --follow --force" },
-	{ on = [ "d" ], exec = "remove" },
-	{ on = [ "D" ], exec = "remove --permanently" },
+	{ on = [ "l" ], exec = "link" },
+	{ on = [ "L" ], exec = "link --relative" },
+	{ on = [ "d" ], exec = [ "remove", "escape --visual --select" ] },
+	{ on = [ "D" ], exec = [ "remove --permanently", "escape --visual --select" ] },
 	{ on = [ "a" ], exec = "create" },
 	{ on = [ "r" ], exec = "rename" },
 	{ on = [ ";" ], exec = "shell" },
@@ -47,15 +54,29 @@ keymap = [
 	{ on = [ "z" ], exec = "jump zoxide" },
 	{ on = [ "Z" ], exec = "jump fzf" },
 
+	# Copy
+	{ on = [ "c", "c" ], exec = "copy path" },
+	{ on = [ "c", "d" ], exec = "copy dirname" },
+	{ on = [ "c", "f" ], exec = "copy filename" },
+	{ on = [ "c", "n" ], exec = "copy name_without_ext" },
+
+	# Find
+	{ on = [ "/" ], exec = "find --smart" },
+	{ on = [ "?" ], exec = "find --previous --smart" },
+	{ on = [ "-" ], exec = "find_arrow" },
+	{ on = [ "=" ], exec = "find_arrow --previous" },
+
 	# Sorting
-	{ on = [ ",", "a" ], exec = "sort alphabetical" },
-	{ on = [ ",", "A" ], exec = "sort alphabetical --reverse" },
-	{ on = [ ",", "c" ], exec = "sort created --reverse" },
-	{ on = [ ",", "C" ], exec = "sort created" },
-	{ on = [ ",", "m" ], exec = "sort modified --reverse" },
-	{ on = [ ",", "M" ], exec = "sort modified" },
-	{ on = [ ",", "s" ], exec = "sort size --reverse" },
-	{ on = [ ",", "S" ], exec = "sort size" },
+	{ on = [ ",", "a" ], exec = "sort alphabetical --dir_first" },
+	{ on = [ ",", "A" ], exec = "sort alphabetical --reverse --dir_first" },
+	{ on = [ ",", "n" ], exec = "sort natural --dir_first" },
+	{ on = [ ",", "N" ], exec = "sort natural --reverse --dir_first" },
+	{ on = [ ",", "c" ], exec = "sort created --reverse --dir_first" },
+	{ on = [ ",", "C" ], exec = "sort created --dir_first" },
+	{ on = [ ",", "m" ], exec = "sort modified --reverse --dir_first" },
+	{ on = [ ",", "M" ], exec = "sort modified --dir_first" },
+	{ on = [ ",", "s" ], exec = "sort size --reverse --dir_first" },
+	{ on = [ ",", "S" ], exec = "sort size --dir_first" },
 
 	# Tabs
 	{ on = [ "t" ], exec = "tab_create --current" },
@@ -86,6 +107,9 @@ keymap = [
 	{ on = [ "g", "t" ], exec = "cd /tmp" },
 	{ on = [ "g", "o" ], exec = "cd ~/Library/CloudStorage/OneDrive-SQUAREENIX" },
 	{ on = [ "g", "<Space>" ], exec = "cd --interactive" },
+
+	# Help
+	{ on = [ "~" ], exec = "help" },
 ]
 
 [tasks]
@@ -100,6 +124,8 @@ keymap = [
 
 	{ on = [ "<Enter>" ], exec = "inspect" },
 	{ on = [ "x" ], exec = "cancel" },
+
+	{ on = [ "~" ], exec = "help" },
 ]
 
 [select]
@@ -114,6 +140,8 @@ keymap = [
 
 	{ on = [ "U" ], exec = "arrow -5" },
 	{ on = [ "E" ], exec = "arrow 5" },
+
+	{ on = [ "~" ], exec = "help" },
 ]
 
 [input]
@@ -128,6 +156,7 @@ keymap = [
 	{ on = [ "k" ], exec = "insert" },
 	{ on = [ "a" ], exec = "insert --append" },
 	{ on = [ "v" ], exec = "visual" },
+	{ on = [ "V" ], exec = [ "move -999", "visual", "move 999" ] },
 
 	# Navigation
 	{ on = [ "n" ], exec = "move -1" },
@@ -135,6 +164,8 @@ keymap = [
 
 	{ on = [ "N" ], exec = "move -999" },
 	{ on = [ "I" ], exec = "move 999" },
+	{ on = [ "<C-n>" ], exec = [ "move -999", "insert" ] },
+	{ on = [ "<C-i>" ], exec = [ "move 999", "insert --append" ] },
 
 	{ on = [ "b" ], exec = "backward" },
 	{ on = [ "w" ], exec = "forward" },
@@ -142,7 +173,9 @@ keymap = [
 
 	# Deletion
 	{ on = [ "d" ], exec = "delete --cut" },
+	{ on = [ "D" ], exec = [ "delete --cut", "move 999" ] },
 	{ on = [ "c" ], exec = "delete --cut --insert" },
+	{ on = [ "C" ], exec = [ "delete --cut --insert", "move 999" ] },
 	{ on = [ "x" ], exec = [ "delete", "move 1 --in-operating" ] },
 
 	# Copy/Paste
@@ -153,4 +186,25 @@ keymap = [
 	# Undo/Redo
 	{ on = [ "l" ], exec = [ "undo" ] },
 	{ on = [ "L" ], exec = [ "redo" ] },
+
+	# Help
+	{ on = [ "~" ], exec = "help" },
+]
+
+[help]
+
+keymap = [
+	{ on = [ "<Esc>" ], exec = "escape" },
+	{ on = [ "q" ],     exec = "close" },
+	{ on = [ "<C-q>" ], exec = "close" },
+
+	# Navigation
+	{ on = [ "u" ], exec = "arrow -1" },
+	{ on = [ "e" ], exec = "arrow 1" },
+
+	{ on = [ "U" ], exec = "arrow -5" },
+	{ on = [ "E" ], exec = "arrow 5" },
+
+	# Filtering
+	{ on = [ "/" ], exec = "filter" },
 ]

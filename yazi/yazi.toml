@@ -1,6 +1,12 @@
+[manager]
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+
 [preview]
-max_width  = 2160
-max_height = 3840
+tab_size   = 2
+max_width  = 1000
+max_height = 1000
 
 [opener]
 folder = [
@@ -9,7 +15,7 @@ folder = [
 ]
 archive = [
 	{ exec = 'unar "$1"', display_name = "Extract here" },
-	{ exec = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', display_name = "MacZip" },
+	{ exec = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, display_name = "MacZip" },
 ]
 text = [
 	{ exec = 'nvim "$1"', block = true },
