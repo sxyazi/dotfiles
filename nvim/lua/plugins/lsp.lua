@@ -24,7 +24,6 @@ local M = {
 		"tailwindcss-language-server", -- Tailwind language server
 		"prettier", -- formatter
 		"eslint-lsp", -- linter
-		"eslint_d", -- linter
 		"stylelint", -- linter
 
 		-- XML
@@ -72,18 +71,6 @@ local M = {
 				"prettier.config.js",
 			},
 			default = vim.fn.expand("$HOME/.config/rules/.prettierrc.json"),
-		},
-		eslint = {
-			files = {
-				".eslintrc",
-				".eslintrc.cjs",
-				".eslintrc.js",
-				".eslintrc.json",
-				".eslintrc.yaml",
-				".eslintrc.yml",
-				"eslint.config.js",
-			},
-			default = vim.fn.expand("$HOME/.config/rules/eslint/eslint.config.cjs"),
 		},
 		stylelint = {
 			files = {
@@ -361,12 +348,9 @@ return {
 		event = "BufWritePre",
 		config = function()
 			local conform = require("conform")
-			local util = require("conform.util")
-
 			local stylua_config = M.resolve_config("stylua")
 			local rustfmt_config = M.resolve_config("rustfmt")
 			local prettier_config = M.resolve_config("prettier")
-			local eslint_config = M.resolve_config("eslint")
 			local stylelint_config = M.resolve_config("stylelint")
 
 			conform.formatters.stylua = {
@@ -377,18 +361,6 @@ return {
 			}
 			conform.formatters.prettier = {
 				prepend_args = function() return { "--config", prettier_config() } end,
-			}
-			conform.formatters.eslint = {
-				command = util.from_node_modules("eslint"),
-				args = function()
-					return { "--config", eslint_config(), "--fix-dry-run", "--stdin", "--stdin-filename", "$FILENAME" }
-				end,
-				env = function()
-					if eslint_config() == M.configs.eslint.default then
-						return { ESLINT_USE_FLAT_CONFIG = "true" }
-					end
-				end,
-				cwd = util.root_file { "package.json" },
 			}
 			conform.formatters.stylelint = {
 				prepend_args = function() return { "-c", stylelint_config(), "--stdin-filepath", "$FILENAME" } end,
@@ -407,20 +379,19 @@ return {
 					rust = { "rustfmt" },
 
 					-- JavaScript
-					javascript = { "prettier", "eslint" },
-					javascriptreact = { "prettier", "eslint" },
-					["javascript.jsx"] = { "prettier", "eslint" },
-					typescript = { "prettier", "eslint" },
-					typescriptreact = { "prettier", "eslint" },
-					["typescript.jsx"] = { "prettier", "eslint" },
+					javascript = { "prettier" },
+					javascriptreact = { "prettier" },
+					["javascript.jsx"] = { "prettier" },
+					typescript = { "prettier" },
+					typescriptreact = { "prettier" },
+					["typescript.jsx"] = { "prettier" },
 
 					-- JSON/XML
-					json = { "prettier", "eslint" },
-					jsonc = { "prettier", "eslint" },
-					json5 = { "prettier", "eslint" },
-					yaml = { "prettier", "eslint" },
-					["yaml.docker-compose"] = { "prettier", "eslint" },
-					toml = { "eslint" },
+					json = { "prettier" },
+					jsonc = { "prettier" },
+					json5 = { "prettier" },
+					yaml = { "prettier" },
+					["yaml.docker-compose"] = { "prettier" },
 					html = { "prettier" },
 
 					-- Markdown
