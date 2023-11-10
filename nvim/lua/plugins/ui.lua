@@ -862,14 +862,6 @@ return {
 		end,
 	},
 
-	-- Indent guides
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-		main = "ibl",
-		config = true,
-	},
-
 	-- A tree-like view for symbols
 	{
 		"simrat39/symbols-outline.nvim",

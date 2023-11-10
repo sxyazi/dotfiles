@@ -1,54 +1,49 @@
 local M = {
-	mason_lsp = {
-		-- https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers
-		"bashls",
-		"clangd",
-		"cmake",
-		"cssls",
-		"dockerls",
-		"docker_compose_language_service",
-		"eslint",
-		"emmet_ls",
-		"gopls", -- Golang
-		"html",
-		"jsonls",
-		"pyright",
-		"texlab", -- LaTeX
-		"lua_ls",
-		"marksman", -- Markdown
-		"rust_analyzer",
-		"sqlls",
-		"taplo", -- TOML
-		"tailwindcss",
-		"tsserver", -- JS/TS
-		"lemminx", -- XML
-		"yamlls", -- YAML
-	},
-	mason_null = {
-		-- Bash
+	mason_tools = {
+		-- Lua
+		"lua-language-server", -- language server
+		"stylua", -- formatter
+		"luacheck", -- linter
+
+		-- Golang
+		"gopls", -- language server
+		"goimports", -- formatter
+		"revive", -- linter
+
+		-- Rust
+		"rust-analyzer", -- language server
+
+		-- Shell
+		"bash-language-server", -- language server
 		"shfmt", -- formatting
 
 		-- FE
-		"stylelint", -- linter
+		"typescript-language-server", -- TypeScript language server
+		"css-lsp", -- CSS language server
+		"json-lsp", -- JSON language server
+		"tailwindcss-language-server", -- Tailwind language server
 		"prettier", -- formatter
+		"eslint-lsp", -- linter
+		"eslint_d", -- linter
+		"stylelint", -- linter
+
+		-- XML
+		"html-lsp", -- HTML language server
+		"taplo", -- TOML language server
+		"yaml-language-server", -- YAML language server
+		"lemminx", -- XML language server
+
+		-- Docker
+		"dockerfile-language-server",
+		"docker-compose-language-service",
 
 		-- GitHub Action
 		"actionlint", -- linter
 
-		-- Golang
-		"revive", -- linter
-		"goimports", -- formatter
-
-		-- Lua
-		"luacheck", -- linter
-		"stylua", -- formatter
-
-		-- Python
-		"ruff", -- linter
-		"black", -- formatter
-
 		-- Misc
-		"cspell",
+		"cspell", -- spell checker
+		"marksman", -- Markdown language server
+		"sqlls", -- SQL language server
 	},
 	configs = {
 		stylua = {
@@ -59,28 +54,6 @@ local M = {
 			files = { ".luacheckrc" },
 			default = vim.fn.expand("$HOME/.config/rules/.luacheckrc"),
 		},
-		prettier = {
-			files = {
-				".prettierrc",
-				".prettierrc.json",
-				".prettierrc.js",
-				".prettierrc.yaml",
-				".prettierrc.yml",
-				"prettier.config.js",
-			},
-			default = vim.fn.expand("$HOME/.config/rules/.prettierrc.json"),
-		},
-		stylelint = {
-			files = {
-				".stylelintrc",
-				"stylelint.config.js",
-				".stylelintrc.json",
-				".stylelintrc.yaml",
-				".stylelintrc.yml",
-				".stylelintrc.js",
-			},
-			default = vim.fn.expand("$HOME/.config/rules/stylelint/stylelint.config.js"),
-		},
 		revive = {
 			files = { "revive.toml" },
 			default = vim.fn.expand("$HOME/.config/rules/revive.toml"),
@@ -88,6 +61,40 @@ local M = {
 		rustfmt = {
 			files = { "rustfmt.toml", ".rustfmt.toml" },
 			default = vim.fn.expand("$HOME/.config/rules/rustfmt.toml"),
+		},
+		prettier = {
+			files = {
+				".prettierrc",
+				".prettierrc.js",
+				".prettierrc.json",
+				".prettierrc.yaml",
+				".prettierrc.yml",
+				"prettier.config.js",
+			},
+			default = vim.fn.expand("$HOME/.config/rules/.prettierrc.json"),
+		},
+		eslint = {
+			files = {
+				".eslintrc",
+				".eslintrc.cjs",
+				".eslintrc.js",
+				".eslintrc.json",
+				".eslintrc.yaml",
+				".eslintrc.yml",
+				"eslint.config.js",
+			},
+			default = vim.fn.expand("$HOME/.config/rules/eslint/eslint.config.cjs"),
+		},
+		stylelint = {
+			files = {
+				".stylelintrc",
+				".stylelintrc.js",
+				".stylelintrc.json",
+				".stylelintrc.yaml",
+				".stylelintrc.yml",
+				"stylelint.config.js",
+			},
+			default = vim.fn.expand("$HOME/.config/rules/stylelint/stylelint.config.js"),
 		},
 	},
 }
@@ -317,8 +324,8 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{
-				"williamboman/mason-lspconfig.nvim",
-				opts = { ensure_installed = M.mason_lsp, automatic_installation = true },
+				"WhoIsSethDaniel/mason-tool-installer.nvim",
+				opts = { ensure_installed = M.mason_tools },
 			},
 			{ "b0o/SchemaStore.nvim", lazy = true },
 		},
@@ -350,109 +357,86 @@ return {
 	},
 
 	{
-		"mhartington/formatter.nvim",
-		event = { "BufReadPre", "BufNewFile" },
+		"stevearc/conform.nvim",
+		event = "BufWritePre",
 		config = function()
-			vim.api.nvim_create_autocmd("BufWritePost", {
-				group = vim.api.nvim_create_augroup("Formatting", { clear = true }),
-				callback = function() vim.api.nvim_command("FormatWrite") end,
-			})
+			local conform = require("conform")
+			local util = require("conform.util")
 
-			local util = require("formatter.util")
-			local filetype = {}
-
-			-- Lua
 			local stylua_config = M.resolve_config("stylua")
-			filetype["lua"] = function()
-				return {
-					exe = "stylua",
-					args = {
-						"--config-path",
-						stylua_config(),
-						"--no-editorconfig",
-						"--search-parent-directories",
-						"--stdin-filepath",
-						util.escape_path(util.get_current_buffer_file_path()),
-						"--",
-						"-",
-					},
-					stdin = true,
-				}
-			end
-			filetype["luau"] = filetype["lua"]
-
-			-- Golang
-			filetype["go"] = require("formatter.filetypes.lua").goimports
-
-			-- Rust
 			local rustfmt_config = M.resolve_config("rustfmt")
-			filetype["rust"] = function()
-				return {
-					exe = "rustfmt",
-					args = { "--config-path", rustfmt_config() },
-					stdin = true,
-				}
-			end
-
-			-- JavaScript
 			local prettier_config = M.resolve_config("prettier")
-			filetype["javascript"] = function()
-				return {
-					exe = "prettier",
-					args = {
-						"--config",
-						prettier_config(),
-						"--stdin-filepath",
-						util.escape_path(util.get_current_buffer_file_path()),
-					},
-					stdin = true,
-					try_node_modules = true,
-				}
-			end
-			filetype["javascriptreact"] = filetype["javascript"]
-			filetype["typescript"] = filetype["javascript"]
-			filetype["typescriptreact"] = filetype["javascript"]
-
-			-- JSON/XML
-			filetype["json"] = filetype["javascript"]
-			filetype["jsonc"] = filetype["javascript"]
-			filetype["json5"] = filetype["javascript"]
-			filetype["yaml"] = filetype["javascript"]
-			filetype["html"] = filetype["javascript"]
-			filetype["graphql"] = filetype["javascript"]
-
-			-- Markdown
-			filetype["markdown"] = filetype["javascript"]
-			filetype["markdown.mdx"] = filetype["javascript"]
-
-			-- CSS
+			local eslint_config = M.resolve_config("eslint")
 			local stylelint_config = M.resolve_config("stylelint")
-			filetype["css"] = {
-				filetype["javascript"],
-				function()
-					return {
-						exe = "stylelint",
-						args = {
-							"-c",
-							stylelint_config(),
-							"--fix",
-							"--stdin",
-							"--stdin-filepath",
-							util.escape_path(util.get_current_buffer_file_path()),
-						},
-						stdin = true,
-						try_node_modules = true,
-					}
-				end,
-			}
-			filetype["less"] = filetype["css"]
-			filetype["scss"] = filetype["css"]
-			filetype["sass"] = filetype["css"]
 
-			require("formatter").setup {
-				logging = false,
-				log_level = vim.log.levels.OFF,
-				filetype = filetype,
+			conform.formatters.stylua = {
+				prepend_args = function() return { "--config-path", stylua_config(), "--no-editorconfig" } end,
+			}
+			conform.formatters.rustfmt = {
+				prepend_args = function() return { "--config-path", rustfmt_config() } end,
+			}
+			conform.formatters.prettier = {
+				prepend_args = function() return { "--config", prettier_config() } end,
+			}
+			conform.formatters.eslint = {
+				command = util.from_node_modules("eslint"),
+				args = function()
+					return { "--config", eslint_config(), "--fix-dry-run", "--stdin", "--stdin-filename", "$FILENAME" }
+				end,
+				env = function()
+					if eslint_config() == M.configs.eslint.default then
+						return { ESLINT_USE_FLAT_CONFIG = "true" }
+					end
+				end,
+				cwd = util.root_file { "package.json" },
+			}
+			conform.formatters.stylelint = {
+				prepend_args = function() return { "-c", stylelint_config(), "--stdin-filepath", "$FILENAME" } end,
+			}
+
+			require("conform").setup {
+				formatters_by_ft = {
+					-- Lua
+					lua = { "stylua" },
+					luau = { "stylua" },
+
+					-- Golang
+					go = { "goimports" },
+
+					-- Rust
+					rust = { "rustfmt" },
+
+					-- JavaScript
+					javascript = { "prettier", "eslint" },
+					javascriptreact = { "prettier", "eslint" },
+					["javascript.jsx"] = { "prettier", "eslint" },
+					typescript = { "prettier", "eslint" },
+					typescriptreact = { "prettier", "eslint" },
+					["typescript.jsx"] = { "prettier", "eslint" },
+
+					-- JSON/XML
+					json = { "prettier", "eslint" },
+					jsonc = { "prettier", "eslint" },
+					json5 = { "prettier", "eslint" },
+					yaml = { "prettier", "eslint" },
+					["yaml.docker-compose"] = { "prettier", "eslint" },
+					toml = { "eslint" },
+					html = { "prettier" },
+
+					-- Markdown
+					markdown = { "prettier" },
+					["markdown.mdx"] = { "prettier" },
+
+					-- CSS
+					css = { "prettier", "stylelint" },
+					less = { "prettier", "stylelint" },
+					scss = { "prettier", "stylelint" },
+					sass = { "prettier", "stylelint" },
+				},
+				format_after_save = {
+					lsp_fallback = true,
+				},
+				notify_on_error = false,
 			}
 		end,
 	},
@@ -463,13 +447,13 @@ return {
 		config = function()
 			local lint = require("lint")
 			lint.linters_by_ft = {
-				lua = "luacheck",
-				go = "revive",
-				css = "stylelint",
-				less = "stylelint",
-				scss = "stylelint",
-				sass = "stylelint",
-				yaml = "actionlint",
+				lua = { "luacheck" },
+				go = { "revive" },
+				css = { "stylelint" },
+				less = { "stylelint" },
+				scss = { "stylelint" },
+				sass = { "stylelint" },
+				yaml = { "actionlint" },
 			}
 
 			lint.linters.luacheck.args = {
@@ -505,8 +489,8 @@ return {
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", lazy = true },
 			{
-				"jayp0521/mason-null-ls.nvim",
-				opts = { ensure_installed = M.mason_null, automatic_installation = true },
+				"WhoIsSethDaniel/mason-tool-installer.nvim",
+				opts = { ensure_installed = M.mason_tools },
 			},
 			{ "davidmh/cspell.nvim", lazy = true },
 		},
