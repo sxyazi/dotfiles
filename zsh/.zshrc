@@ -1,9 +1,9 @@
 setopt AUTO_CD
-setopt CORRECT
 setopt INTERACTIVE_COMMENTS
 setopt HIST_FCNTL_LOCK
 setopt HIST_IGNORE_ALL_DUPS
 setopt SHARE_HISTORY
+unsetopt AUTO_REMOVE_SLASH
 unsetopt HIST_EXPIRE_DUPS_FIRST
 unsetopt EXTENDED_HISTORY
 
@@ -45,4 +45,3 @@ source $ZDOTDIR/tabtab/pnpm.zsh
 source $ZDOTDIR/function.zsh
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-

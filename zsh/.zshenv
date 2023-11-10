@@ -45,4 +45,3 @@ fi
 # Clean up
 unset __TREE_IGNORE
 unset __FD_COMMAND
-

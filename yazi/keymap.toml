@@ -1,10 +1,10 @@
 [manager]
 
 keymap = [
-	{ on = [ "<Esc>" ], exec = "escape"  },
+	{ on = [ "<Esc>" ], exec = "escape" },
 	{ on = [ "q" ], exec = "quit" },
 	{ on = [ "<C-q>" ], exec = "close" },
-	{ on = [ "<C-z>" ], exec = "suspend" },
+	{ on = [ "<C-z>" ], exec = '''shell "$SHELL" --block --confirm''' },
 
 	# Navigation
 	{ on = [ "u" ], exec = "arrow -1" },
@@ -53,6 +53,12 @@ keymap = [
 	{ on = [ "<C-s>" ], exec = "search none" },
 	{ on = [ "z" ], exec = "jump zoxide" },
 	{ on = [ "Z" ], exec = "jump fzf" },
+
+	# Linemode
+	{ on = [ "m", "f", "s" ], exec = "linemode size" },
+	{ on = [ "m", "f", "p" ], exec = "linemode permissions" },
+	{ on = [ "m", "f", "m" ], exec = "linemode mtime" },
+	{ on = [ "m", "f", "n" ], exec = "linemode none" },
 
 	# Copy
 	{ on = [ "c", "c" ], exec = "copy path" },
@@ -207,4 +213,16 @@ keymap = [
 
 	# Filtering
 	{ on = [ "/" ], exec = "filter" },
+]
+
+[completion]
+
+keymap = [
+	{ on = [ "<C-q>" ], exec = "close" },
+	{ on = [ "<Tab>" ], exec = "close --submit" },
+
+	{ on = [ "<C-u>" ], exec = "arrow -1" },
+	{ on = [ "<C-e>" ], exec = "arrow 1" },
+
+	{ on = [ "~" ], exec = "help" }
 ]

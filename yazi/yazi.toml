@@ -2,6 +2,7 @@
 sort_by        = "natural"
 sort_sensitive = false
 sort_reverse   = false
+linemode       = "size"
 
 [preview]
 tab_size   = 2
@@ -9,25 +10,45 @@ max_width  = 1000
 max_height = 1000
 
 [opener]
-folder = [
-	{ exec = 'open -R "$@"', display_name = "Reveal in Finder" },
-	{ exec = 'code "$@"' },
+edit = [
+	{ exec = '$EDITOR "$@"', block = true },
+	{ exec = 'code "$@"',    orphan = true },
+]
+play = [
+	{ exec = 'mpv "$@"' },
+	{ exec = 'iina "$@"' },
+	{ exec = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, desc = "Show media info" }
 ]
 archive = [
-	{ exec = 'unar "$1"', display_name = "Extract here" },
-	{ exec = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, display_name = "MacZip" },
+	{ exec = 'unar "$1"', desc = "Extract here" },
+	{ exec = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" },
 ]
-text = [
-	{ exec = 'nvim "$1"', block = true },
-	{ exec = 'code "$@"' },
+
+[open]
+rules = [
+	{ name = "*/", use = [ "edit", "open", "reveal" ] },
+
+	{ mime = "text/*",  use = [ "edit", "reveal" ] },
+	{ mime = "image/*", use = [ "open", "reveal" ] },
+	{ mime = "video/*", use = [ "play", "reveal" ] },
+	{ mime = "audio/*", use = [ "play", "reveal" ] },
+	{ mime = "inode/x-empty", use = [ "edit", "reveal" ] },
+
+	{ mime = "application/json", use = [ "edit", "reveal" ] },
+	{ mime = "*/javascript",     use = [ "edit", "reveal" ] },
+
+	{ mime = "application/zip",             use = [ "extract", "reveal", "archive" ] },
+	{ mime = "application/gzip",            use = [ "extract", "reveal", "archive" ] },
+	{ mime = "application/x-tar",           use = [ "extract", "reveal", "archive" ] },
+	{ mime = "application/x-bzip",          use = [ "extract", "reveal", "archive" ] },
+	{ mime = "application/x-bzip2",         use = [ "extract", "reveal", "archive" ] },
+	{ mime = "application/x-7z-compressed", use = [ "extract", "reveal", "archive" ] },
+	{ mime = "application/x-rar",           use = [ "extract", "reveal", "archive" ] },
+
+	{ mime = "*", use = [ "open", "reveal" ] },
 ]
-video = [
-	{ exec = 'mpv "$@"' },
-	{ exec = 'iina "$@"' },
-	{ exec = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, display_name = "Show media info" }
-]
-audio = [
-	{ exec = 'mpv "$@"' },
-	{ exec = 'iina "$@"' },
-	{ exec = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, display_name = "Show media info" },
+
+[plugins]
+preload = [
+	"~/.config/yazi/ui.lua"
 ]

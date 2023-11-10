@@ -1,5 +1,3 @@
-local formatter = require("formatter")
-
 local M = {
 	mason_lsp = {
 		-- https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers
@@ -48,10 +46,6 @@ local M = {
 		-- Python
 		"ruff", -- linter
 		"black", -- formatter
-
-		-- Rust
-		-- We use rustup to manage those, for keeping up with nightly
-		-- "rustfmt", -- formatter
 
 		-- Misc
 		"cspell",
@@ -145,7 +139,6 @@ function M.nix_setup()
 	end
 	require("lspconfig").nil_ls.setup {
 		capabilities = M.capabilities(),
-		on_attach = formatter.attach,
 		settings = {
 			["nil"] = {
 				formatting = {
@@ -182,7 +175,6 @@ end
 function M.go_setup()
 	require("lspconfig").gopls.setup {
 		capabilities = M.capabilities(),
-		-- on_attach = formatter.attach, TODO
 	}
 end
 
@@ -223,7 +215,6 @@ function M.fe_setup()
 		on_attach = function(client, bufnr)
 			client.server_capabilities.documentFormattingProvider = true
 			client.server_capabilities.documentRangeFormattingProvider = true
-			formatter.attach(client, bufnr)
 		end,
 	}
 
@@ -358,6 +349,156 @@ return {
 		end,
 	},
 
+	{
+		"mhartington/formatter.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		config = function()
+			vim.api.nvim_create_autocmd("BufWritePost", {
+				group = vim.api.nvim_create_augroup("Formatting", { clear = true }),
+				callback = function() vim.api.nvim_command("FormatWrite") end,
+			})
+
+			local util = require("formatter.util")
+			local filetype = {}
+
+			-- Lua
+			local stylua_config = M.resolve_config("stylua")
+			filetype["lua"] = function()
+				return {
+					exe = "stylua",
+					args = {
+						"--config-path",
+						stylua_config(),
+						"--no-editorconfig",
+						"--search-parent-directories",
+						"--stdin-filepath",
+						util.escape_path(util.get_current_buffer_file_path()),
+						"--",
+						"-",
+					},
+					stdin = true,
+				}
+			end
+			filetype["luau"] = filetype["lua"]
+
+			-- Golang
+			filetype["go"] = require("formatter.filetypes.lua").goimports
+
+			-- Rust
+			local rustfmt_config = M.resolve_config("rustfmt")
+			filetype["rust"] = function()
+				return {
+					exe = "rustfmt",
+					args = { "--config-path", rustfmt_config() },
+					stdin = true,
+				}
+			end
+
+			-- JavaScript
+			local prettier_config = M.resolve_config("prettier")
+			filetype["javascript"] = function()
+				return {
+					exe = "prettier",
+					args = {
+						"--config",
+						prettier_config(),
+						"--stdin-filepath",
+						util.escape_path(util.get_current_buffer_file_path()),
+					},
+					stdin = true,
+					try_node_modules = true,
+				}
+			end
+			filetype["javascriptreact"] = filetype["javascript"]
+			filetype["typescript"] = filetype["javascript"]
+			filetype["typescriptreact"] = filetype["javascript"]
+
+			-- JSON/XML
+			filetype["json"] = filetype["javascript"]
+			filetype["jsonc"] = filetype["javascript"]
+			filetype["json5"] = filetype["javascript"]
+			filetype["yaml"] = filetype["javascript"]
+			filetype["html"] = filetype["javascript"]
+			filetype["graphql"] = filetype["javascript"]
+
+			-- Markdown
+			filetype["markdown"] = filetype["javascript"]
+			filetype["markdown.mdx"] = filetype["javascript"]
+
+			-- CSS
+			local stylelint_config = M.resolve_config("stylelint")
+			filetype["css"] = {
+				filetype["javascript"],
+				function()
+					return {
+						exe = "stylelint",
+						args = {
+							"-c",
+							stylelint_config(),
+							"--fix",
+							"--stdin",
+							"--stdin-filepath",
+							util.escape_path(util.get_current_buffer_file_path()),
+						},
+						stdin = true,
+						try_node_modules = true,
+					}
+				end,
+			}
+			filetype["less"] = filetype["css"]
+			filetype["scss"] = filetype["css"]
+			filetype["sass"] = filetype["css"]
+
+			require("formatter").setup {
+				logging = false,
+				log_level = vim.log.levels.OFF,
+				filetype = filetype,
+			}
+		end,
+	},
+
+	{
+		"mfussenegger/nvim-lint",
+		event = { "BufReadPre", "BufNewFile" },
+		config = function()
+			local lint = require("lint")
+			lint.linters_by_ft = {
+				lua = "luacheck",
+				go = "revive",
+				css = "stylelint",
+				less = "stylelint",
+				scss = "stylelint",
+				sass = "stylelint",
+				yaml = "actionlint",
+			}
+
+			lint.linters.luacheck.args = {
+				"--config",
+				M.resolve_config("luacheck"),
+				"--formatter",
+				"plain",
+				"--codes",
+				"--ranges",
+				"-",
+			}
+			lint.linters.revive.args = { "-config", M.resolve_config("revive") }
+			lint.linters.stylelint.args = {
+				"-c",
+				M.resolve_config("stylelint"),
+				"-f",
+				"json",
+				"--stdin",
+				"--stdin-filename",
+				function() return vim.fn.expand("%:p") end,
+			}
+
+			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+				group = vim.api.nvim_create_augroup("Linting", { clear = true }),
+				callback = lint.try_lint,
+			})
+		end,
+	},
+
 	-- Integrating non-LSPs like Prettier
 	{
 		"jose-elias-alvarez/null-ls.nvim",
@@ -374,61 +515,11 @@ return {
 			local nls = require("null-ls")
 			local cspell = require("cspell")
 
-			local stylua_config = M.resolve_config("stylua")
-			local luacheck_config = M.resolve_config("luacheck")
-			local stylelint_config = M.resolve_config("stylelint")
-			local prettier_config = M.resolve_config("prettier")
-			local revive_config = M.resolve_config("revive")
-			local rustfmt_config = M.resolve_config("rustfmt")
 			nls.setup {
-				on_attach = formatter.attach,
 				sources = {
-					-- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-					-- Bash
-					-- nls.builtins.formatting.shfmt,
-
-					-- FE
-					nls.builtins.diagnostics.stylelint.with {
-						extra_args = function() return { "-c", stylelint_config() } end,
+					cspell.diagnostics.with {
+						diagnostics_postprocess = function(diagnostic) diagnostic.severity = vim.diagnostic.severity.HINT end,
 					},
-					nls.builtins.formatting.stylelint.with {
-						extra_args = function() return { "-c", stylelint_config() } end,
-					},
-					nls.builtins.formatting.prettier.with {
-						extra_args = function() return { "--config", prettier_config() } end,
-					},
-
-					-- GitHub Action
-					nls.builtins.diagnostics.actionlint,
-
-					-- Golang
-					nls.builtins.code_actions.gomodifytags,
-					nls.builtins.code_actions.impl,
-					nls.builtins.diagnostics.revive.with {
-						args = function() return { "-config", revive_config(), "-formatter", "json", "./..." } end,
-					},
-					nls.builtins.formatting.goimports,
-
-					-- Lua
-					nls.builtins.diagnostics.luacheck.with {
-						extra_args = { "--config", luacheck_config() },
-					},
-					nls.builtins.formatting.stylua.with {
-						extra_args = function() return { "--config-path", stylua_config(), "--no-editorconfig" } end,
-					},
-
-					-- Python
-					nls.builtins.diagnostics.ruff,
-					nls.builtins.formatting.ruff,
-					nls.builtins.formatting.black,
-
-					-- Rust
-					nls.builtins.formatting.rustfmt.with {
-						extra_args = function() return { "--config-path", rustfmt_config() } end,
-					},
-
-					-- Misc
-					cspell.diagnostics,
 					cspell.code_actions,
 
 					nls.builtins.code_actions.gitrebase,
