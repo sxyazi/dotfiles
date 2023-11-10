@@ -492,9 +492,9 @@ return {
 				function() return vim.fn.expand("%:p") end,
 			}
 
-			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+			vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
 				group = vim.api.nvim_create_augroup("Linting", { clear = true }),
-				callback = lint.try_lint,
+				callback = function() lint.try_lint() end,
 			})
 		end,
 	},

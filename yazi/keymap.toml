@@ -55,10 +55,10 @@ keymap = [
 	{ on = [ "Z" ], exec = "jump fzf" },
 
 	# Linemode
-	{ on = [ "m", "f", "s" ], exec = "linemode size" },
-	{ on = [ "m", "f", "p" ], exec = "linemode permissions" },
-	{ on = [ "m", "f", "m" ], exec = "linemode mtime" },
-	{ on = [ "m", "f", "n" ], exec = "linemode none" },
+	{ on = [ "m", "s" ], exec = "linemode size" },
+	{ on = [ "m", "p" ], exec = "linemode permissions" },
+	{ on = [ "m", "m" ], exec = "linemode mtime" },
+	{ on = [ "m", "n" ], exec = "linemode none" },
 
 	# Copy
 	{ on = [ "c", "c" ], exec = "copy path" },
