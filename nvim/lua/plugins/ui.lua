@@ -425,6 +425,16 @@ return {
 		end,
 	},
 
+	-- Adds support for file operations using built-in LSP
+	{
+		"antosha417/nvim-lsp-file-operations",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-neo-tree/neo-tree.nvim",
+		},
+		config = function() require("lsp-file-operations").setup() end,
+	},
+
 	-- Fuzz finder
 	{
 		"nvim-telescope/telescope.nvim",
@@ -548,20 +558,18 @@ return {
 					lsp_type_definitions = { theme = "ivy" },
 					lsp_implementations = { theme = "ivy" },
 					lsp_dynamic_workspace_symbols = {
-						sorter = telescope.extensions.fzf.native_fzf_sorter(nil),
+						sorter = telescope.extensions.fzy_native.native_fzy_sorter(),
 					},
 				},
 				extensions = {
-					fzf = {
-						fuzzy = true,
+					fzy_native = {
 						override_generic_sorter = true,
 						override_file_sorter = true,
-						case_mode = "smart_case",
 					},
 				},
 			}
 
-			telescope.load_extension("fzf")
+			telescope.load_extension("fzy_native")
 			telescope.load_extension("noice")
 		end,
 	},
@@ -569,11 +577,6 @@ return {
 		"danielfalk/smart-open.nvim",
 		dependencies = {
 			{ "kkharji/sqlite.lua", lazy = true },
-			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				lazy = true,
-				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-			},
 			{ "nvim-telescope/telescope-fzy-native.nvim", lazy = true },
 		},
 		keys = {

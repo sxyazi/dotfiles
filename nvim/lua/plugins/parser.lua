@@ -40,6 +40,7 @@ local M = {
 		"python",
 		"regex",
 		"ruby",
+		"ron",
 		"rust",
 		"scss",
 		"smali",
@@ -83,7 +84,6 @@ return {
 				},
 				indent = { enable = true },
 				autotag = { enable = true },
-				context_commentstring = { enable = true, enable_autocmd = false },
 				textobjects = {
 					move = {
 						enable = true,

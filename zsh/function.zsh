@@ -7,8 +7,8 @@ alias -- -="cd -"
 alias p="pwd"
 alias v="nvim"
 alias r="yazi"
-alias l="exa -al --icons --group-directories-first"
-alias ll="exa -a --icons --group-directories-first"
+alias l="eza -al --icons --group-directories-first"
+alias ll="eza -a --icons --group-directories-first"
 alias ssh="kitty +kitten ssh"
 alias du="dust -r -n 999999999"
 alias tree="tree -aC"
@@ -33,8 +33,8 @@ alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/ya
 alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
 
 function ya() {
-	tmp="$(mktemp -t "yazi-cwd")"
-	~/Desktop/yazi/target/debug/yazi --cwd-file="$tmp"
+	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
 		cd -- "$cwd"
 	fi

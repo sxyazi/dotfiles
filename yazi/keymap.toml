@@ -14,13 +14,13 @@ keymap = [
 	{ on = [ "E" ], exec = "arrow 5" },
 
 	{ on = [ "n" ], exec = [ "leave", "escape --visual --select" ] },
-	{ on = [ "i" ], exec = [ "enter", "escape --visual --select" ] },
+	{ on = [ "i" ], exec = [ "plugin --sync enter-or-open", "escape --visual --select" ] },
 
 	{ on = [ "N" ], exec = "back" },
 	{ on = [ "I" ], exec = "forward" },
 
-	{ on = [ "<C-u>" ], exec = "peek -5" },
-	{ on = [ "<C-e>" ], exec = "peek 5" },
+	{ on = [ "<C-u>" ], exec = "seek -5" },
+	{ on = [ "<C-e>" ], exec = "seek 5" },
 
 	{ on = [ "g", "g" ], exec = "arrow -99999999" },
 	{ on = [ "G" ],      exec = "arrow 99999999" },
@@ -44,7 +44,7 @@ keymap = [
 	{ on = [ "d" ], exec = [ "remove", "escape --visual --select" ] },
 	{ on = [ "D" ], exec = [ "remove --permanently", "escape --visual --select" ] },
 	{ on = [ "a" ], exec = "create" },
-	{ on = [ "r" ], exec = "rename" },
+	{ on = [ "r" ], exec = "rename --cursor=before_ext" },
 	{ on = [ ";" ], exec = "shell" },
 	{ on = [ ":" ], exec = "shell --block" },
 	{ on = [ "h" ], exec = "hidden toggle" },
@@ -66,6 +66,9 @@ keymap = [
 	{ on = [ "c", "f" ], exec = "copy filename" },
 	{ on = [ "c", "n" ], exec = "copy name_without_ext" },
 
+	# Filter
+	{ on = [ "f" ], exec = "filter" },
+
 	# Find
 	{ on = [ "/" ], exec = "find --smart" },
 	{ on = [ "?" ], exec = "find --previous --smart" },
@@ -73,16 +76,18 @@ keymap = [
 	{ on = [ "=" ], exec = "find_arrow --previous" },
 
 	# Sorting
-	{ on = [ ",", "a" ], exec = "sort alphabetical --dir_first" },
-	{ on = [ ",", "A" ], exec = "sort alphabetical --reverse --dir_first" },
-	{ on = [ ",", "n" ], exec = "sort natural --dir_first" },
-	{ on = [ ",", "N" ], exec = "sort natural --reverse --dir_first" },
-	{ on = [ ",", "c" ], exec = "sort created --reverse --dir_first" },
-	{ on = [ ",", "C" ], exec = "sort created --dir_first" },
-	{ on = [ ",", "m" ], exec = "sort modified --reverse --dir_first" },
-	{ on = [ ",", "M" ], exec = "sort modified --dir_first" },
-	{ on = [ ",", "s" ], exec = "sort size --reverse --dir_first" },
-	{ on = [ ",", "S" ], exec = "sort size --dir_first" },
+	{ on = [ ",", "m" ], exec = "sort modified --dir-first",               desc = "Sort by modified time" },
+	{ on = [ ",", "M" ], exec = "sort modified --reverse --dir-first",     desc = "Sort by modified time (reverse)" },
+	{ on = [ ",", "c" ], exec = "sort created --dir-first",                desc = "Sort by created time" },
+	{ on = [ ",", "C" ], exec = "sort created --reverse --dir-first",      desc = "Sort by created time (reverse)" },
+	{ on = [ ",", "e" ], exec = "sort extension --dir-first",         	   desc = "Sort by extension" },
+	{ on = [ ",", "E" ], exec = "sort extension --reverse --dir-first",    desc = "Sort by extension (reverse)" },
+	{ on = [ ",", "a" ], exec = "sort alphabetical --dir-first",           desc = "Sort alphabetically" },
+	{ on = [ ",", "A" ], exec = "sort alphabetical --reverse --dir-first", desc = "Sort alphabetically (reverse)" },
+	{ on = [ ",", "n" ], exec = "sort natural --dir-first",                desc = "Sort naturally" },
+	{ on = [ ",", "N" ], exec = "sort natural --reverse --dir-first",      desc = "Sort naturally (reverse)" },
+	{ on = [ ",", "s" ], exec = "sort size --dir-first",                   desc = "Sort by size" },
+	{ on = [ ",", "S" ], exec = "sort size --reverse --dir-first",         desc = "Sort by size (reverse)" },
 
 	# Tabs
 	{ on = [ "t" ], exec = "tab_create --current" },
@@ -153,48 +158,66 @@ keymap = [
 [input]
 
 keymap = [
-	{ on = [ "<C-q>" ], exec = "close" },
-	{ on = [ "<Enter>" ], exec = "close --submit" },
-	{ on = [ "<Esc>" ], exec = "escape" },
-	{ on = [ "<Backspace>" ], exec = "backspace" },
+	{ on = [ "<C-q>" ],   exec = "close",          desc = "Cancel input" },
+	{ on = [ "<Enter>" ], exec = "close --submit", desc = "Submit the input" },
+	{ on = [ "<Esc>" ],   exec = "escape",         desc = "Go back the normal mode, or cancel input" },
 
 	# Mode
-	{ on = [ "k" ], exec = "insert" },
-	{ on = [ "a" ], exec = "insert --append" },
-	{ on = [ "v" ], exec = "visual" },
-	{ on = [ "V" ], exec = [ "move -999", "visual", "move 999" ] },
+	{ on = [ "k" ], exec = "insert",                              desc = "Enter insert mode" },
+	{ on = [ "a" ], exec = "insert --append",                     desc = "Enter append mode" },
+	{ on = [ "<C-n>" ], exec = [ "move -999", "insert" ],         desc = "Move to the BOL, and enter insert mode" },
+	{ on = [ "<C-i>" ], exec = [ "move 999", "insert --append" ], desc = "Move to the EOL, and enter append mode" },
+	{ on = [ "v" ], exec = "visual",                              desc = "Enter visual mode" },
+	{ on = [ "V" ], exec = [ "move -999", "visual", "move 999" ], desc = "Enter visual mode and select all" },
 
-	# Navigation
-	{ on = [ "n" ], exec = "move -1" },
-	{ on = [ "i" ], exec = "move 1" },
+	# Character-wise movement
+	{ on = [ "n" ],       exec = "move -1", desc = "Move back a character" },
+	{ on = [ "i" ],       exec = "move 1",  desc = "Move forward a character" },
+	{ on = [ "<Left>" ],  exec = "move -1", desc = "Move back a character" },
+	{ on = [ "<Right>" ], exec = "move 1",  desc = "Move forward a character" },
+	{ on = [ "<C-b>" ],   exec = "move -1", desc = "Move back a character" },
+	{ on = [ "<C-f>" ],   exec = "move 1",  desc = "Move forward a character" },
 
-	{ on = [ "N" ], exec = "move -999" },
-	{ on = [ "I" ], exec = "move 999" },
-	{ on = [ "<C-n>" ], exec = [ "move -999", "insert" ] },
-	{ on = [ "<C-i>" ], exec = [ "move 999", "insert --append" ] },
+	# Word-wise movement
+	{ on = [ "b" ],     exec = "backward",              desc = "Move back to the start of the current or previous word" },
+	{ on = [ "w" ],     exec = "forward",               desc = "Move forward to the start of the next word" },
+	{ on = [ "h" ],     exec = "forward --end-of-word", desc = "Move forward to the end of the current or next word" },
+	{ on = [ "<A-b>" ], exec = "backward",              desc = "Move back to the start of the current or previous word" },
+	{ on = [ "<A-f>" ], exec = "forward --end-of-word", desc = "Move forward to the end of the current or next word" },
 
-	{ on = [ "b" ], exec = "backward" },
-	{ on = [ "w" ], exec = "forward" },
-	{ on = [ "h" ], exec = "forward --end-of-word" },
+	# Line-wise movement
+	{ on = [ "N" ],     exec = "move -999", desc = "Move to the BOL" },
+	{ on = [ "I" ],     exec = "move 999",  desc = "Move to the EOL" },
+	{ on = [ "<C-a>" ], exec = "move -999", desc = "Move to the BOL" },
+	{ on = [ "<C-e>" ], exec = "move 999",  desc = "Move to the EOL" },
 
-	# Deletion
-	{ on = [ "d" ], exec = "delete --cut" },
-	{ on = [ "D" ], exec = [ "delete --cut", "move 999" ] },
-	{ on = [ "c" ], exec = "delete --cut --insert" },
-	{ on = [ "C" ], exec = [ "delete --cut --insert", "move 999" ] },
-	{ on = [ "x" ], exec = [ "delete", "move 1 --in-operating" ] },
+	# Delete
+	{ on = [ "<Backspace>" ], exec = "backspace",	        desc = "Delete the character before the cursor" },
+	{ on = [ "<C-h>" ],       exec = "backspace",         desc = "Delete the character before the cursor" },
+	{ on = [ "<C-d>" ],       exec = "backspace --under", desc = "Delete the character under the cursor" },
 
-	# Copy/Paste
-	{ on = [ "y" ], exec = [ "yank" ] },
-	{ on = [ "p" ], exec = [ "paste" ] },
-	{ on = [ "P" ], exec = [ "paste --before" ] },
+	# Kill
+	{ on = [ "<C-u>" ], exec = "kill bol",      desc = "Kill backwards to the BOL" },
+	{ on = [ "<C-k>" ], exec = "kill eol",      desc = "Kill forwards to the EOL" },
+	{ on = [ "<C-w>" ], exec = "kill backward", desc = "Kill backwards to the start of the current word" },
+	{ on = [ "<A-d>" ], exec = "kill forward",  desc = "Kill forwards to the end of the current word" },
+
+	# Cut/Yank/Paste
+	{ on = [ "d" ], exec = "delete --cut",                              desc = "Cut the selected characters" },
+	{ on = [ "D" ], exec = [ "delete --cut", "move 999" ],              desc = "Cut until the EOL" },
+	{ on = [ "c" ], exec = "delete --cut --insert",                     desc = "Cut the selected characters, and enter insert mode" },
+	{ on = [ "C" ], exec = [ "delete --cut --insert", "move 999" ],     desc = "Cut until the EOL, and enter insert mode" },
+	{ on = [ "x" ], exec = [ "delete", "move 1 --in-operating" ],       desc = "Cut the current character" },
+	{ on = [ "y" ], exec = "yank",           desc = "Copy the selected characters" },
+	{ on = [ "p" ], exec = "paste",          desc = "Paste the copied characters after the cursor" },
+	{ on = [ "P" ], exec = "paste --before", desc = "Paste the copied characters before the cursor" },
 
 	# Undo/Redo
-	{ on = [ "l" ], exec = [ "undo" ] },
-	{ on = [ "L" ], exec = [ "redo" ] },
+	{ on = [ "l" ],     exec = "undo", desc = "Undo the last operation" },
+	{ on = [ "L" ], exec = "redo", desc = "Redo the last operation" },
 
 	# Help
-	{ on = [ "~" ], exec = "help" },
+	{ on = [ "~" ], exec = "help", desc = "Open help" }
 ]
 
 [help]

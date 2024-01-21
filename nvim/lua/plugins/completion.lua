@@ -131,10 +131,9 @@ return {
 					{ name = "luasnip" },
 				},
 				formatting = {
-					fields = { "kind", "abbr" },
+					fields = { "kind", "abbr", "menu" },
 					format = function(entry, item)
 						item.kind = icons[item.kind] or item.kind
-						item.menu = nil
 
 						local truncated = vim.fn.strcharpart(item.abbr, 0, 30)
 						if truncated ~= item.abbr then

@@ -166,13 +166,13 @@ map_set("je", "WindowJumpBottom", 1)
 map_set("jn", "WindowJumpLeft", 1)
 map_set("ji", "WindowJumpRight", 1)
 
--- Resizeing
+-- Resizing
 map_set("ru", "WindowResizeTop", 2)
 map_set("re", "WindowResizeBottom", 2)
 map_set("rn", "WindowResizeLeft", 2)
 map_set("ri", "WindowResizeRight", 2)
 
--- Moveing
+-- Moving
 map_set("mu", "WindowMoveTop", 2)
 map_set("me", "WindowMoveBottom", 2)
 map_set("mn", "WindowMoveLeft", 2)

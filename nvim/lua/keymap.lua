@@ -32,6 +32,7 @@ vim.keymap.set("c", "<C-e>", "<Down>")
 
 -- word navigation keys
 vim.keymap.set("", "h", "e")
+vim.keymap.set("", "H", "E")
 
 -- insert mode keys
 vim.keymap.set("n", "k", function() return #vim.fn.getline(".") == 0 and '"_cc' or "i" end, { expr = true })

@@ -21,8 +21,8 @@ def handle_result(args, answer, target_window_id, boss):
     cmd = window.child.foreground_cmdline[0]
     act = args[1]  # e.g. -jump
     if act[0] == "-" and cmd[-4:] == "nvim":
-        secound = directions[args[2]] if len(args) > 2 else ""
-        window.write_to_child(f"\x1b[119;8u{act[1]}{secound}")
+        second = directions[args[2]] if len(args) > 2 else ""
+        window.write_to_child(f"\x1b[119;8u{act[1]}{second}")
         return
 
     if (act == "-close" or act == "-quit") and cmd[-7:] == "joshuto":

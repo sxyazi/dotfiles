@@ -10,7 +10,7 @@ let
   };
 
   cli = {
-    exa = "nix";
+    eza = "nix";
     bat = "nix";
     zoxide = "nix";
     fd = "nix";

@@ -13,6 +13,10 @@ local M = {
 		-- Rust
 		"rust-analyzer", -- language server
 
+		-- Python
+		"pyright", -- language server
+		"ruff", -- formatter
+
 		-- Shell
 		"bash-language-server", -- language server
 		"shfmt", -- formatting
@@ -377,6 +381,9 @@ return {
 
 					-- Rust
 					rust = { "rustfmt" },
+
+					-- Python
+					python = { "ruff_format" },
 
 					-- JavaScript
 					javascript = { "prettier" },
