@@ -33,6 +33,10 @@ alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/ya
 alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
 
 function ya() {
+	if [ -n "$YAZI_LEVEL" ]; then
+		exit
+	fi
+
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
 	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then

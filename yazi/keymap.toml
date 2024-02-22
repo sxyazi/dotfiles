@@ -3,6 +3,9 @@
 [manager]
 
 prepend_keymap = [
+	{ on = [ "w" ], exec = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
+	{ on = [ "W" ], exec = "tasks_show" },
+
 	# Navigation
 	{ on = [ "u" ], exec = "arrow -1" },
 	{ on = [ "e" ], exec = "arrow 1" },
@@ -10,8 +13,8 @@ prepend_keymap = [
 	{ on = [ "U" ], exec = "arrow -5" },
 	{ on = [ "E" ], exec = "arrow 5" },
 
-	{ on = [ "n" ], exec = [ "leave", "escape --visual --select" ] },
-	{ on = [ "i" ], exec = [ "plugin --sync enter-or-open", "escape --visual --select" ] },
+	{ on = [ "n" ], exec = "leave" },
+	{ on = [ "i" ], exec = "plugin --sync enter-or-open" },
 
 	{ on = [ "N" ], exec = "back" },
 	{ on = [ "I" ], exec = "forward" },

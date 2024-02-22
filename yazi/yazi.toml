@@ -1,9 +1,5 @@
 [manager]
-sort_by        = "modified"
-sort_sensitive = false
-sort_reverse   = true
-sort_dir_first = false
-linemode       = "size"
+linemode = "size"
 
 [preview]
 tab_size   = 2
@@ -12,8 +8,8 @@ max_height = 1000
 
 [opener]
 edit = [
-	{ exec = '$EDITOR "$@"', block = true },
-	{ exec = 'code "$@"',    orphan = true },
+	{ exec = '${EDITOR:=vi} "$@"', desc = "$EDITOR", block = true },
+	{ exec = 'code "$@"', orphan = true },
 ]
 play = [
 	{ exec = 'mpv "$@"' },
@@ -47,4 +43,12 @@ rules = [
 	{ mime = "application/x-rar",           use = [ "extract", "reveal", "archive" ] },
 
 	{ mime = "*", use = [ "open", "reveal" ] },
+]
+
+[plugin]
+prepend_previewers = [
+	{ mime = "audio/*", exec = "exifaudio" },
+]
+append_previewers = [
+	{ name = "*", exec = "hexyl" },
 ]

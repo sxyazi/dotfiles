@@ -325,4 +325,28 @@ return {
 			{ "go", "<Esc>:Sort<CR>", mode = "v", silent = true },
 		},
 	},
+
+	-- Generate sharable file permalinks (with line ranges) for git host websites
+	{
+		"ruifm/gitlinker.nvim",
+		keys = {
+			{
+				"<leader>p",
+				':lua require"gitlinker".get_buf_range_url("n", {action_callback = require"gitlinker.actions".copy_to_clipboard})<CR>',
+				mode = "n",
+				silent = true,
+			},
+			{
+				"<leader>p",
+				':lua require"gitlinker".get_buf_range_url("v", {action_callback = require"gitlinker.actions".copy_to_clipboard})<CR>',
+				mode = "v",
+				silent = true,
+			},
+		},
+		config = function()
+			require("gitlinker").setup {
+				mappings = nil,
+			}
+		end,
+	},
 }

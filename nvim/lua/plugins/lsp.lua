@@ -10,8 +10,9 @@ local M = {
 		"goimports", -- formatter
 		"revive", -- linter
 
-		-- Rust
-		"rust-analyzer", -- language server
+		-- Rust (managed by `rustup`)
+		-- "rustfmt", -- formatter"
+		-- "rust-analyzer", -- language server
 
 		-- Python
 		"pyright", -- language server
