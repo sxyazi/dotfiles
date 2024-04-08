@@ -28,7 +28,7 @@ alias gb="git branch"
 alias gr="git rebase"
 alias gt='cd "$(git rev-parse --show-toplevel)"'
 
-alias r="export RUST_BACKTRACE=1; pkill yazi; cd ~/Desktop/yazi; cargo build && cd - && ~/Desktop/yazi/target/debug/yazi || cd -"
+alias r="export RUST_BACKTRACE=1; cd ~/Desktop/yazi; cargo build && cd - && ~/Desktop/yazi/target/debug/yazi || cd -"
 alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/yazi.log"
 alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
 
@@ -70,21 +70,3 @@ function gpr() {
 
 	git checkout -b "pr-$(openssl rand -hex 4)"
 }
-
-# Store commands in history only if successful
-# CREDITS:
-# https://gist.github.com/danydev/4ca4f5c523b19b17e9053dfa9feb246d
-# https://scarff.id.au/blog/2019/zsh-history-conditional-on-command-success/
-
-function __fd18et_prevent_write() {
-  __fd18et_LASTHIST=$1
-  return 2
-}
-function __fd18et_save_last_successed() {
-  if [[ ($? == 0 || $? == 130) && -n $__fd18et_LASTHIST && -n $HISTFILE ]] ; then
-    print -sr -- ${=${__fd18et_LASTHIST%%'\n'}}
-  fi
-}
-add-zsh-hook zshaddhistory __fd18et_prevent_write
-add-zsh-hook precmd __fd18et_save_last_successed
-add-zsh-hook zshexit __fd18et_save_last_successed

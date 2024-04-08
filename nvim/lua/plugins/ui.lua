@@ -481,10 +481,22 @@ return {
 				{ "<leader>?", function() require("telescope.builtin").live_grep { additional_args = extr_args } end },
 
 				-- LSP
-				{ "<leader>l", function() require("telescope.builtin").lsp_references { initial_mode = "normal" } end },
-				{ "<leader>b", function() require("telescope.builtin").lsp_definitions { initial_mode = "normal" } end },
-				{ "<leader>m", function() require("telescope.builtin").lsp_type_definitions { initial_mode = "normal" } end },
-				{ "<leader>i", function() require("telescope.builtin").lsp_implementations { initial_mode = "normal" } end },
+				{
+					"<leader>l",
+					function() require("telescope.builtin").lsp_references { initial_mode = "normal", reuse_win = true } end,
+				},
+				{
+					"<leader>b",
+					function() require("telescope.builtin").lsp_definitions { initial_mode = "normal", reuse_win = true } end,
+				},
+				{
+					"<leader>m",
+					function() require("telescope.builtin").lsp_type_definitions { initial_mode = "normal", reuse_win = true } end,
+				},
+				{
+					"<leader>i",
+					function() require("telescope.builtin").lsp_implementations { initial_mode = "normal", reuse_win = true } end,
+				},
 				{ "<leader>u", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end },
 			}
 		end,
@@ -865,27 +877,14 @@ return {
 		end,
 	},
 
-	-- A tree-like view for symbols
+	-- Neovim plugin for terminal file manager integration
 	{
-		"simrat39/symbols-outline.nvim",
-		keys = {
-			{ ",o", ":SymbolsOutline<CR>", silent = true },
-		},
-		opts = {
-			keymaps = {
-				close = "q",
-				goto_location = "<CR>",
-				focus_location = "<Tab>",
-				hover_symbol = "<Nop>",
-				toggle_preview = "K",
-				rename_symbol = "r",
-				code_actions = "a",
-				fold = "n",
-				unfold = "i",
-				fold_all = "N",
-				unfold_all = "I",
-				fold_reset = "<Nop>",
-			},
-		},
+		"rolv-apneseth/tfm.nvim",
+		config = function()
+			vim.api.nvim_set_keymap("n", "<leader>v", "", {
+				noremap = true,
+				callback = require("tfm").open,
+			})
+		end,
 	},
 }

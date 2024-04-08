@@ -7,85 +7,90 @@ prepend_keymap = [
 	{ on = [ "W" ], exec = "tasks_show" },
 
 	# Navigation
-	{ on = [ "u" ], exec = "arrow -1" },
-	{ on = [ "e" ], exec = "arrow 1" },
+	{ on = [ "u" ], run = "arrow -1" },
+	{ on = [ "e" ], run = "arrow 1" },
 
-	{ on = [ "U" ], exec = "arrow -5" },
-	{ on = [ "E" ], exec = "arrow 5" },
+	{ on = [ "U" ], run = "arrow -5" },
+	{ on = [ "E" ], run = "arrow 5" },
 
-	{ on = [ "n" ], exec = "leave" },
-	{ on = [ "i" ], exec = "plugin --sync enter-or-open" },
+	{ on = [ "n" ], run = "leave" },
+	{ on = [ "i" ], run = "plugin --sync smart-enter" },
 
-	{ on = [ "N" ], exec = "back" },
-	{ on = [ "I" ], exec = "forward" },
+	{ on = [ "N" ], run = "back" },
+	{ on = [ "I" ], run = "forward" },
 
-	{ on = [ "<C-u>" ], exec = "seek -5" },
-	{ on = [ "<C-e>" ], exec = "seek 5" },
+	{ on = [ "<C-u>" ], run = "seek -5" },
+	{ on = [ "<C-e>" ], run = "seek 5" },
 
 	# Operation
-	{ on = [ "l" ], exec = "link" },
-	{ on = [ "L" ], exec = "link --relative" },
+	{ on = [ "l" ], run = "link" },
+	{ on = [ "L" ], run = "link --relative" },
 
 	# Find
-	{ on = [ "-" ], exec = "find_arrow" },
-	{ on = [ "=" ], exec = "find_arrow --previous" },
+	{ on = [ "-" ], run = "find_arrow" },
+	{ on = [ "=" ], run = "find_arrow --previous" },
 ]
 
 [tasks]
 
 prepend_keymap = [
-	{ on = [ "u" ], exec = "arrow -1" },
-	{ on = [ "e" ], exec = "arrow 1" },
+	{ on = [ "W" ], run = "close" },
+
+	{ on = [ "u" ], run = "arrow -1" },
+	{ on = [ "e" ], run = "arrow 1" },
 ]
 
 [select]
 
 prepend_keymap = [
-	{ on = [ "u" ], exec = "arrow -1" },
-	{ on = [ "e" ], exec = "arrow 1" },
+	{ on = [ "u" ], run = "arrow -1" },
+	{ on = [ "e" ], run = "arrow 1" },
 
-	{ on = [ "U" ], exec = "arrow -5" },
-	{ on = [ "E" ], exec = "arrow 5" },
+	{ on = [ "U" ], run = "arrow -5" },
+	{ on = [ "E" ], run = "arrow 5" },
 ]
 
 [input]
 
 prepend_keymap = [
 	# Mode
-	{ on = [ "k" ],     exec = "insert" },
-	{ on = [ "<C-n>" ], exec = [ "move -999", "insert" ] },
-	{ on = [ "<C-i>" ], exec = [ "move 999", "insert --append" ] },
+	{ on = [ "k" ],     run = "insert" },
+	{ on = [ "<C-n>" ], run = [ "move -999", "insert" ] },
+	{ on = [ "<C-i>" ], run = [ "move 999", "insert --append" ] },
 
 	# Character-wise movement
-	{ on = [ "n" ], exec = "move -1" },
-	{ on = [ "i" ], exec = "move 1" },
+	{ on = [ "n" ], run = "move -1" },
+	{ on = [ "i" ], run = "move 1" },
 
 	# Word-wise movement
-	{ on = [ "h" ], exec = "forward --end-of-word" },
+	{ on = [ "h" ], run = "forward --end-of-word" },
 
 	# Line-wise movement
-	{ on = [ "N" ], exec = "move -999" },
-	{ on = [ "I" ], exec = "move 999" },
+	{ on = [ "N" ], run = "move -999" },
+	{ on = [ "I" ], run = "move 999" },
+
+	# Cut/Yank/Paste
+	{ on = [ "x" ], run = [ "delete", "move 1 --in-operating" ] },
 
 	# Undo/Redo
-	{ on = [ "l" ], exec = "undo" },
-	{ on = [ "L" ], exec = "redo" },
+	{ on = [ "l" ], run = "undo" },
+	{ on = [ "L" ], run = "redo" },
 ]
 
 [completion]
 
 prepend_keymap = [
-	{ on = [ "<C-u>" ], exec = "arrow -1" },
-	{ on = [ "<C-e>" ], exec = "arrow 1" },
+	{ on = [ "<C-u>" ], run = "arrow -1" },
+	{ on = [ "<C-e>" ], run = "arrow 1" },
 ]
 
 [help]
 
 prepend_keymap = [
 	# Navigation
-	{ on = [ "u" ], exec = "arrow -1" },
-	{ on = [ "e" ], exec = "arrow 1" },
+	{ on = [ "u" ], run = "arrow -1" },
+	{ on = [ "e" ], run = "arrow 1" },
 
-	{ on = [ "U" ], exec = "arrow -5" },
-	{ on = [ "E" ], exec = "arrow 5" },
+	{ on = [ "U" ], run = "arrow -5" },
+	{ on = [ "E" ], run = "arrow 5" },
 ]

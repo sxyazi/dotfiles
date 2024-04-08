@@ -1,3 +1,5 @@
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
 [manager]
 linemode = "size"
 
@@ -8,17 +10,17 @@ max_height = 1000
 
 [opener]
 edit = [
-	{ exec = '${EDITOR:=vi} "$@"', desc = "$EDITOR", block = true },
-	{ exec = 'code "$@"', orphan = true },
+	{ run = '${EDITOR:=vi} "$@"', desc = "$EDITOR", block = true },
+	{ run = 'code "$@"', orphan = true },
 ]
 play = [
-	{ exec = 'mpv "$@"' },
-	{ exec = 'iina "$@"' },
-	{ exec = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, desc = "Show media info" }
+	{ run = 'mpv "$@"' },
+	{ run = 'iina --no-stdin "$@"' },
+	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, desc = "Show media info" }
 ]
 archive = [
-	{ exec = 'unar "$1"', desc = "Extract here" },
-	{ exec = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" },
+	{ run = 'unar "$1"', desc = "Extract here" },
+	{ run = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" },
 ]
 
 [open]
@@ -47,8 +49,5 @@ rules = [
 
 [plugin]
 prepend_previewers = [
-	{ mime = "audio/*", exec = "exifaudio" },
-]
-append_previewers = [
-	{ name = "*", exec = "hexyl" },
+	{ mime = "audio/*", run = "exifaudio" },
 ]

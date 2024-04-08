@@ -291,8 +291,8 @@ return {
 	{
 		"Wansmer/treesj",
 		keys = {
-			{ "j", ":TSJJoin<CR>", silent = true },
-			{ "J", ":TSJSplit<CR>", silent = true },
+			{ "j", ":TSJSplit<CR>", silent = true },
+			{ "J", ":TSJJoin<CR>", silent = true },
 		},
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {

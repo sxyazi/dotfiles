@@ -1,1 +1,4 @@
-/Users/ika/Documents/yazi-theme/catppuccin-mocha/theme.toml
+"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
+
+[flavor]
+use = "catppuccin-mocha"
