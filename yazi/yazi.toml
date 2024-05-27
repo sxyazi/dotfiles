@@ -1,7 +1,9 @@
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
 [manager]
-linemode = "size"
+linemode    = "size"
+show_hidden = true
+sort_by     = "natural"
 
 [preview]
 tab_size   = 2
@@ -14,7 +16,7 @@ edit = [
 	{ run = 'code "$@"', orphan = true },
 ]
 play = [
-	{ run = 'mpv "$@"' },
+	{ run = 'mpv --force-window "$@"' },
 	{ run = 'iina --no-stdin "$@"' },
 	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, desc = "Show media info" }
 ]

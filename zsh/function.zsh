@@ -15,6 +15,7 @@ alias tree="tree -aC"
 alias icpng="mkdir converted-images; sips -s format png * --out converted-images"
 alias icjpg="mkdir converted-images; sips -s format jpeg * --out converted-images"
 
+alias g='XDG_CONFIG_HOME="$HOME/.config" lazygit'
 alias gs="git status"
 alias ga="git add -A"
 alias gc="git commit -v"
@@ -28,11 +29,11 @@ alias gb="git branch"
 alias gr="git rebase"
 alias gt='cd "$(git rev-parse --show-toplevel)"'
 
-alias r="export RUST_BACKTRACE=1; cd ~/Desktop/yazi; cargo build && cd - && ~/Desktop/yazi/target/debug/yazi || cd -"
+alias r="export RUST_BACKTRACE=1; cd ~/Desktop/yazi; cargo build -p yazi-fm && cd - && ~/Desktop/yazi/target/debug/yazi || cd -"
 alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/yazi.log"
 alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
 
-function ya() {
+function yy() {
 	if [ -n "$YAZI_LEVEL" ]; then
 		exit
 	fi
@@ -70,3 +71,11 @@ function gpr() {
 
 	git checkout -b "pr-$(openssl rand -hex 4)"
 }
+
+# Change Yazi's CWD to PWD on subshell exit
+if [[ -n "$YAZI_ID" ]]; then
+	function _yazi_cd() {
+		ya pub "$YAZI_ID" dds-cd --str "$PWD"
+	}
+	add-zsh-hook zshexit _yazi_cd
+fi
