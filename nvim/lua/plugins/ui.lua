@@ -165,16 +165,6 @@ return {
 	{
 		"stevearc/dressing.nvim",
 		lazy = true,
-		init = function()
-			vim.ui.select = function(...)
-				require("lazy").load { plugins = { "dressing.nvim" } }
-				return vim.ui.select(...)
-			end
-			vim.ui.input = function(...)
-				require("lazy").load { plugins = { "dressing.nvim" } }
-				return vim.ui.input(...)
-			end
-		end,
 		opts = {
 			input = {
 				insert_only = false,
@@ -277,7 +267,7 @@ return {
 		config = function()
 			local telescope = require("telescope")
 			local actions = require("telescope.actions")
-			local trouble = require("trouble.providers.telescope")
+			local trouble = require("trouble.sources.telescope")
 
 			telescope.setup {
 				defaults = {
@@ -297,7 +287,7 @@ return {
 							["<C-s>"] = actions.select_vertical,
 							["<C-h>"] = actions.select_horizontal,
 							["<C-t>"] = actions.select_tab,
-							["<C-q>"] = trouble.smart_open_with_trouble,
+							["<C-q>"] = trouble.open,
 						},
 						n = {
 							["k"] = false, -- disable default keybinding
@@ -316,7 +306,7 @@ return {
 							["s"] = actions.select_vertical,
 							["h"] = actions.select_horizontal,
 							["t"] = actions.select_tab,
-							["<C-q>"] = trouble.smart_open_with_trouble,
+							["<C-q>"] = trouble.open,
 						},
 					},
 					buffer_previewer_maker = function(filepath, bufnr, opts)
@@ -468,11 +458,11 @@ return {
 		dependencies = {
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
 		},
-		cmd = { "TroubleToggle", "Trouble" },
+		cmd = { "Trouble" },
 		keys = {
-			{ ",e", ":TroubleToggle workspace_diagnostics<CR>", silent = true },
-			{ ",E", ":TroubleToggle document_diagnostics<CR>", silent = true },
-			{ ",q", ":TroubleToggle quickfix<CR>", silent = true },
+			{ ",e", ":Trouble diagnostics toggle<CR>", silent = true },
+			{ ",E", ":Trouble diagnostics toggle filter.buf=0<CR>", silent = true },
+			{ ",q", ":Trouble qflist toggle<CR>", silent = true },
 			{
 				"[q",
 				function()

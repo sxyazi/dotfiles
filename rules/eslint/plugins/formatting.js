@@ -127,12 +127,9 @@ export const fmRules = {
 		allowSeparatedGroups : true,
 	}],
 	"sort-vars"     : ["warn", { ignoreCase: true }],
-	"spaced-comment": ["warn", "always", {
-		line : { markers: ["/"] },
-		block: { balanced: true },
-	}],
-	"strict": ["warn", "never"],
-	"yoda"  : "warn",
+	"spaced-comment": ["warn", "always"],
+	"strict"        : ["warn", "never"],
+	"yoda"          : "warn",
 }
 
 /** @type { import('eslint').Linter.FlatConfig[] } */

@@ -75,7 +75,7 @@ function gpr() {
 # Change Yazi's CWD to PWD on subshell exit
 if [[ -n "$YAZI_ID" ]]; then
 	function _yazi_cd() {
-		ya pub "$YAZI_ID" dds-cd --str "$PWD"
+		ya pub dds-cd --str "$PWD"
 	}
 	add-zsh-hook zshexit _yazi_cd
 fi

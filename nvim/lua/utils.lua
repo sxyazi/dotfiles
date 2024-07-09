@@ -23,7 +23,7 @@ function M.list_equal(a, b)
 end
 
 function M.line_ending(bufnr)
-	local format = vim.api.nvim_buf_get_option(bufnr, "fileformat")
+	local format = vim.api.nvim_get_option_value("fileformat", { buf = bufnr })
 	if format == "dos" then
 		return "\r\n"
 	elseif format == "mac" then
@@ -35,7 +35,7 @@ end
 
 function M.full_lines(bufnr)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
-	if vim.api.nvim_buf_get_option(bufnr, "eol") then
+	if vim.api.nvim_get_option_value("eol", { buf = bufnr }) then
 		lines[#lines + 1] = ""
 	end
 	return lines

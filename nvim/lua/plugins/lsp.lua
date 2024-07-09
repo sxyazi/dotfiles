@@ -385,12 +385,12 @@ return {
 					python = { "ruff_format" },
 
 					-- JavaScript
-					javascript = { "prettier" },
-					javascriptreact = { "prettier" },
-					["javascript.jsx"] = { "prettier" },
-					typescript = { "prettier" },
-					typescriptreact = { "prettier" },
-					["typescript.jsx"] = { "prettier" },
+					-- javascript = { "prettier" },
+					-- javascriptreact = { "prettier" },
+					-- ["javascript.jsx"] = { "prettier" },
+					-- typescript = { "prettier" },
+					-- typescriptreact = { "prettier" },
+					-- ["typescript.jsx"] = { "prettier" },
 
 					-- JSON/XML
 					json = { "prettier" },

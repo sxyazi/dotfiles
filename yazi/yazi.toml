@@ -46,7 +46,7 @@ rules = [
 	{ mime = "application/x-7z-compressed", use = [ "extract", "reveal", "archive" ] },
 	{ mime = "application/x-rar",           use = [ "extract", "reveal", "archive" ] },
 
-	{ mime = "*", use = [ "open", "reveal" ] },
+	{ name = "*", use = [ "open", "reveal" ] },
 ]
 
 [plugin]
