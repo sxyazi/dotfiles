@@ -165,6 +165,16 @@ return {
 	{
 		"stevearc/dressing.nvim",
 		lazy = true,
+		init = function()
+			vim.ui.select = function(...)
+				require("lazy").load { plugins = { "dressing.nvim" } }
+				return vim.ui.select(...)
+			end
+			vim.ui.input = function(...)
+				require("lazy").load { plugins = { "dressing.nvim" } }
+				return vim.ui.input(...)
+			end
+		end,
 		opts = {
 			input = {
 				insert_only = false,
@@ -485,74 +495,21 @@ return {
 			},
 		},
 		opts = {
-			action_keys = {
-				previous = "u",
-				next = "e",
+			keys = {
+				u = "prev",
+				e = "next",
 
-				jump = "<Tab>",
-				jump_close = "<CR>",
+				["<Tab>"] = "jump",
+				["<CR>"] = "jump_close",
 
-				open_split = "s",
-				open_vsplit = "S",
-				open_tab = "t",
+				s = "jump_split",
+				S = "jump_vsplit",
 
-				toggle_fold = "za",
-				open_folds = "zr",
-				close_folds = "zm",
+				za = "fold_toggle",
+				zr = "fold_open",
+				zc = "fold_close",
 			},
 		},
-		config = function(opts)
-			vim.api.nvim_create_autocmd({ "FileType" }, {
-				pattern = "Trouble",
-				callback = function(event)
-					if require("trouble.config").options.mode ~= "telescope" then
-						return
-					end
-
-					local function delete()
-						local folds = require("trouble.folds")
-						local telescope = require("trouble.providers.telescope")
-
-						local ord = { "" } -- { filename, ... }
-						local files = { [""] = { 1, 1, 0 } } -- { [filename] = { start, end, start_index } }
-						for i, result in ipairs(telescope.results) do
-							if files[result.filename] == nil then
-								local next = files[ord[#ord]][2] + 1
-								files[result.filename] = { next, next, i }
-								table.insert(ord, result.filename)
-							end
-							if not folds.is_folded(result.filename) then
-								files[result.filename][2] = files[result.filename][2] + 1
-							end
-						end
-
-						local line = unpack(vim.api.nvim_win_get_cursor(0))
-						for i, id in ipairs(ord) do
-							if line == files[id][1] then -- Group
-								local next = ord[i + 1]
-								for _ = files[id][3], next and files[next][3] - 1 or #telescope.results do
-									table.remove(telescope.results, files[id][3])
-								end
-								break
-							elseif line <= files[id][2] then -- Item
-								table.remove(telescope.results, files[id][3] + (line - files[id][1]) - 1)
-								break
-							end
-						end
-
-						if #telescope.results == 0 then
-							require("trouble").close()
-						else
-							require("trouble").refresh { provider = "telescope", auto = false }
-						end
-					end
-
-					vim.keymap.set("n", "x", delete, { buffer = event.buf })
-				end,
-			})
-
-			require("trouble").setup(opts)
-		end,
 	},
 
 	-- Git integration for buffers
@@ -644,11 +601,15 @@ return {
 	-- Neovim plugin for Yazi
 	{
 		"mikavilpas/yazi.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
-			{
-				"<leader>v",
-				function() require("yazi").yazi() end,
+			{ "<leader>v", ":Yazi<cr>", silent = true },
+		},
+		opts = {
+			use_ya_for_events_reading = true,
+			use_yazi_client_id_flag = true,
+
+			keymaps = {
+				show_help = "~",
 			},
 		},
 	},

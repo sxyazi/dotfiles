@@ -4,10 +4,14 @@ function copy_subtitle()
 		return
 	end
 
-	mp.commandv(
-		"run", "/bin/bash", "-c",
-		("echo -n %q | LANG=en_US.UTF-8 pbcopy"):format(subtitle)
-	)
+	local last = ""
+	for w in string.gmatch(subtitle .. "\n", "(.-)[\r\n]+") do
+		if w:find("%S") then
+			last = w:gsub("^%s+", ""):gsub("%s+$", "")
+		end
+	end
+
+	mp.commandv("run", "sh", "-c", 'printf "%s" "$1" | LANG=en_US.UTF-8 pbcopy', "", last)
 	mp.osd_message("Subtitle line copied!")
 end
 

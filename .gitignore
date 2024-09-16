@@ -39,14 +39,6 @@ rules/**/node_modules
 !yazi
 !yazi/**
 
-!joshuto
-!joshuto/**
-
-!ranger
-!ranger/**
-ranger/**/__init__.py
-ranger/**/__pycache__
-
 !mpv
 !mpv/**
 mpv/watch_later

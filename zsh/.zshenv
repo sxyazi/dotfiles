@@ -17,7 +17,7 @@ __FD_COMMAND="-L -H --no-ignore-vcs ${__TREE_IGNORE//-I/-E} $__FD_COMMAND"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-export BAT_THEME="Catppuccin-macchiato"
+export BAT_THEME="Catppuccin Mocha"
 export HOMEBREW_NO_ANALYTICS=1
 export RANGER_LOAD_DEFAULT_RC="FALSE"
 export PNPM_HOME=$HOME/Library/pnpm

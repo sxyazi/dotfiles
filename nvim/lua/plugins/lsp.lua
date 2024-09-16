@@ -178,7 +178,7 @@ function M.go_setup()
 end
 
 function M.fe_setup()
-	require("lspconfig").tsserver.setup {
+	require("lspconfig").ts_ls.setup {
 		capabilities = M.capabilities(),
 	}
 	require("lspconfig").html.setup {
