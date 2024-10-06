@@ -6,7 +6,6 @@ alias -- -="cd -"
 
 alias p="pwd"
 alias v="nvim"
-alias r="yazi"
 alias l="eza -al --icons --group-directories-first"
 alias ll="eza -a --icons --group-directories-first"
 alias ssh="kitty +kitten ssh"
@@ -29,11 +28,10 @@ alias gb="git branch"
 alias gr="git rebase"
 alias gt='cd "$(git rev-parse --show-toplevel)"'
 
-alias r="export RUST_BACKTRACE=1; cd ~/Desktop/yazi; cargo build -p yazi-fm && cd - && ~/Desktop/yazi/target/debug/yazi || cd -"
 alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/yazi.log"
 alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
 
-function yy() {
+function y() {
 	if [ -n "$YAZI_LEVEL" ]; then
 		exit
 	fi

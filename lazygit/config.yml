@@ -1,0 +1,60 @@
+gui:
+  expandFocusedSidePanel: true
+  language: en
+  mouseEvents: false
+  nerdFontsVersion: "3"
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --syntax-theme="Catppuccin-mocha"
+update:
+  method: never
+notARepository: "quit"
+promptToReturnFromSubprocess: false
+keybinding:
+  universal:
+    prevItem-alt: "u"
+    nextItem-alt: "e"
+    prevBlock-alt: "n"
+    nextBlock-alt: "i"
+    scrollUpMain-alt1: "U"
+    scrollDownMain-alt1: "E"
+    scrollLeft: "N"
+    scrollRight: "I"
+    nextMatch: "-"
+    prevMatch: "="
+    new: "k"
+    edit: "o"
+    openFile: "O"
+    undo: "l"
+    redo: "L"
+  status:
+    checkForUpdate: <disabled>
+  files:
+    ignoreFile: "h"
+  branches:
+    viewGitFlowOptions: "I"
+    setUpstream: "s"
+  commits:
+    moveUpCommit: "<c-u>"
+    moveDownCommit: "<c-e>"
+    startInteractiveRebase: "I"
+  main:
+    editSelectHunk: <disabled>
+  submodules:
+    init: "c"
+customCommands:
+  - key: "v"
+    context: "localBranches"
+    loadingText: "Checking out GitHub Pull Request..."
+    command: "gh pr checkout {{.Form.PullRequestNumber}}"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Which PR do you want to check out?"
+        key: "PullRequestNumber"
+        command: >-
+          gh pr list --json number,title,headRefName,updatedAt
+          --template '{{`{{range .}}{{printf "#%v: %s - %s (%s)" .number .title .headRefName (timeago .updatedAt)}}{{end}}`}}'
+        filter: "#(?P<number>[0-9]+): (?P<title>.+) - (?P<ref_name>[^ ]+).*"
+        valueFormat: "{{.number}}"
+        labelFormat: '{{"#" | black | bold}}{{.number | white | bold}} {{.title | yellow | bold}}{{" [" | black | bold}}{{.ref_name | green}}{{"]" | black | bold}}'

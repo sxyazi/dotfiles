@@ -29,12 +29,6 @@ vim.opt.foldlevel = 99
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
--- TODO: remove this once https://github.com/nvim-telescope/telescope.nvim/issues/699 is fixed
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-	pattern = { "*" },
-	callback = function() vim.cmd([[normal! zx]]) end,
-})
-
 -- UI
 vim.opt.winblend = 0
 vim.opt.pumblend = 0

@@ -11,7 +11,7 @@ function vi-yank-wrapped {
 }
 zle -N vi-yank-wrapped
 
-bindkey -s "^y" "yy\n"
+bindkey -s "^y" "y\n"
 
 # Menu
 bindkey -rpM menuselect ""

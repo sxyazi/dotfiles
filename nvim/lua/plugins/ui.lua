@@ -136,7 +136,6 @@ return {
 						event = "msg_show",
 						kind = "emsg",
 						any = {
-							-- TODO: A bug workaround of Lspsaga's finder
 							-- { find = "E134: Cannot move a range of lines into itself" },
 						},
 					},

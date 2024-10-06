@@ -191,7 +191,7 @@ function M.fe_setup()
 		},
 	}
 
-	local eslint_default = require("lspconfig.server_configurations.eslint").default_config
+	local eslint_default = require("lspconfig").eslint.config_def.default_config
 	local eslint_settings = { packageManager = "pnpm", useESLintClass = true }
 
 	if not eslint_default.root_dir(vim.fn.getcwd()) then

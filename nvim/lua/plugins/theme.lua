@@ -25,8 +25,8 @@ return {
 		build = ":CatppuccinCompile",
 		enabled = true,
 		opts = {
-			flavour = "mocha",
-			background = { light = "latte", dark = "mocha" },
+			flavour = "macchiato",
+			background = { light = "latte", dark = "macchiato" },
 			transparent_background = true,
 			term_colors = true,
 			integrations = {

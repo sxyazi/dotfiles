@@ -22,8 +22,18 @@ zsh/.zcompcache
 !less/**
 less/.lesshst
 
+!yazi
+!yazi/**
+
 !nvim/
 !nvim/**
+
+!mpv
+!mpv/**
+mpv/watch_later
+
+!lazygit
+!lazygit/**
 
 !bat/
 !bat/**
@@ -35,11 +45,4 @@ tmux/plugins/
 !rules/
 !rules/**
 rules/**/node_modules
-
-!yazi
-!yazi/**
-
-!mpv
-!mpv/**
-mpv/watch_later
 
