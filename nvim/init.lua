@@ -2,7 +2,6 @@ require("core")
 require("keymap")
 require("window")
 require("terminal")
-require("testing")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
