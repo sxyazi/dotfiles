@@ -347,6 +347,20 @@ return {
 
 					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = event.buf })
 					vim.keymap.set({ "n", "v" }, "<C-CR>", vim.lsp.buf.code_action, { buffer = event.buf })
+
+					-- Jump to next/previous diagnostic
+					vim.keymap.set(
+						"n",
+						"[e",
+						function() vim.diagnostic.goto_prev { severity = vim.diagnostic.severity.ERROR } end,
+						{ buffer = event.buf }
+					)
+					vim.keymap.set(
+						"n",
+						"]e",
+						function() vim.diagnostic.goto_next { severity = vim.diagnostic.severity.ERROR } end,
+						{ buffer = event.buf }
+					)
 				end,
 			})
 		end,
@@ -468,7 +482,7 @@ return {
 
 	-- Integrating non-LSPs like Prettier
 	{
-		"jose-elias-alvarez/null-ls.nvim",
+		"nvimtools/none-ls.nvim",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", lazy = true },
 			{

@@ -6,7 +6,8 @@ gui:
 git:
   paging:
     colorArg: always
-    pager: delta --dark --paging=never --syntax-theme="Catppuccin-mocha"
+    # pager: delta --dark --paging=never --syntax-theme="Catppuccin-mocha"
+    externalDiffCommand: difft --color=always --display=inline --syntax-highlight=off
 update:
   method: never
 notARepository: "quit"
