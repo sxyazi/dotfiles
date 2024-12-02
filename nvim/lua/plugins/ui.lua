@@ -9,14 +9,6 @@ return {
 				component_separators = "|",
 				section_separators = { left = "", right = "" },
 				globalstatus = true,
-				ignore_focus = {
-					"dapui_watches",
-					"dapui_stacks",
-					"dapui_breakpoints",
-					"dapui_scopes",
-					"dapui_console",
-					"dap-repl",
-				},
 			},
 			sections = {
 				lualine_a = {
@@ -77,14 +69,12 @@ return {
 				{
 					filter = {
 						event = "notify",
+						error = true,
 						any = {
-							-- Neo-tree
-							{ find = "Toggling hidden files: true" },
-							{ find = "Toggling hidden files: false" },
-							{ find = "Operation canceled" },
-
 							-- Telescope
 							{ find = "Nothing currently selected" },
+							-- LSP
+							{ find = "server cancelled the request" },
 						},
 					},
 					opts = { skip = true },
@@ -355,6 +345,14 @@ return {
 						override_generic_sorter = true,
 						override_file_sorter = true,
 					},
+					-- TODO: remove this once https://github.com/danielfalk/smart-open.nvim/issues/71 gets resolved
+					smart_open = {
+						mappings = {
+							i = {
+								["<C-w>"] = function() vim.api.nvim_input("<c-s-w>") end,
+							},
+						},
+					},
 				},
 			}
 
@@ -381,7 +379,7 @@ return {
 		config = function() require("telescope").load_extension("smart_open") end,
 	},
 
-	-- Manage LSP/DAP servers
+	-- Manage LSP servers
 	{
 		"williamboman/mason.nvim",
 		cmd = "Mason",
@@ -552,7 +550,7 @@ return {
 	{
 		"mikavilpas/yazi.nvim",
 		keys = {
-			{ "<leader>v", ":Yazi<cr>", silent = true },
+			{ "<leader>y", ":Yazi<cr>", silent = true },
 		},
 		opts = {
 			use_ya_for_events_reading = true,
@@ -562,5 +560,20 @@ return {
 				show_help = "~",
 			},
 		},
+	},
+
+	-- Neovim file explorer
+	{
+		"stevearc/oil.nvim",
+		keys = {
+			{ "<leader>v", ":Oil<cr>", silent = true },
+		},
+		opts = {
+			delete_to_trash = true,
+			keymaps = {
+				["<S-CR>"] = "actions.parent",
+			},
+		},
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 }

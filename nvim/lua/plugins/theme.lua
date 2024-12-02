@@ -32,7 +32,6 @@ return {
 			integrations = {
 				bufferline = false,
 				cmp = true,
-				dap = { enabled = true, enable_ui = true },
 				fidget = true,
 				gitsigns = true,
 				illuminate = true,

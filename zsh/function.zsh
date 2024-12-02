@@ -37,7 +37,7 @@ function y() {
 	fi
 
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-	yazi "$@" --cwd-file="$tmp"
+	YAZI_LOG=debug yazi "$@" --cwd-file="$tmp"
 	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
 		cd -- "$cwd"
 	fi
@@ -73,7 +73,7 @@ function gpr() {
 # Change Yazi's CWD to PWD on subshell exit
 if [[ -n "$YAZI_ID" ]]; then
 	function _yazi_cd() {
-		ya pub dds-cd --str "$PWD"
+		ya emit cd "$PWD"
 	}
 	add-zsh-hook zshexit _yazi_cd
 fi

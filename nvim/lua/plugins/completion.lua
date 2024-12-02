@@ -274,6 +274,10 @@ return {
 				-- Keymap conflict
 				["Find Next"] = "",
 				["Find Prev"] = "",
+
+				-- Fix the issue where the first item is skipped when pressing `<C-k>`
+				-- https://github.com/mg979/vim-visual-multi/issues/243#issuecomment-1965536044
+				["I BS"] = "",
 			}
 			vim.g.VM_custom_motions = {
 				["u"] = "k",

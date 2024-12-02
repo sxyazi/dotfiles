@@ -162,7 +162,7 @@ function M.lua_setup()
 				workspace = {
 					checkThirdParty = false,
 					ignoreDir = { ".vscode", "node_modules" },
-					library = vim.api.nvim_get_runtime_file("", true),
+					-- library = vim.api.nvim_get_runtime_file("", true),
 				},
 				runtime = { version = "LuaJIT" },
 				telemetry = { enable = false },
@@ -225,11 +225,17 @@ end
 function M.rust_setup()
 	require("lspconfig").rust_analyzer.setup {
 		capabilities = M.capabilities(),
+		cmd = vim.lsp.rpc.connect("/tmp/ra-mux.sock"),
 		settings = {
 			["rust-analyzer"] = {
 				cargo = { allFeatures = true },
 				procMacro = { enable = true },
 				checkOnSave = { command = "clippy" },
+				lspMux = {
+					version = "1",
+					method = "connect",
+					server = "rust-analyzer",
+				},
 			},
 		},
 	}

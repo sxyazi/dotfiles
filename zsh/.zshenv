@@ -19,7 +19,6 @@ export VISUAL="nvim"
 
 export BAT_THEME="Catppuccin Mocha"
 export HOMEBREW_NO_ANALYTICS=1
-export RANGER_LOAD_DEFAULT_RC="FALSE"
 export PNPM_HOME=$HOME/Library/pnpm
 
 export LESSKEYIN=$HOME/.config/less/.lesskey
