@@ -82,7 +82,7 @@ return {
 				{
 					filter = {
 						event = "msg_show",
-						kind = { "echo" },
+						kind = { "echo", "echomsg" },
 					},
 					opts = { skip = true },
 				},
@@ -287,7 +287,6 @@ return {
 							["<C-e>"] = actions.cycle_history_next,
 							["<M-u>"] = actions.preview_scrolling_up,
 							["<M-e>"] = actions.preview_scrolling_down,
-							["<C-s>"] = actions.select_vertical,
 							["<C-h>"] = actions.select_horizontal,
 							["<C-t>"] = actions.select_tab,
 							["<C-q>"] = trouble.open,
@@ -546,34 +545,24 @@ return {
 		end,
 	},
 
+	-- The fastest Neovim colorizer.
+	{
+		"norcalli/nvim-colorizer.lua",
+		event = { "BufReadPre", "BufNewFile" },
+		config = function() require("colorizer").setup() end,
+	},
+
 	-- Neovim plugin for Yazi
 	{
 		"mikavilpas/yazi.nvim",
+		dependencies = { "folke/snacks.nvim", lazy = true },
 		keys = {
 			{ "<leader>y", ":Yazi<cr>", silent = true },
 		},
 		opts = {
-			use_ya_for_events_reading = true,
-			use_yazi_client_id_flag = true,
-
 			keymaps = {
 				show_help = "~",
 			},
 		},
-	},
-
-	-- Neovim file explorer
-	{
-		"stevearc/oil.nvim",
-		keys = {
-			{ "<leader>v", ":Oil<cr>", silent = true },
-		},
-		opts = {
-			delete_to_trash = true,
-			keymaps = {
-				["<S-CR>"] = "actions.parent",
-			},
-		},
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 }

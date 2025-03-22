@@ -1,14 +1,18 @@
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
 [manager]
-linemode    = "size"
-show_hidden = true
-sort_by     = "natural"
+linemode     = "size"
+show_hidden  = true
+sort_by      = "natural"
+mouse_events = []
 
 [preview]
-tab_size   = 2
-max_width  = 1000
-max_height = 1000
+wrap       = "yes"
+max_width  = 1500
+max_height = 1500
+
+[input]
+cursor_blink = true
 
 [opener]
 edit = [
@@ -20,36 +24,25 @@ play = [
 	{ run = 'iina --no-stdin "$@"' },
 	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, desc = "Show media info" }
 ]
-archive = [
-	{ run = 'unar "$1"', desc = "Extract here" },
-	{ run = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" },
+extract = [
+	{ run = 'ya pub extract --list "$@"', desc = "Extract here" },
+	{ run = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" }
+]
+subtitle = [
+	{ run = ''' echo sub-add "'$0'" | socat - /tmp/mpv.sock ''', desc = "Add sub to MPV" },
+	{ run = ''' opencc -c tw2sp -i "$1" -o "$1" ''', desc = "TW to SC" },
 ]
 
 [open]
-rules = [
-	{ name = "*/", use = [ "open", "edit", "reveal" ] },
-
-	{ mime = "text/*",  use = [ "edit", "reveal" ] },
-	{ mime = "image/*", use = [ "open", "reveal" ] },
-	{ mime = "video/*", use = [ "play", "reveal" ] },
-	{ mime = "audio/*", use = [ "play", "reveal" ] },
-	{ mime = "inode/x-empty", use = [ "edit", "reveal" ] },
-
-	{ mime = "application/json", use = [ "edit", "reveal" ] },
-	{ mime = "*/javascript",     use = [ "edit", "reveal" ] },
-
-	{ mime = "application/zip",             use = [ "extract", "reveal", "archive" ] },
-	{ mime = "application/gzip",            use = [ "extract", "reveal", "archive" ] },
-	{ mime = "application/x-tar",           use = [ "extract", "reveal", "archive" ] },
-	{ mime = "application/x-bzip",          use = [ "extract", "reveal", "archive" ] },
-	{ mime = "application/x-bzip2",         use = [ "extract", "reveal", "archive" ] },
-	{ mime = "application/x-7z-compressed", use = [ "extract", "reveal", "archive" ] },
-	{ mime = "application/x-rar",           use = [ "extract", "reveal", "archive" ] },
-
-	{ name = "*", use = [ "open", "reveal" ] },
+prepend_rules = [
+	{ name = "*.{ass,srt,ssa,sty,sup,vtt}", use = [ "subtitle", "edit" ] },
 ]
 
 [plugin]
-prepend_previewers = [
-	{ mime = "audio/*", run = "exifaudio" },
+prepend_fetchers = [
+	{ id = "git", name = "*", run = "git" },
+	{ id = "git", name = "*/", run = "git" },
+
+	{ id = "mactag", name = "*", run = "mactag" },
+	{ id = "mactag", name = "*/", run = "mactag" },
 ]

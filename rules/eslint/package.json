@@ -14,18 +14,18 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@eslint/js": "^8.57.0",
+		"@eslint/js": "^8.57.1",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
-		"eslint-plugin-import": "^2.30.0",
+		"eslint-plugin-import": "^2.31.0",
 		"eslint-plugin-json-schema-validator": "^4.9.0",
-		"eslint-plugin-jsonc": "^2.16.0",
+		"eslint-plugin-jsonc": "^2.18.2",
 		"eslint-plugin-markdown": "^3.0.1",
-		"eslint-plugin-react": "^7.35.2",
+		"eslint-plugin-react": "^7.37.2",
 		"eslint-plugin-react-hooks": "^4.6.2",
 		"eslint-plugin-toml": "^0.5.0",
 		"eslint-plugin-unicorn": "^47.0.0",
-		"eslint-plugin-yml": "^1.14.0",
+		"eslint-plugin-yml": "^1.16.0",
 		"espree": "^9.6.1",
 		"globals": "^13.24.0",
 		"jsonc-eslint-parser": "^2.4.0",
@@ -34,6 +34,6 @@
 	},
 	"devDependencies": {
 		"esbuild": "^0.17.19",
-		"eslint": "^8.57.0"
+		"eslint": "^8.57.1"
 	}
 }

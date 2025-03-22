@@ -44,6 +44,12 @@ function y() {
 	rm -f -- "$tmp"
 }
 
+function r() {
+	cd ~/Desktop/yazi
+	cargo +nightly build -p yazi-fm && cd - || cd -
+	RUST_BACKTRACE=1 YAZI_LOG=debug ~/Desktop/yazi/target/debug/yazi "$@" && cd - || cd -
+}
+
 function gpr() {
 	local username=$(git config user.name)
 	if [ -z "$username" ]; then

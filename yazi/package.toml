@@ -1,0 +1,54 @@
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "6c639b4"
+hash = "5614c46d5de76623c283d415bfac8025"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "2730199"
+hash = "2f1053f89d1a301a648ab181d0948e38"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "2730199"
+hash = "7a08e303167d5b655c06da6d570f0333"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "2730199"
+hash = "1f3dad061209081a6b04dd6ff2cb06c7"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "2730199"
+hash = "e0d2c8d7e7afe5b82270367098d1a821"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mactag"
+rev = "2730199"
+hash = "2b3aa04f8c795b6fdc6484fe1c38044f"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "2730199"
+hash = "dd97eede8e20e59cd2604e8006e470e2"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "2730199"
+hash = "7918aab6a71caf31b58411f789195677"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:vcs-files"
+rev = "2730199"
+hash = "5e85dd0baca18119f4d712d81b09eb7c"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-latte"
+rev = "68326b4"
+hash = "5dffea1e87c50b18b8bb1599f6d4881a"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "68326b4"
+hash = "3ec21bcfd2735cfcbab61faaf43e59e4"

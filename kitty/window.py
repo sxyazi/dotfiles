@@ -25,8 +25,8 @@ def handle_result(args, answer, target_window_id, boss):
         window.write_to_child(f"\x1b[119;8u{act[1]}{second}")
         return
 
-    if (act == "-close" or act == "-quit") and cmd[-7:] == "joshuto":
-        window.write_to_child(f"\x1b{act[1]}")
+    if (act == "-close" or act == "-quit") and cmd[-4:] == "yazi":
+        window.write_to_child(f"\x1b[99;5u")
         return
 
     def split(direction):

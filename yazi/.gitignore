@@ -1,0 +1,4 @@
+flavors/*
+plugins/*
+
+!plugins/folder-rules.yazi
