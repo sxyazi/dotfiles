@@ -28,7 +28,16 @@ return {
 			flavour = "macchiato",
 			background = { light = "latte", dark = "macchiato" },
 			transparent_background = true,
+			float = { transparent = true, solid = true },
 			term_colors = true,
+			custom_highlights = function(C)
+				local O = require("catppuccin").options
+				return {
+					["@module"] = { fg = C.lavender, style = O.styles.miscs or { "italic" } },
+					["@type.builtin"] = { fg = C.yellow, style = O.styles.properties or { "italic" } },
+					["@property"] = { fg = C.lavender, style = O.styles.properties or {} },
+				}
+			end,
 			integrations = {
 				bufferline = false,
 				cmp = true,

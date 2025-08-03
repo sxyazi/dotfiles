@@ -380,7 +380,7 @@ return {
 
 	-- Manage LSP servers
 	{
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
 		cmd = "Mason",
 		opts = {
 			pip = {
@@ -388,7 +388,7 @@ return {
 			},
 			ui = {
 				keymaps = {
-					-- https://github.com/williamboman/mason.nvim/blob/main/lua/mason/settings.lua#L87
+					-- https://github.com/mason-org/mason.nvim/blob/main/lua/mason/settings.lua#L87
 					toggle_package_expand = "<Tag>",
 					install_package = "k",
 					update_all_packages = "K",
@@ -543,13 +543,6 @@ return {
 				callback = function() map(vim.api.nvim_get_current_buf()) end,
 			})
 		end,
-	},
-
-	-- The fastest Neovim colorizer.
-	{
-		"norcalli/nvim-colorizer.lua",
-		event = { "BufReadPre", "BufNewFile" },
-		config = function() require("colorizer").setup() end,
 	},
 
 	-- Neovim plugin for Yazi
