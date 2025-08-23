@@ -49,7 +49,7 @@ vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand("$HOME/.cache/nvim/undo")
 vim.opt.backupdir = vim.fn.expand("$HOME/.cache/nvim/backup")
 vim.opt.viewdir = vim.fn.expand("$HOME/.cache/nvim/view")
-vim.lsp.set_log_level("off")
+vim.lsp.log.set_level("off")
 
 -- Rendering
 vim.opt.termguicolors = true

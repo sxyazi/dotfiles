@@ -1,6 +1,6 @@
 "$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
 
-[manager]
+[mgr]
 
 prepend_keymap = [
 	# Hopping
@@ -31,11 +31,11 @@ prepend_keymap = [
 
 	# Goto
 	{ on = [ "g", "r" ], run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"' },
-	{ on = [ 'g', 'f' ], run = 'shell -- ya emit cd "$(zoxide query Friends)"' },
+	{ on = [ "g", "v" ], run = 'shell -- ya emit cd "$(zoxide query Friends)"' },
 	{ on = [ "g", "c" ], run = "plugin vcs-files" },
 
 	# Shell
-	{ on = "$", run = 'shell --block $SHELL' },
+	{ on = "$", run = "shell --block $SHELL" },
 
 	# Plugins
 	{ on = "M",          run = "plugin mount" },
@@ -43,29 +43,32 @@ prepend_keymap = [
 	{ on = [ "c", "m" ], run = "plugin chmod" },
 	{ on = [ "b", "a" ], run = "plugin mactag add" },
 	{ on = [ "b", "r" ], run = "plugin mactag remove" },
+	{ on = "<C-1>", run = "plugin toggle-pane max-parent" },
+	{ on = "<C-2>", run = "plugin toggle-pane max-current" },
+	{ on = "<C-3>", run = "plugin toggle-pane max-preview" },
 ]
 
 [tasks]
 
 prepend_keymap = [
-	{ on = "u", run = "arrow -1" },
-	{ on = "e", run = "arrow 1" },
+	{ on = "u", run = "arrow prev" },
+	{ on = "e", run = "arrow next" },
 ]
 
 [spot]
 
 prepend_keymap = [
-	{ on = "u", run = "arrow -1" },
-	{ on = "e", run = "arrow 1" },
-	{ on = "n", run = "swipe -1" },
-	{ on = "i", run = "swipe 1" },
+	{ on = "u", run = "arrow prev" },
+	{ on = "e", run = "arrow next" },
+	{ on = "n", run = "swipe prev" },
+	{ on = "i", run = "swipe next" },
 ]
 
 [pick]
 
 prepend_keymap = [
-	{ on = "u", run = "arrow -1" },
-	{ on = "e", run = "arrow 1" },
+	{ on = "u", run = "arrow prev" },
+	{ on = "e", run = "arrow next" },
 ]
 
 [input]
@@ -98,23 +101,23 @@ prepend_keymap = [
 [confirm]
 
 prepend_keymap = [
-	{ on = "u", run = "arrow -1" },
-	{ on = "e", run = "arrow 1" },
+	{ on = "u", run = "arrow prev" },
+	{ on = "e", run = "arrow next" },
 ]
 
 [cmp]
 
 prepend_keymap = [
-	{ on = "<C-u>", run = "arrow -1" },
-	{ on = "<C-e>", run = "arrow 1" },
+	{ on = "<C-u>", run = "arrow prev" },
+	{ on = "<C-e>", run = "arrow next" },
 ]
 
 [help]
 
 prepend_keymap = [
 	# Navigation
-	{ on = "u", run = "arrow -1" },
-	{ on = "e", run = "arrow 1" },
+	{ on = "u", run = "arrow prev" },
+	{ on = "e", run = "arrow next" },
 
 	{ on = "U", run = "arrow -5" },
 	{ on = "E", run = "arrow 5" },

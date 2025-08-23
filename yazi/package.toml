@@ -1,54 +1,79 @@
 [[plugin.deps]]
 use = "Rolv-Apneseth/starship"
-rev = "6c639b4"
-hash = "5614c46d5de76623c283d415bfac8025"
+rev = "6a0f3f7"
+hash = "d5a74d95c2e8194ac352c5e10e81e64f"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "2730199"
-hash = "2f1053f89d1a301a648ab181d0948e38"
+rev = "cbc4450"
+hash = "1adc12c2b2b025411ab61eb8f0879574"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "2730199"
-hash = "7a08e303167d5b655c06da6d570f0333"
+rev = "cbc4450"
+hash = "47865a70cade14a0b9b6bc6a54f16bdb"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "2730199"
-hash = "1f3dad061209081a6b04dd6ff2cb06c7"
+rev = "cbc4450"
+hash = "3996fc74044bc44144b323686f887e1"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "2730199"
-hash = "e0d2c8d7e7afe5b82270367098d1a821"
+rev = "cbc4450"
+hash = "a57f09c9e61ffc850d8ea8c6fc1efb2c"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mactag"
-rev = "2730199"
-hash = "2b3aa04f8c795b6fdc6484fe1c38044f"
+rev = "cbc4450"
+hash = "72dfb25e9d0c015365827431e28df322"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "2730199"
-hash = "dd97eede8e20e59cd2604e8006e470e2"
+rev = "cbc4450"
+hash = "f10a14e823382d90fab5b3ee54cb38fe"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-enter"
-rev = "2730199"
-hash = "7918aab6a71caf31b58411f789195677"
+rev = "cbc4450"
+hash = "56fdabc96fc1f4d53c96eb884b02a5be"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:vcs-files"
-rev = "2730199"
-hash = "5e85dd0baca18119f4d712d81b09eb7c"
+rev = "cbc4450"
+hash = "cc8da55f1deda45ee3787cc97b58ffc9"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:toggle-pane"
+rev = "cbc4450"
+hash = "d6f60c24d8c0cf57a855bf46115b2502"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:piper"
+rev = "cbc4450"
+hash = "2143a53182dbbe935a1abd1623424aa5"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:types"
+rev = "cbc4450"
+hash = "1e047e1b13b5e3fc6ab1f5d0d04a14e2"
+
+[[plugin.deps]]
+use = "TKperson/yazip"
+rev = "de4098e"
+hash = "2650b3b34087f3bfaa95846149a17f2e"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:zoom"
+rev = "b886025"
+hash = "23d704e18d864036fc65c188bc6b2e47"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-latte"
-rev = "68326b4"
-hash = "5dffea1e87c50b18b8bb1599f6d4881a"
+rev = "d04a298"
+hash = "a4d508772dc7b20d739a2f9a1d2d396f"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-macchiato"
-rev = "68326b4"
-hash = "3ec21bcfd2735cfcbab61faaf43e59e4"
+rev = "d04a298"
+hash = "e6c5beeb1da3199355734273ee452a7f"

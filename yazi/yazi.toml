@@ -1,18 +1,15 @@
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
-[manager]
-linemode     = "size"
-show_hidden  = true
-sort_by      = "natural"
-mouse_events = []
+[mgr]
+linemode    = "size"
+show_hidden = true
+sort_by     = "natural"
+# mouse_events = []
 
 [preview]
 wrap       = "yes"
 max_width  = 1500
 max_height = 1500
-
-[input]
-cursor_blink = true
 
 [opener]
 edit = [
@@ -26,7 +23,7 @@ play = [
 ]
 extract = [
 	{ run = 'ya pub extract --list "$@"', desc = "Extract here" },
-	{ run = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" }
+	{ run = 'open -a MacZip "$1"', orphan = true, desc = "MacZip" }
 ]
 subtitle = [
 	{ run = ''' echo sub-add "'$0'" | socat - /tmp/mpv.sock ''', desc = "Add sub to MPV" },
@@ -35,14 +32,18 @@ subtitle = [
 
 [open]
 prepend_rules = [
-	{ name = "*.{ass,srt,ssa,sty,sup,vtt}", use = [ "subtitle", "edit" ] },
+	{ url = "*.{ass,srt,ssa,sty,sup,vtt}", use = [ "subtitle", "edit" ] },
 ]
+
+[tasks]
+image_alloc = 0
+image_bound = [ 0, 0 ]
 
 [plugin]
 prepend_fetchers = [
-	{ id = "git", name = "*", run = "git" },
-	{ id = "git", name = "*/", run = "git" },
+	{ id = "git", url = "*", run = "git" },
+	{ id = "git", url = "*/", run = "git" },
 
-	{ id = "mactag", name = "*", run = "mactag" },
-	{ id = "mactag", name = "*/", run = "mactag" },
+	{ id = "mactag", url = "*", run = "mactag" },
+	{ id = "mactag", url = "*/", run = "mactag" },
 ]

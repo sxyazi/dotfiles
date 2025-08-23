@@ -116,7 +116,7 @@ vim.api.nvim_create_user_command("RestoreCursor", restore_cursor, { nargs = "?" 
 
 local function map_set(key, cmd, term)
 	vim.keymap.set("", "<C-S-M-w>" .. key, string.format(":%s<CR>:RestoreCursor<CR>", cmd), { silent = true })
-	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>:RestoreCursor force<CR>", cmd), { silent = true })
+	vim.keymap.set("i", "<C-S-M-w>" .. key, string.format("<Esc>:%s<CR>:RestoreCursor<CR>", cmd), { silent = true })
 
 	if term == 1 then
 		vim.keymap.set("t", "<C-S-M-w>" .. key, string.format("<C-\\><C-n>:%s<CR>", cmd), { silent = true })

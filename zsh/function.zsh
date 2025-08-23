@@ -32,22 +32,18 @@ alias rl="echo '' > ~/.local/state/yazi/yazi.log; tail -F ~/.local/state/yazi/ya
 alias rr="~/Desktop/yazi/target/debug/yazi --clear-cache"
 
 function y() {
-	if [ -n "$YAZI_LEVEL" ]; then
-		exit
-	fi
-
-	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	YAZI_LOG=debug yazi "$@" --cwd-file="$tmp"
-	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		cd -- "$cwd"
-	fi
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
 
 function r() {
-	cd ~/Desktop/yazi
-	cargo +nightly build -p yazi-fm && cd - || cd -
-	RUST_BACKTRACE=1 YAZI_LOG=debug ~/Desktop/yazi/target/debug/yazi "$@" && cd - || cd -
+	local old="$PWD"
+	cd ~/Desktop/yazi && cargo build -p yazi-fm
+	cd "$old"
+	RUST_BACKTRACE=1 YAZI_LOG=debug ~/Desktop/yazi/target/debug/yazi "$@"
 }
 
 function gpr() {

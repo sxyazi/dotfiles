@@ -20,7 +20,7 @@ vim.keymap.set("", "e", "j")
 vim.keymap.set("", "E", "5j")
 vim.keymap.set("", "n", "h")
 vim.keymap.set("", "N", "^")
-vim.keymap.set("", "i", "l")
+vim.keymap.set("", "i", "l", { nowait = true })
 vim.keymap.set("", "I", "$")
 
 vim.keymap.set("n", "<C-u>", 'line(".")>1 ? ":m .-2<CR>" : ""', { expr = true, silent = true })

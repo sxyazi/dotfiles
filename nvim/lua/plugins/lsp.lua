@@ -225,7 +225,7 @@ end
 function M.rust_setup()
 	require("lspconfig").rust_analyzer.setup {
 		capabilities = M.capabilities(),
-		cmd = vim.lsp.rpc.connect("/tmp/ra-mux.sock"),
+		-- cmd = vim.lsp.rpc.connect("/tmp/ra-mux.sock"),
 		settings = {
 			["rust-analyzer"] = {
 				cargo = { allFeatures = true },
