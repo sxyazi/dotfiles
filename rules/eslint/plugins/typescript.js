@@ -10,7 +10,7 @@ export const typescript = [
 		files          : ["**/*.{ts,tsx,cts,mts}"],
 		languageOptions: {
 			parser       : tsParser,
-			parserOptions: { project: true },
+			parserOptions: { projectService: true },
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: true,
@@ -22,11 +22,10 @@ export const typescript = [
 			...eslint.configs.recommended.rules,
 			...tsPlugin.configs["eslint-recommended"].overrides[0].rules,
 			...tsPlugin.configs.recommended.rules,
-			...tsPlugin.configs["recommended-requiring-type-checking"].rules,
+			...tsPlugin.configs["recommended-type-checked"].rules,
 
 			...jsRules,
-			"@typescript-eslint/ban-ts-comment"       : "off",
-			"@typescript-eslint/no-non-null-assertion": "off",
+			"@typescript-eslint/ban-ts-comment": "off",
 		},
 	},
 ]

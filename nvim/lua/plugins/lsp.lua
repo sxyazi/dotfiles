@@ -186,6 +186,11 @@ end
 function M.fe_setup()
 	vim.lsp.config("ts_ls", {
 		capabilities = M.capabilities(),
+		on_attach = function(client)
+			-- Use ESLint as the formatter for JS/TS files
+			client.server_capabilities.documentFormattingProvider = false
+			client.server_capabilities.documentRangeFormattingProvider = false
+		end,
 	})
 	vim.lsp.config("html", {
 		capabilities = M.capabilities(),
@@ -219,7 +224,7 @@ function M.fe_setup()
 		root_dir = function(bufnr, on_dir) on_dir(eslint_cwd or vim.fn.getcwd()) end,
 		-- https://github.com/Microsoft/vscode-eslint#settings-options
 		settings = eslint_settings,
-		on_attach = function(client, bufnr)
+		on_attach = function(client)
 			client.server_capabilities.documentFormattingProvider = true
 			client.server_capabilities.documentRangeFormattingProvider = true
 		end,

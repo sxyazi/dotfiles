@@ -6,33 +6,33 @@ import { fmRules } from "./formatting.js"
 
 export const tomlRules = {
 	// https://ota-meshi.github.io/eslint-plugin-toml/rules/#toml-rules
-	"toml/indent": ["warn", "tab", {}],
-	"toml/keys-order": "warn",
-	"toml/no-non-decimal-integer": "warn",
-	"toml/no-space-dots": "warn",
-	"toml/padding-line-between-pairs": "off",
+	"toml/indent"                     : ["warn", "tab", {}],
+	"toml/keys-order"                 : "warn",
+	"toml/no-non-decimal-integer"     : "warn",
+	"toml/no-space-dots"              : "warn",
+	"toml/padding-line-between-pairs" : "off",
 	"toml/padding-line-between-tables": "warn",
-	"toml/quoted-keys": "warn",
-	"toml/tables-order": "off",
+	"toml/quoted-keys"                : "warn",
+	"toml/tables-order"               : "off",
 
 	// https://ota-meshi.github.io/eslint-plugin-toml/rules/#extension-rules
-	"toml/array-bracket-newline": fmRules["array-bracket-newline"],
-	"toml/array-bracket-spacing": fmRules["array-bracket-spacing"],
-	"toml/array-element-newline": fmRules["array-element-newline"],
-	"toml/comma-style": fmRules["comma-style"],
+	"toml/array-bracket-newline"     : fmRules["array-bracket-newline"],
+	"toml/array-bracket-spacing"     : fmRules["array-bracket-spacing"],
+	"toml/array-element-newline"     : fmRules["array-element-newline"],
+	"toml/comma-style"               : fmRules["comma-style"],
 	"toml/inline-table-curly-spacing": fmRules["object-curly-spacing"],
-	"toml/key-spacing": ["warn", { align: "equal" }],
-	"toml/spaced-comment": ["warn", "always", { markers: ["#"] }],
-	"toml/table-bracket-spacing": fmRules["array-bracket-spacing"],
+	"toml/key-spacing"               : ["warn", { align: "equal" }],
+	"toml/spaced-comment"            : ["warn", "always", { markers: ["#"] }],
+	"toml/table-bracket-spacing"     : fmRules["array-bracket-spacing"],
 }
 
 /** @type { import('eslint').Linter.Config[] } */
 export const toml = [
 	{
-		files: ["**/*.toml"],
+		files          : ["**/*.toml"],
 		languageOptions: { parser: tomlParser },
-		plugins: {
-			"toml": tomlPlugin,
+		plugins        : {
+			"toml"                 : tomlPlugin,
 			"json-schema-validator": jsonSchemaPlugin,
 		},
 		rules: {
