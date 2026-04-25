@@ -1,6 +1,6 @@
 import jsonSchemaPlugin, { configs as jsonSchemaConfigs } from "eslint-plugin-json-schema-validator"
 import ymlPlugin, { configs as ymlConfigs } from "eslint-plugin-yml"
-import ymlParser from "yaml-eslint-parser"
+import * as ymlParser from "yaml-eslint-parser"
 
 import { fmRules } from "./formatting.js"
 
@@ -26,7 +26,7 @@ export const ymlRules = {
 	"yml/spaced-comment": fmRules["spaced-comment"],
 }
 
-/** @type { import('eslint').Linter.FlatConfig[] } */
+/** @type { import('eslint').Linter.Config[] } */
 export const yaml = [
 	{
 		files: ["**/*.{yaml,yml}"],

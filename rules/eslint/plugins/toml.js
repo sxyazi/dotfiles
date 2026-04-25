@@ -1,6 +1,6 @@
 import jsonSchemaPlugin, { configs as jsonSchemaConfigs } from "eslint-plugin-json-schema-validator"
 import tomlPlugin, { configs as tomlConfigs } from "eslint-plugin-toml"
-import tomlParser from "toml-eslint-parser"
+import * as tomlParser from "toml-eslint-parser"
 
 import { fmRules } from "./formatting.js"
 

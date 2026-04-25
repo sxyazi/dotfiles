@@ -1,3 +1,5 @@
+import stylisticPlugin from "@stylistic/eslint-plugin"
+
 export const fmRules = {
 	// https://eslint.org/docs/latest/rules/#layout--formatting
 	"array-bracket-newline"         : ["warn", "consistent"],
@@ -132,57 +134,60 @@ export const fmRules = {
 	"yoda"          : "warn",
 }
 
-/** @type { import('eslint').Linter.FlatConfig[] } */
+/** @type { import('eslint').Linter.Config[] } */
 export const formatting = [
 	{
 		files: ["**/*.{ts,tsx,js,jsx,cjs,mjs,cts,mts}"],
 		rules: fmRules,
 	},
 	{
-		files: ["**/*.{ts,tsx,cts,mts}"],
+		files  : ["**/*.{ts,tsx,cts,mts}"],
+		plugins: {
+			"@stylistic": stylisticPlugin,
+		},
 		rules: {
-			"block-spacing"                                 : "off",
-			"@typescript-eslint/block-spacing"              : fmRules["block-spacing"],
-			"brace-style"                                   : "off",
-			"@typescript-eslint/brace-style"                : fmRules["brace-style"],
-			"comma-dangle"                                  : "off",
-			"@typescript-eslint/comma-dangle"               : fmRules["comma-dangle"],
-			"comma-spacing"                                 : "off",
-			"@typescript-eslint/comma-spacing"              : fmRules["comma-spacing"],
-			"func-call-spacing"                             : "off",
-			"@typescript-eslint/func-call-spacing"          : fmRules["func-call-spacing"],
-			"indent"                                        : "off",
-			"@typescript-eslint/indent"                     : fmRules.indent,
+			"block-spacing"                         : "off",
+			"@stylistic/block-spacing"              : fmRules["block-spacing"],
+			"brace-style"                           : "off",
+			"@stylistic/brace-style"                : fmRules["brace-style"],
+			"comma-dangle"                          : "off",
+			"@stylistic/comma-dangle"               : fmRules["comma-dangle"],
+			"comma-spacing"                         : "off",
+			"@stylistic/comma-spacing"              : fmRules["comma-spacing"],
+			"func-call-spacing"                     : "off",
+			"@stylistic/function-call-spacing"      : fmRules["func-call-spacing"],
+			"indent"                                : "off",
+			"@stylistic/indent"                     : fmRules.indent,
 			// "key-spacing"                                   : "off",
 			// "@typescript-eslint/key-spacing"                : fmRules["key-spacing"],
-			"keyword-spacing"                               : "off",
-			"@typescript-eslint/keyword-spacing"            : fmRules["keyword-spacing"],
-			"lines-between-class-members"                   : "off",
-			"@typescript-eslint/lines-between-class-members": fmRules["lines-between-class-members"],
-			"@typescript-eslint/member-delimiter-style"     : ["warn", {
+			"keyword-spacing"                       : "off",
+			"@stylistic/keyword-spacing"            : fmRules["keyword-spacing"],
+			"lines-between-class-members"           : "off",
+			"@stylistic/lines-between-class-members": fmRules["lines-between-class-members"],
+			"@stylistic/member-delimiter-style"     : ["warn", {
 				multiline : { delimiter: "none", requireLast: false },
 				singleline: { delimiter: "comma", requireLast: false },
 			}],
-			"no-extra-parens"                                   : "off",
-			"@typescript-eslint/no-extra-parens"                : fmRules["no-extra-parens"],
-			"object-curly-spacing"                              : "off",
-			"@typescript-eslint/object-curly-spacing"           : fmRules["object-curly-spacing"],
-			"padding-line-between-statements"                   : "off",
-			"@typescript-eslint/padding-line-between-statements": [
+			"no-extra-parens"                           : "off",
+			"@stylistic/no-extra-parens"                : fmRules["no-extra-parens"],
+			"object-curly-spacing"                      : "off",
+			"@stylistic/object-curly-spacing"           : fmRules["object-curly-spacing"],
+			"padding-line-between-statements"           : "off",
+			"@stylistic/padding-line-between-statements": [
 				...fmRules["padding-line-between-statements"],
 				{ blankLine: "always", prev: "*", next: ["interface", "type"] },
 			],
-			"quotes"                                        : "off",
-			"@typescript-eslint/quotes"                     : fmRules.quotes,
-			"semi"                                          : "off",
-			"@typescript-eslint/semi"                       : fmRules.semi,
-			"space-before-blocks"                           : "off",
-			"@typescript-eslint/space-before-blocks"        : fmRules["space-before-blocks"],
-			"space-before-function-paren"                   : "off",
-			"@typescript-eslint/space-before-function-paren": fmRules["space-before-function-paren"],
-			"space-infix-ops"                               : "off",
-			"@typescript-eslint/space-infix-ops"            : fmRules["space-infix-ops"],
-			"@typescript-eslint/type-annotation-spacing"    : "warn",
+			"quotes"                                : "off",
+			"@stylistic/quotes"                     : fmRules.quotes,
+			"semi"                                  : "off",
+			"@stylistic/semi"                       : fmRules.semi,
+			"space-before-blocks"                   : "off",
+			"@stylistic/space-before-blocks"        : fmRules["space-before-blocks"],
+			"space-before-function-paren"           : "off",
+			"@stylistic/space-before-function-paren": fmRules["space-before-function-paren"],
+			"space-infix-ops"                       : "off",
+			"@stylistic/space-infix-ops"            : fmRules["space-infix-ops"],
+			"@stylistic/type-annotation-spacing"    : "warn",
 		},
 	},
 ]

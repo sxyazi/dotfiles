@@ -1,7 +1,7 @@
 import reactPlugin from "eslint-plugin-react"
 import reactHooksPlugin from "eslint-plugin-react-hooks"
 
-/** @type { import('eslint').Linter.FlatConfig[] } */
+/** @type { import('eslint').Linter.Config[] } */
 export const react = [
 	{
 		files  : ["**/*.{ts,tsx,js,jsx,cjs,mjs,cts,mts}"],
@@ -21,7 +21,7 @@ export const react = [
 	},
 ]
 
-/** @type { import('eslint').Linter.FlatConfig[] } */
+/** @type { import('eslint').Linter.Config[] } */
 export const preact = [
 	{
 		files  : ["**/*.{ts,tsx,js,jsx,cjs,mjs,cts,mts}"],

@@ -83,6 +83,14 @@ local M = {
 			},
 			default = vim.fn.expand("$HOME/.config/rules/stylelint/stylelint.config.js"),
 		},
+		eslint = {
+			files = {
+				"eslint.config.js",
+				"eslint.config.mjs",
+				"eslint.config.cjs",
+			},
+			default = vim.fn.expand("$HOME/.config/rules/eslint/eslint.config.js"),
+		},
 	},
 }
 
@@ -191,12 +199,11 @@ function M.fe_setup()
 
 	local eslint_cwd
 	local eslint_default = vim.lsp.config.eslint
-	local eslint_settings = { packageManager = "pnpm", useESLintClass = true }
+	local eslint_settings = { packageManager = "pnpm" }
 
 	eslint_default.root_dir(0, function(dir) eslint_cwd = dir end)
 	if not eslint_cwd then
-		eslint_settings.experimental = { useFlatConfig = true }
-		eslint_settings.options = { overrideConfigFile = vim.fn.expand("$HOME/.config/rules/eslint/eslint.config.cjs") }
+		eslint_settings.options = { overrideConfigFile = M.configs.eslint.default }
 	end
 
 	vim.lsp.config("eslint", {

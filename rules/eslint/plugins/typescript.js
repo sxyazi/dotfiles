@@ -4,7 +4,7 @@ import tsParser from "@typescript-eslint/parser"
 
 import { jsRules } from "./javascript.js"
 
-/** @type { import('eslint').Linter.FlatConfig[] } */
+/** @type { import('eslint').Linter.Config[] } */
 export const typescript = [
 	{
 		files          : ["**/*.{ts,tsx,cts,mts}"],
@@ -30,4 +30,3 @@ export const typescript = [
 		},
 	},
 ]
-
