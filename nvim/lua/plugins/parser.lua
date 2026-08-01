@@ -90,7 +90,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		branch = "main",
-		build = function() require("nvim-treesitter").install(M.ts_langs, { summary = true }):wait() end,
+		build = function() require("nvim-treesitter").update(M.ts_langs, { summary = true }):wait() end,
 		dependencies = {
 			{ "windwp/nvim-ts-autotag", opts = {} },
 			{
