@@ -25,7 +25,8 @@ export const typescript = [
 			...tsPlugin.configs["recommended-type-checked"].rules,
 
 			...jsRules,
-			"@typescript-eslint/ban-ts-comment": "off",
+			"@typescript-eslint/ban-ts-comment"     : "off",
+			"@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: { attributes: false } }],
 		},
 	},
 ]

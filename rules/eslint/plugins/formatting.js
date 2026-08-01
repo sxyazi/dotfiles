@@ -152,7 +152,7 @@ export const formatting = [
 			"@stylistic/implicit-arrow-linebreak"        : fmRules["implicit-arrow-linebreak"],
 			"@stylistic/indent"                          : fmRules.indent,
 			"@stylistic/jsx-quotes"                      : fmRules["jsx-quotes"],
-			"@stylistic/key-spacing"                     : fmRules["key-spacing"],
+			// "@stylistic/key-spacing"                     : fmRules["key-spacing"],
 			"@stylistic/keyword-spacing"                 : fmRules["keyword-spacing"],
 			"@stylistic/line-comment-position"           : fmRules["line-comment-position"],
 			"@stylistic/linebreak-style"                 : fmRules["linebreak-style"],

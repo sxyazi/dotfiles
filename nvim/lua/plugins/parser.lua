@@ -1,6 +1,6 @@
 local M = {
 	ts_langs = {
-		-- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+		-- https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md
 		"bash",
 		"c",
 		"cmake",
@@ -49,6 +49,7 @@ local M = {
 		"toml",
 		"tsx",
 		"typescript",
+		"typescriptreact",
 		"vim",
 		"vue",
 		"yaml",
@@ -105,7 +106,6 @@ return {
 			},
 		},
 		config = function()
-			require("selection").setup()
 			vim.api.nvim_create_autocmd("FileType", {
 				group = vim.api.nvim_create_augroup("user_treesitter", { clear = true }),
 				pattern = M.ts_langs,
@@ -116,7 +116,10 @@ return {
 
 					vim.treesitter.start(args.buf)
 					vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-					require("selection").attach(args.buf)
+
+					-- Incremental selection
+					vim.keymap.set({ "n", "x" }, "<CR>", function() vim.treesitter.select("parent") end, { buffer = args.buf })
+					vim.keymap.set({ "n", "x" }, "<S-CR>", function() vim.treesitter.select("child") end, { buffer = args.buf })
 				end,
 			})
 		end,
@@ -168,6 +171,34 @@ return {
 		},
 		keys = {
 			{ "<leader>u", "<cmd>AerialToggle<CR>" },
+		},
+	},
+
+	-- VSCode-style diff
+	{
+		"esmuellert/codediff.nvim",
+		cmd = "CodeDiff",
+		opts = {
+			diff = {
+				layout = "inline",
+				ignore_trim_whitespace = true,
+				compute_moves = true,
+			},
+			keymaps = {
+				view = {
+					toggle_explorer = false,
+					toggle_layout = "<leader>t",
+					toggle_stage = false,
+					stage_hunk = "<leader>s",
+					unstage_hunk = "<leader>S",
+					discard_hunk = "<leader>r",
+				},
+				explorer = {
+					select = "<Tab>",
+					unstage_all = false,
+					restore = false,
+				},
+			},
 		},
 	},
 }

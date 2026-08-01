@@ -23,7 +23,7 @@ return {
 		build = ":CatppuccinCompile",
 		enabled = true,
 		opts = {
-			flavour = "macchiato",
+			flavour = "auto",
 			background = { light = "latte", dark = "macchiato" },
 			transparent_background = true,
 			float = { transparent = true, solid = true },
@@ -46,6 +46,7 @@ return {
 			integrations = {
 				bufferline = false,
 				cmp = true,
+				diffview = true,
 				fidget = true,
 				gitsigns = true,
 				illuminate = true,

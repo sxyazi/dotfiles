@@ -32,7 +32,7 @@ local M = {
 
 		-- XML
 		"html-lsp", -- HTML language server
-		"taplo", -- TOML language server
+		"tombi", -- TOML language server
 		"yaml-language-server", -- YAML language server
 		"lemminx", -- XML language server
 
@@ -204,7 +204,10 @@ function M.fe_setup()
 
 	local eslint_cwd
 	local eslint_default = vim.lsp.config.eslint
-	local eslint_settings = { packageManager = "pnpm" }
+	local eslint_settings = {
+		packageManager = "pnpm",
+		nodePath = vim.fn.expand("$PNPM_HOME/global/5/node_modules"),
+	}
 
 	eslint_default.root_dir(0, function(dir) eslint_cwd = dir end)
 	if not eslint_cwd then
@@ -235,36 +238,6 @@ function M.fe_setup()
 	})
 
 	vim.lsp.enable { "ts_ls", "html", "cssls", "eslint", "tailwindcss" }
-end
-
-function M.rust_setup()
-	vim.lsp.config("rust_analyzer", {
-		capabilities = M.capabilities(),
-		-- cmd = vim.lsp.rpc.connect("/tmp/ra-mux.sock"),
-		settings = {
-			["rust-analyzer"] = {
-				cargo = { allFeatures = true },
-				procMacro = { enable = true },
-				-- checkOnSave = { command = "clippy" },
-				-- lspMux = {
-				-- 	version = "1",
-				-- 	method = "connect",
-				-- 	server = "rust-analyzer",
-				-- },
-			},
-		},
-	})
-	vim.lsp.enable("rust_analyzer")
-
-	vim.api.nvim_create_autocmd("BufWritePost", {
-		pattern = "*/Cargo.toml",
-		callback = function()
-			for _, client in ipairs(vim.lsp.get_clients { name = "rust_analyzer" }) do
-				client.request("rust-analyzer/reloadWorkspace", nil, function() end, 0)
-			end
-		end,
-		group = vim.api.nvim_create_augroup("RustWorkspaceRefresh", { clear = true }),
-	})
 end
 
 function M.python_setup()
@@ -322,10 +295,10 @@ function M.yaml_setup()
 end
 
 function M.toml_setup()
-	vim.lsp.config("taplo", {
+	vim.lsp.config("tombi", {
 		capabilities = M.capabilities(),
 	})
-	vim.lsp.enable("taplo")
+	vim.lsp.enable("tombi")
 end
 
 function M.markdown_setup()
@@ -353,7 +326,6 @@ return {
 			M.lua_setup()
 			M.go_setup()
 			M.fe_setup()
-			M.rust_setup()
 			M.python_setup()
 			M.json_setup()
 			M.yaml_setup()

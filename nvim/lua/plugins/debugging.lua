@@ -1,4 +1,33 @@
 return {
+	{
+		"mrcjkb/rustaceanvim",
+		lazy = false,
+		init = function()
+			vim.g.rustaceanvim = {
+				tools = {
+					enable_clippy = false,
+				},
+				server = {
+					default_settings = {
+						["rust-analyzer"] = {
+							cargo = {
+								allFeatures = true,
+								-- target = "aarch64-pc-windows-msvc",
+							},
+							check = {
+								-- targets = { "aarch64-unknown-linux-gnu" },
+							},
+							procMacro = { enable = true },
+							diagnostics = {
+								disabled = { "inactive-code", "unlinked-file" },
+							},
+						},
+					},
+				},
+			}
+		end,
+	},
+
 	-- An extensible framework for interacting with tests within NeoVim
 	{
 		"nvim-neotest/neotest",
@@ -8,7 +37,6 @@ return {
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-neotest/neotest-plenary",
-			"rouge8/neotest-rust",
 		},
 		keys = {
 			{ "<leader>s", function() require("neotest").run.run() end },
@@ -18,9 +46,7 @@ return {
 			require("neotest").setup {
 				adapters = {
 					require("neotest-plenary"),
-					require("neotest-rust") {
-						args = { "--no-capture" },
-					},
+					require("rustaceanvim.neotest"),
 				},
 			}
 		end,
