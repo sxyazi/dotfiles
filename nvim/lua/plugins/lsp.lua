@@ -96,7 +96,7 @@ local M = {
 
 function M.capabilities(override)
 	if not M._capabilities then
-		M._capabilities = require("cmp_nvim_lsp").default_capabilities()
+		M._capabilities = require("blink.cmp").get_lsp_capabilities()
 	end
 	return override and vim.tbl_deep_extend("keep", M._capabilities, override) or M._capabilities
 end
@@ -313,6 +313,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
+			"saghen/blink.cmp",
 			{
 				"WhoIsSethDaniel/mason-tool-installer.nvim",
 				opts = { ensure_installed = M.mason_tools },

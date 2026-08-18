@@ -47,10 +47,10 @@ return {
 		},
 		opts = {
 			lsp = {
+				signature = { view = "signature" },
 				override = {
 					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true,
 				},
 			},
 			presets = {
@@ -63,6 +63,17 @@ return {
 			views = {
 				mini = {
 					win_options = { winblend = 0 },
+				},
+				signature = {
+					view = "hover",
+					size = {
+						max_width = 80,
+						max_height = 12,
+					},
+					border = {
+						style = "rounded",
+						padding = { 0, 2 },
+					},
 				},
 			},
 			routes = {

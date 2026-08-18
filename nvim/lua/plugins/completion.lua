@@ -90,102 +90,86 @@ return {
 	},
 
 	{
-		"hrsh7th/nvim-cmp",
+		"saghen/blink.cmp",
+		build = function() require("blink.cmp").build():pwait() end,
 		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = {
-			{ "hrsh7th/cmp-nvim-lsp", lazy = true },
-			{ "hrsh7th/cmp-buffer", lazy = true },
-			{ "hrsh7th/cmp-cmdline", lazy = true },
-			{ "hrsh7th/cmp-path", lazy = true },
-
-			-- For luasnip users
-			{ "saadparwaiz1/cmp_luasnip", lazy = true },
+			"saghen/blink.lib",
+			"L3MON4D3/LuaSnip",
 		},
-		config = function()
-			local cmp = require("cmp")
-			cmp.setup {
-				preselect = cmp.PreselectMode.None,
-				mapping = {
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<C-u>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
-					["<C-e>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
-					["<M-u>"] = cmp.mapping.scroll_docs(-4),
-					["<M-e>"] = cmp.mapping.scroll_docs(4),
-					["<CR>"] = cmp.mapping.confirm { select = true },
-					["<S-CR>"] = cmp.mapping.confirm { select = true, behavior = cmp.ConfirmBehavior.Replace },
+		opts = {
+			keymap = {
+				preset = "none",
+				["<C-Space>"] = { "show" },
+				["<C-u>"] = { "select_prev", "fallback" },
+				["<C-e>"] = { "select_next", "fallback" },
+				["<M-u>"] = { "scroll_documentation_up", "fallback" },
+				["<M-e>"] = { "scroll_documentation_down", "fallback" },
+				["<CR>"] = { "select_and_accept", "fallback" },
+			},
+			appearance = { kind_icons = icons },
+			completion = {
+				list = {
+					selection = { preselect = true, auto_insert = false },
 				},
-				snippet = {
-					expand = function(args) require("luasnip").lsp_expand(args.body) end,
+				menu = {
+					border = "rounded",
+					draw = {
+						columns = { { "kind_icon" }, { "label" } },
+						components = {
+							label = { width = { max = 30 } },
+						},
+					},
 				},
+				documentation = {
+					window = { border = "rounded" },
+				},
+			},
+			snippets = { preset = "luasnip" },
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+				providers = {
+					lsp = { fallbacks = {} },
+					buffer = {
+						min_keyword_length = function(ctx) return ctx.mode == "cmdline" and 2 or 0 end,
+					},
+					path = {
+						min_keyword_length = function(ctx) return ctx.mode == "cmdline" and 2 or 0 end,
+					},
+					cmdline = {
+						min_keyword_length = function(ctx) return ctx.mode == "cmdline" and 2 or 0 end,
+					},
+				},
+			},
+			cmdline = {
+				keymap = {
+					preset = "none",
+					["<Tab>"] = {
+						function(cmp)
+							if cmp.is_menu_visible() then
+								return cmp.select_and_accept()
+							end
+							return cmp.show_and_insert_or_accept_single()
+						end,
+						"fallback",
+					},
+					["<S-Tab>"] = {
+						function(cmp)
+							if cmp.is_menu_visible() then
+								return cmp.select_prev()
+							end
+							return cmp.show_and_insert_or_accept_single { initial_selected_item_idx = -1 }
+						end,
+						"fallback",
+					},
+				},
+				sources = { default = { "buffer", "path", "cmdline" } },
 				completion = {
-					completeopt = "menu,menuone,noinsert",
+					menu = { auto_show = true },
 				},
-				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
-				},
-				sources = {
-					{ name = "nvim_lsp" },
-					{ name = "path" },
-					{ name = "buffer" },
-					{ name = "luasnip" },
-				},
-				formatting = {
-					fields = { "kind", "abbr", "menu" },
-					format = function(entry, item)
-						item.kind = icons[item.kind] or item.kind
-
-						local truncated = vim.fn.strcharpart(item.abbr, 0, 30)
-						if truncated ~= item.abbr then
-							item.abbr = truncated .. "…"
-						end
-
-						return item
-					end,
-				},
-			}
-
-			local mapping = {
-				["<Tab>"] = cmp.mapping(function()
-					if cmp.visible() then
-						cmp.select_next_item()
-					else
-						cmp.complete()
-					end
-				end, { "c" }),
-				["<S-Tab>"] = cmp.mapping(function()
-					if cmp.visible() then
-						cmp.select_prev_item()
-					else
-						cmp.complete()
-					end
-				end, { "c" }),
-			}
-
-			-- Use buffer source for `/` and `?`
-			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = mapping,
-				completion = {
-					completeopt = "menu,menuone,noselect",
-				},
-				sources = {
-					{ name = "buffer", keyword_length = 2 },
-				},
-			})
-
-			-- Use cmdline & path source for ':'
-			cmp.setup.cmdline(":", {
-				mapping = mapping,
-				completion = {
-					completeopt = "menu,menuone,noselect",
-				},
-				sources = cmp.config.sources({
-					{ name = "path", keyword_length = 2 },
-				}, {
-					{ name = "cmdline", keyword_length = 2 },
-				}),
-			})
-		end,
+			},
+			fuzzy = { implementation = "rust" },
+		},
 	},
 
 	{
